@@ -1,0 +1,288 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600&display=swap");
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    scroll-behavior: smooth;
+    font-family: "Poppins", sans-serif;
+    transition: 0.2s;
+}
+
+:root {
+    --mainColor: #f2e6d6;
+    --primaryTextColor: #474747;
+    --hoverColor: #d4bb9a;
+}
+
+.adoptionVerificationContainer {
+    padding-top: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+}
+
+.adoptionVerificationContainer .petDetails {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5%;
+
+}
+
+.adoptionVerificationContainer .petDetails .petDetailsImgContainer {
+    max-width: 300px;
+    height: auto;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.adoptionVerificationContainer .petDetails h3 {
+    padding-bottom: 20px;
+}
+
+.adoptionVerificationContainer .petDetails .petDetailsImgContainer .petDetailsImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.adoptionVerificationContainer .petDetails h2 {
+    font-size: 40px;
+}
+
+.adoptionVerification {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.adoptionVerification .header {
+    margin-top: 20px;
+    width: 60%;
+    padding: 10px 20px;
+}
+
+.adoptionVerification .emailWarning {
+    color:red;
+    font-size: 30px;
+    margin-top: 228px;
+    margin-left: 710px;
+    position: absolute;
+}
+.adoptionVerification .addressWarning {
+    color:red;
+    font-size: 30px;
+    margin-top: 380px;
+    margin-left: 710px;
+    position: absolute;
+}
+.adoptionVerification .contactWarning {
+    color:red;
+    font-size: 30px;
+    margin-top: 470px;
+    margin-left: 710px;
+    position: absolute;
+}
+.adoptionVerification .householdWarning {
+    color:red;
+    font-size: 30px;
+    margin-top: 588px;
+    margin-left: 710px;
+    position: absolute;
+}
+.adoptionVerification .employmentWarning {
+    color:red;
+    font-size: 30px;
+    margin-top: 765px;
+    margin-left: 710px;
+    position: absolute;
+}
+.adoptionVerification .petExpWarning {
+    color:red;
+    font-size: 30px;
+    margin-top: 940px;
+    margin-left: 710px;
+    position: absolute;
+}
+
+.adoptionVerification .header h2 {
+    font-size: 1.875rem;
+}
+
+.adoptionVerification .header p {
+    color: rgb(104, 104, 104);
+    font-size: 15px;
+}
+
+.adoptionVerification .inputContainer {
+    width: 70%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.adoptionVerification .petNamePrev {
+    color: var(--primaryTextColor);
+    text-align: center;
+    
+}
+
+.adoptionVerification .inputContainer label {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.adoptionVerification .inputContainer input, textarea {
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.attachValidID {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.adoptionVerification .btnValidID {
+    background: none;
+    border: 1px solid rgb(207, 207, 207);
+    width: 100%;
+    border-radius: 5px;
+    color: rgb(158, 158, 158);
+    padding: 7px;
+    text-align: start;
+    cursor: pointer;
+}
+
+.adoptionVerification .btnValidID:hover {
+    border: 1px solid black;
+}
+
+.removeID {
+    margin-right: 10px;
+    color: rgb(158, 158, 158);
+
+}
+
+.removeID:hover {
+    color: black;
+    cursor: pointer;
+    transform: scale(1.04);
+}
+
+.adoptionVerification #address {
+    resize: none;
+}
+
+.adoptionVerificationContainer .adoptionVerification .inputContainer .respBox {
+    height: 120px;
+    resize: none;
+    font-size: 14px;
+}
+
+.adoptionVerificationContainer .adoptionVerification .inputContainer .charCount {
+    font-size: 10px;
+    margin-top: -7px;
+    margin-bottom: 12px;
+}
+
+.adoptionVerificationContainer .adoptionVerification .inputContainer .respDisclaimer {
+    font-size: 12px;
+    color: rgb(141, 141, 141);
+    text-align: center;
+}
+
+.TAC-header {
+    margin-top: 20px;
+    border: none;
+    background-color: rgb(233, 233, 233);
+    width: 100%;
+    padding: 8px 20px;
+    border-radius: 7px;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.TAC-header:hover {
+    transform: scale(1.01);
+}
+
+.adoptionVerification .TAC-container {
+    width: 70%;
+    position: relative;
+}
+
+.termsAndConditions {
+    padding: 20px;
+    width: 100%;
+    border: 1px solid rgb(233, 233, 233);
+    border-radius: 7px;
+    background-color: rgb(240, 240, 240);
+}
+
+.termsAndConditions .commitmentHeader {
+    margin: 15px 0;
+}
+
+.termsAndConditions h4 {
+    margin-top: 15px;
+}
+
+.termsAndConditions p {
+    font-size: 13px;
+}
+
+.adoptionVerification .termsAndConditions .privacyHeader {
+    margin-top: 40px;
+}
+
+.adoptionVerification .termsAndConditions .TAC-title, .commitmentHeader, .privacyHeader {
+    text-align: center;
+}
+
+.adoptionVerification .verTAC {
+    font-size: 11px;
+    width: 70%;
+    margin-top: 30px;
+    margin-bottom: -15px;
+}
+
+.adoptionVerification .submitBtn {
+    background-color: var(--primaryTextColor);
+    color: white;
+    padding: 8px;
+    width: 70%;
+    border-radius: 7px;
+    cursor: pointer;
+    margin: 15px 0;
+    transition: margin-top 0.5s ease;
+}
+
+.adoptionVerification .submitBtn:hover {
+    background-color: #4e4e4e;
+}
+
+
+
+
+
+
