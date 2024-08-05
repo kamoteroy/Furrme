@@ -1,7 +1,7 @@
 const db = require('../mysql');
 
 async function getPets(req, res) {
-    db.query("select * from pets where status = 'Available' || status = 'Pending'", (err, petList) => {
+    db.query("SELECT * FROM pets INNER JOIN pet_img ON pets.pet_id=pet_img.pet_id where status = 'Available' || status = 'Pending';", (err, petList) => {
         if(err){
             console.log(err);
         }

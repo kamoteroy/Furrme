@@ -46,8 +46,7 @@ function Login() {
                     if(res.data.message){
                         alert(res.data.message);
                     }
-                    else { 
-                        console.log(res.data.message)
+                    else {
                         dispatch(login({token:res.data.token, user: res.data.userData}))
                         alert('Success redirecting to dashboard')
                         res.data.userData.email==="admin@furrme.com" ? (

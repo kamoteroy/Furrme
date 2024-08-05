@@ -19,16 +19,16 @@ import {
 import { CgProfile } from "react-icons/cg";
 import { MdContactSupport } from "react-icons/md";
 import { IoIosLogOut } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {logout} from "../store/Users";
 
 function Navbar(props) {
     const [openDropdown, setOpenDropdown] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);//For Simulation (Please replace with correct authentication logic)
     const navbarRef = useRef(null);
     const navigate = useNavigate();
-    const [userData, setuserData] = useState(props.user);
     const user = useSelector((state) => state.value)
-    console.log(user)
+    const dispatch = useDispatch();
     
     const toggleDropdown = (dropdown) => {
         setOpenDropdown(openDropdown === dropdown ? null : dropdown);
@@ -43,12 +43,12 @@ function Navbar(props) {
     };
 
     useEffect(() => {
-        if(window.localStorage.getItem("loggedUser")===''){
+        if(user===null){
         }
         else{
-            setuserData(JSON.parse(window.localStorage.getItem("loggedUser")));
             setIsLoggedIn(!isLoggedIn);
         }
+
         const handleClickOutside = (event) => {
             if (
                 navbarRef.current &&
@@ -65,13 +65,13 @@ function Navbar(props) {
 
 
     const Logout = () => {
-        window.localStorage.removeItem("loggedUser")
+        dispatch(logout());
         setIsLoggedIn(!isLoggedIn);
         navigate("/")
     }
     
     const Community = () => {
-        if(window.localStorage.getItem("loggedUser")===''){
+        if(user===null){
             navigate("/login")
         }
         else{
@@ -80,7 +80,7 @@ function Navbar(props) {
     }
 
     const Home = () => {
-        if(window.localStorage.getItem("loggedUser")===''){
+        if(user===null){
             navigate("/")
         }
         else{
@@ -191,7 +191,7 @@ function Navbar(props) {
                         className="DP-Icon"
                         onClick={() => toggleDropdown("user")}
                     >
-                        <img src={userData.userData.image} alt={userData.userData.name}/>
+                        <img src={user.user.image} alt={user.user.name}/>
                     </div>
                 ) : (
                     <button onClick={handleLogin}>Login</button>

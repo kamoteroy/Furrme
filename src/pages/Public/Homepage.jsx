@@ -1,9 +1,7 @@
-import React from "react";
 import "../../styles/Homepage.css";
 import { Link } from "react-router-dom";
 
 function Homepage() {
-    window.localStorage.setItem("loggedUser", '');
     return (
         <div className="homepage-container">
             <div className="homepage-bg">

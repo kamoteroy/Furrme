@@ -5,13 +5,15 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useSelector } from "react-redux";
 
 function Adoption() {
     const [showTerms, setShowTerms] = useState(false);
     const [fileName, setFileName] = useState("No file chosen");
     const [imageAttached, setImageAttached] = useState(false);
     const [uploadedImg, setUploadedImg] = useState('');
-    const petData = useLocation();
+    const location = useLocation();
+    const petData = location.state
     const [errors, setErrors] = useState({});
     const validationErrors = {};
     const navigate = useNavigate();
@@ -26,7 +28,8 @@ function Adoption() {
         employment: '',
         pet_exp: ''
     });
-    const userData = JSON.parse(localStorage.getItem("loggedUser"))
+    const getData = useSelector((state) => state.value)
+    const userData = getData.user;
     
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -86,11 +89,11 @@ function Adoption() {
                     image_url: uploadedImg,
                 });
                 await axios.post("http://localhost:3001/adoptreq",{
-                    id: petData.state.pet.pet_id,
-                    name: petData.state.pet.name,
-                    category: petData.state.pet.category,
+                    id: petData.pet_id,
+                    name: petData.name,
+                    category: petData.category,
                     image: res.data,
-                    email: userData.userData.email,
+                    email: userData.email,
                     address: formData.address,
                     contact: formData.contact,
                     date: todaysDate,
@@ -146,16 +149,14 @@ function Adoption() {
 
     return (
         <div>
-            <Navbar
-                user = {window.localStorage.getItem("loggedUser")}
-            />
+            <Navbar/>
             <div className="adoptionVerificationContainer">
                 <div className="petDetails">
                     <h3>Pet for Adoption: </h3>
                     <div className="petDetailsImgContainer">
-                        <img className="petDetailsImg" src={petData.state.pet.image} alt={petData.state.pet.name}/>
+                        <img className="petDetailsImg" src={petData.image} alt={petData.name}/>
                     </div>
-                    <h2 className="petName">{petData.state.name}</h2>
+                    <h2 className="petName">{petData.name}</h2>
                 </div>
                 <div className="adoptionVerification">
                     <div className="header">
@@ -167,14 +168,15 @@ function Adoption() {
                         </p>
                     </div>
                     <div className="inputContainer">
-                        <p className="petNamePrev">Pet for Adoption: {petData.state.pet.name}</p>
+                        <p className="petNamePrev">Pet for Adoption: {petData.name}</p>
                         <label htmlFor="email">Email</label>
                         <input
                             type="text"
                             id="email"
                             name="email"
-                            value={userData.userData.email}
+                            value={userData.email}
                             onChange={handleInputChange}
+                            readonly="readonly"
                         />
                         <label htmlFor="validID" className="validIDImg">
                             Upload a valid ID

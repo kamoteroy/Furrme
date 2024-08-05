@@ -5,6 +5,7 @@ import { LuUpload } from "react-icons/lu";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import CommunityPostCard from "../../components/CommunityPostCard";
 import axios from 'axios';
+import { useSelector } from "react-redux";
 
 function Community() {
     const [postContent, setPostContent] = useState('');;;
@@ -13,7 +14,8 @@ function Community() {
     let d = new Date();
     const todaysDate = d.toISOString().split('T')[0];
     const [postList, setList] = useState([]);
-    const userData = JSON.parse(localStorage.getItem("loggedUser"));
+    const getData = useSelector((state) => state.value)
+    const user = getData.user
     const [refreshKey, setRefreshKey] = useState(0);
 
     const refreshComponent = () => {
@@ -23,7 +25,7 @@ function Community() {
     useEffect(() => {
         axios.get('http://localhost:3001/community', {
             headers: {
-              'token': userData.token,
+              'token': user.token,
             }
           })
         .then(res=>
@@ -82,9 +84,9 @@ function Community() {
                 image: res.data,
                 description: postContent,
                 date: todaysDate,
-                user_name: userData.userData.fname + ' ' + userData.userData.lname,
-                user_img: userData.userData.image,
-                token: userData.token,
+                user_name: user.fname + ' ' + user.lname,
+                user_img: user.image,
+                token: user.token,
             })
             .then(res=>{
                 setList(res.data)
@@ -113,7 +115,7 @@ function Community() {
                     <h2>Create Post</h2>
                     <div className="createPostInputs">
                         <div className="userAvatar">
-                            <img src={userData.userData.image} alt={userData.userData.fname} />
+                            <img src={user.image} alt={user.fname} />
                         </div>
                         <textarea
                             id="postContent"

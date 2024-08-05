@@ -15,7 +15,6 @@ function AllPets() {
     const colorRef = useRef(null); // Ref for color dropdown
     const [petList, setList] = useState([]);
     const user = useSelector((state) => state.value)
-    console.log(user)
     
     useEffect(() => {
             axios.get('http://localhost:3001/pets'/*, {

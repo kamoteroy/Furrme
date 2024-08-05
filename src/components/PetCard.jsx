@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function PetCard(pet) {
     return (
-        <Link to={`/pets/${pet.data.category}/${pet.data.name}`} state={{pet: pet.data}} className="petCard">
+        <Link to={`/pets/${pet.data.category}/${pet.data.name}`} state={pet.data} className="petCard">
             <div className="petImgContainer">
             <img src={pet.data.image} alt={pet.data.name} className="petImage" />
 

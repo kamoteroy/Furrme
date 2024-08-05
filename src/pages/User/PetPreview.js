@@ -7,37 +7,37 @@ import { useSelector } from "react-redux";
 
 function PetPreview() {
     const containerRef = useRef(null);
-    const petData = useLocation();
+    const location = useLocation();
+    const petData = location.state
     const [pets, setPets] = useState([]);
-    const petID = parseInt(petData.state.pet.pet_id);
+    const petID = parseInt(petData.pet_id);
     const navigate = useNavigate();
-    const user = useSelector((state) => state.user.value);
+    const user = useSelector((state) => state.value);
     
     const handleWheel = (e) => {
-        e.preventDefault();
         const container = containerRef.current;
         if (container) {
             container.scrollLeft += e.deltaY;
         }
     };
     
-    const [selectedImg, setSelectedImg] = useState(petData.state.pet.image);
+    const [selectedImg, setSelectedImg] = useState(petData.image);
 
     const handleImageClick = (imgSrc) => {
         setSelectedImg(imgSrc);
     };
 
     const confirmAdoption = () => {
-        if(window.localStorage.getItem("loggedUser")===''){
+        if(user===null){
             navigate('/login');
         }
         else{
-            navigate(`/pets/${petData.state.pet.category}/${petData.state.pet.name}/adopt` , {state: {pet: petData.state.pet} })
+            navigate(`/pets/${petData.category}/${petData.name}/adopt` , {state: petData })
         }
     }
 
     useEffect(() => {
-        axios.post(`http://localhost:3001/petpreview/:${petData.state.pet.name}`, {petID})
+        axios.post(`http://localhost:3001/petpreview/:${petData.name}`, {petID})
         .then(res=>
             setPets(res.data))
         .catch(err=>console.log(err));
@@ -51,7 +51,7 @@ function PetPreview() {
             <div className="petPreview">
                 <div className="petImgSec">
                     <div className="selectedImgContainer">
-                        <img src={selectedImg} alt={petData.state.pet.name}/>
+                        <img src={selectedImg} alt={petData.name}/>
                     </div>
                     <div
                         className="petImgCollection"
@@ -60,9 +60,9 @@ function PetPreview() {
                     >
                         <div
                             className="imgBoxes"
-                            onMouseEnter={() => handleImageClick(petData.state.pet.image)}
+                            onMouseEnter={() => handleImageClick(petData.image)}
                         >
-                            <img src={petData.state.pet.image} alt={"img1"}/>
+                            <img src={petData.image} alt={"img1"}/>
                         </div>
                         <div
                             className="imgBoxes"
@@ -91,16 +91,16 @@ function PetPreview() {
                     </div>
                 </div>
                 <div className="petInfoContainer">
-                    <h1 className="petNameInfo">{petData.state.pet.name}</h1>
+                    <h1 className="petNameInfo">{petData.name}</h1>
                     <div className="petInfoList">
                         <h2>Pet Information:</h2>
-                        <h3>Breed: {petData.state.pet.breed}</h3>
-                        <h3>Color: {petData.state.pet.color}</h3>
-                        <h3>Age: {petData.state.pet.age}</h3>
-                        <h3>Gender: {petData.state.pet.gender}</h3>
-                        <h3>Behavior: {petData.state.pet.behavior}</h3>
-                        <h3>Health: {petData.state.pet.health}</h3>
-                        <h3 className="petDescriptionInfo">Description: {petData.state.pet.description}</h3>
+                        <h3>Breed: {petData.breed}</h3>
+                        <h3>Color: {petData.color}</h3>
+                        <h3>Age: {petData.age}</h3>
+                        <h3>Gender: {petData.gender}</h3>
+                        <h3>Behavior: {petData.behavior}</h3>
+                        <h3>Health: {petData.health}</h3>
+                        <h3 className="petDescriptionInfo">Description: {petData.description}</h3>
                     </div>
                     <button onClick={() => confirmAdoption()} className="adoptionInqBtn">
                         Inquire of Adoption
