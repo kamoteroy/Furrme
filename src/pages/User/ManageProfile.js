@@ -3,17 +3,19 @@ import axios from 'axios';
 import "../../styles/ManageProfile.css";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function ManageProfile() {
-    const userData = JSON.parse(localStorage.getItem("loggedUser"))
-    const [uploadedImg, setUploadedImg] = useState(userData.userData.image);
+    const getData = useSelector((state) => state.value);
+    const user = getData.user;
+    const [uploadedImg, setUploadedImg] = useState(user.image);
     const [showCreatePostBtn, setShowCreatePostBtn] = useState(false);
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [formData, setformData] = useState({
-        fname: userData.userData.fname,
-        lname: userData.userData.lname,
-        email: userData.userData.email,
+        fname: user.fname,
+        lname: user.lname,
+        email: user.email,
         pass: ''
     });
     
@@ -58,11 +60,12 @@ function ManageProfile() {
                     email: formData.email,
                     pass: formData.pass,
                     image: res.data,
-                    token: userData.token,
-                    prevEmail: userData.userData.email
+                    token: getData.token,
+                    prevEmail: user.email
                 })
                 .then(result=>{
                     alert(result.data.message);
+                    console.log(result.data)
                     window.localStorage.setItem("loggedUser", JSON.stringify(result.data))
                 }
                 )
@@ -107,11 +110,11 @@ function ManageProfile() {
                         <div className="profilePictureContainer">
                             {uploadedImg ? (
                             <>
-                                <img src={uploadedImg} alt={userData.userData.fname}/>
+                                <img src={uploadedImg} alt={user.fname}/>
                             </>
                             ) : (
                             <>
-                                <img src={userData.userData.image} alt={userData.userData.fname}/>
+                                <img src={user.image} alt={user.fname}/>
                             </>
                             )}
                         </div>
@@ -129,7 +132,7 @@ function ManageProfile() {
                         <label htmlFor="firstName">First Name</label>
                         <input type="text" 
                         id="firstName" 
-                        defaultValue={userData.userData.fname}
+                        defaultValue={user.fname}
                         name="fname"
                         onChange={(e) => handleInputChange}/>
                     </div>
@@ -139,7 +142,7 @@ function ManageProfile() {
                         <label htmlFor="lastName">Last Name</label>
                         <input type="text" 
                         id="lastName" 
-                        defaultValue={userData.userData.lname}
+                        defaultValue={user.lname}
                         name="lname"
                         onChange={handleInputChange}/>
                     </div>
@@ -148,7 +151,7 @@ function ManageProfile() {
                         <label htmlFor="email">Email</label>
                         <input type="email" 
                         id="email" 
-                        defaultValue={userData.userData.email}
+                        defaultValue={user.email}
                         name="email"
                         onChange={handleInputChange}/>
                     </div>
