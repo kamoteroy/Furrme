@@ -25,34 +25,36 @@ import AdminEvaluation from "./pages/Admin/AdminEvaluation";
 import AdminPetPreview from "./pages/Admin/AdminPetPreview";
 
 function App() {
+  const login = window.localStorage.getItem("isLogged");
 
-    const login = window.localStorage.getItem("isLogged");
-
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={login ? <Homepage /> : <AllPets />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/pets" element={<AllPets />} />
-                <Route path="/pets/:category/:name" element={<PetPreview />} />
-                <Route path="/pets/Dogs" element={<Dogs />} />
-                <Route path="/pets/Cats" element={<Cats />} />
-                <Route path="/pets/:category/:name/adopt" element={<Adoption />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/forgotpassword" element={<Forgot />} />
-                <Route path="/manage" element={<ManageProfile />} />
-                <Route path="/education" element={<Resources />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/FAQS" element={<FAQS />} />
-                <Route path="/admin/pets" element={<Admin />} />
-                <Route path="/admin/request" element={<AdminRequest />} />
-                <Route path="/admin/create" element={<CreatePetListing />} />
-                <Route path="/admin/pets/:category/:name" element={<AdminPetPreview />} />
-                <Route path="/admin/evaluate/:name" element={<AdminEvaluation />} />
-            </Routes>
-        </Router>
-    );
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={login ? <Homepage /> : <AllPets />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/pets" element={<AllPets />} />
+        <Route path="/pets/:category/:name" element={<PetPreview />} />
+        <Route path="/pets/Dogs" element={<Dogs />} />
+        <Route path="/pets/Cats" element={<Cats />} />
+        <Route path="/pets/:category/:name/adopt" element={<Adoption />} />
+        <Route path="/community" element={<Community />} />
+        <Route path="/forgotpassword" element={<Forgot />} />
+        <Route path="/manage" element={<ManageProfile />} />
+        <Route path="/education" element={<Resources />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/FAQS" element={<FAQS />} />
+        <Route path="/admin/pets" element={<Admin />} />
+        <Route path="/admin/request" element={<AdminRequest />} />
+        <Route path="/admin/create" element={<CreatePetListing />} />
+        <Route
+          path="/admin/pets/:category/:name"
+          element={<AdminPetPreview />}
+        />
+        <Route path="/admin/evaluate/:name" element={<AdminEvaluation />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
