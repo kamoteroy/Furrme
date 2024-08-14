@@ -24,9 +24,22 @@ cloud.config({
   api_secret: process.env.api_secret,
 });
 
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to the database: " + err.stack);
+    return;
+  }
+  console.log("Connected to the database");
+});
+
+app.listen(3001, () => {
+  console.log("Running on port 3001...");
+});
+
 const verifyJWT = (req, res, next) => {
   var token;
   token = req.headers.token;
+
   if (!token) {
     token = req.body.token;
   }
@@ -40,15 +53,29 @@ const verifyJWT = (req, res, next) => {
   }
 };
 
+app.post("/upload", async (req, res, next) => {
+  const image_url = req.body.image_url;
+  try {
+    const uploadResult = await cloud.uploader
+      .upload(image_url)
+      .then((result) => {
+        return res.json(result.secure_url);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.get("/pets", page.getPets);
 app.get("/pets/cats", page.getCats);
 app.get("/pets/dogs", page.getDogs);
 
 app.post("/login", user.logIn);
 app.post("/signup", user.signUp);
-app.post("/manage", verifyJWT, user.manageProfile);
+app.post("/manage", user.manageProfile);
 app.post("/addpost", verifyJWT, user.addPost);
-app.get("/community", user.communityList);
+app.get("/community", verifyJWT, user.communityList);
+app.post("/adoptReq", verifyJWT, user.adoptionRequest);
 
 app.get("/petDetails/:id", async (req, res) => {
   db.query(
@@ -78,19 +105,6 @@ app.get("/petImage/:id", async (req, res) => {
   );
 });
 
-app.post("/upload", async (req, res, next) => {
-  const image_url = req.body.image_url;
-  try {
-    const uploadResult = await cloud.uploader
-      .upload(image_url)
-      .then((result) => {
-        return res.json(result.secure_url);
-      });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
 app.post("/admin/preview", (req, res) => {
   db.query(
     "select * from accounts where email = ?",
@@ -101,32 +115,6 @@ app.post("/admin/preview", (req, res) => {
       } else {
         return res.json(accInfo[0]);
       }
-    }
-  );
-});
-
-app.post("/adoptreq", async (req, res) => {
-  const addpost =
-    "INSERT into adoptreq(pet_id, pet_name, category, email, image, address, contact, household, employment, pet_exp, dates, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  db.query(
-    addpost,
-    [
-      req.body.id,
-      req.body.name,
-      req.body.category,
-      req.body.email,
-      req.body.image,
-      req.body.address,
-      req.body.contact,
-      req.body.household,
-      req.body.employment,
-      req.body.pet_exp,
-      req.body.date,
-      req.body.status,
-    ],
-    (err, result) => {
-      if (err) res.json({ message: "Error Applying" }), console.log(err);
-      return res.json({ message: "Adoption Application Successful!" });
     }
   );
 });
@@ -220,31 +208,4 @@ app.get("/requestlist", (req, res) => {
       return res.json(petList);
     }
   });
-});
-
-app.post("/petpreview/:name", (req, res) => {
-  db.query(
-    "select * from pet_img where pet_id = ?",
-    [req.body.petID],
-    (err, pets) => {
-      if (err) {
-        console.log(err);
-      } else {
-        return res.json(pets[0]);
-      }
-    }
-  );
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error("Error connecting to the database: " + err.stack);
-    return;
-  }
-  console.log("Connected to the database");
-});
-
-//testing
-app.listen(3001, () => {
-  console.log("Running on port 3001...");
 });

@@ -1,0 +1,14 @@
+
+
+POST http://localhost:3001/manage
+Content-Type: application/json
+
+{
+    "fname": "bobo",
+    "lname": "bobooooooooooooooo",
+    "newEmail": "aaaa@aaaag.com",
+    "pass": "123123123",
+    "image": "https://res.cloudinary.com/dmquudoki/image/upload/v1723305746/k5ldlecxhvoo3mkhznn0.jpg",
+    "prevEmail": "aaaa@aaaag.com",
+    "token": "eyJhbGciOiJIUzI1NiJ9.YWFhYUBhYWFhZy5jb20.QO2a74D_qjYaWwRFFEkpfCa3-WPPUsw3xYSoAhUCCkA"
+}

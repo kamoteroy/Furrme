@@ -65,20 +65,31 @@ async function signUp(req, res) {
 }
 
 async function manageProfile(req, res) {
+  var taken = 0; // 0 if same 1
+  const email = jwt.verify(req.body.token, "jwtRoy");
   const updateInfo =
     "UPDATE accounts set fname = ?, lname = ?, email = ?, pass = ?, image = ? where email = ?";
-  const accInfo =
-    "select fname,image,lname,email from accounts where email = ?";
+  const accInfo = `select * from accounts where email = ?`;
   const hashedPassword = await bcrypt.hash(req.body.pass, 10);
 
-  const email = jwt.verify(req.body.token, "jwtRoy");
-  if (email === req.body.email) {
+  if (email != req.body.newEmail) {
+    await new Promise((res, rej) => {
+      db.query(accInfo, req.body.newEmail, (err, info) => {
+        if (err) rej();
+        if (info[0]) taken = 1;
+        res();
+      });
+    });
+  }
+
+  if (taken === 1) return res.json({ message: "Email Taken", access: 0 });
+  else if (taken === 0) {
     db.query(
       updateInfo,
       [
         req.body.fname,
         req.body.lname,
-        email,
+        req.body.newEmail,
         hashedPassword,
         req.body.image,
         req.body.prevEmail,
@@ -86,20 +97,20 @@ async function manageProfile(req, res) {
       (err, result) => {
         if (err) console.log(err);
         else {
-          db.query(accInfo, [email], (err, info) => {
+          db.query(accInfo, req.body.newEmail, (err, info) => {
+            const newToken = jwt.sign(req.body.newEmail, "jwtRoy");
             if (err) console.log(err);
             else
               return res.json({
                 userData: info[0],
-                token: req.body.token,
+                token: newToken,
                 message: "Info Updated Successfully",
+                access: 1,
               });
           });
         }
       }
     );
-  } else {
-    res.json({ message: "No fcking Access" });
   }
 }
 
@@ -107,7 +118,9 @@ async function addPost(req, res) {
   const addpost =
     "INSERT into community(user_name, user_img, description, dates, image) VALUES (?, ?, ?, ?, ?)";
   const sql = "SELECT * from community";
-  token = jwt.verify(req.body.token, "jwtRoy");
+  const token = jwt.verify(req.body.token, "jwtRoy");
+  console.log(req.body);
+  console.log(req.headers);
   if (token) {
     db.query(
       addpost,
@@ -141,10 +154,37 @@ async function communityList(req, res) {
   });
 }
 
+async function adoptionRequest(req, res) {
+  const addpost =
+    "INSERT into adoptreq(pet_id, pet_name, category, email, image, address, contact, household, employment, pet_exp, dates, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  db.query(
+    addpost,
+    [
+      req.body.id,
+      req.body.name,
+      req.body.category,
+      req.body.email,
+      req.body.image,
+      req.body.address,
+      req.body.contact,
+      req.body.household,
+      req.body.employment,
+      req.body.pet_exp,
+      req.body.date,
+      req.body.status,
+    ],
+    (err, result) => {
+      if (err) res.json({ message: "Error Applying" }), console.log(err);
+      return res.json({ message: "Adoption Application Successful!" });
+    }
+  );
+}
+
 module.exports = {
   logIn,
   signUp,
   manageProfile,
   addPost,
   communityList,
+  adoptionRequest,
 };
