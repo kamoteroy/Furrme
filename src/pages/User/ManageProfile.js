@@ -14,12 +14,13 @@ function ManageProfile() {
   const [showCreatePostBtn, setShowCreatePostBtn] = useState(false);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const [formData, setformData] = useState({
+  const defaultValues = {
     fname: user.fname,
     lname: user.lname,
     email: user.email,
     pass: "",
-  });
+  };
+  const [formData, setformData] = useState(defaultValues);
   const token = getData.token;
   const [access, setAccess] = useState("");
 
@@ -30,8 +31,13 @@ function ManageProfile() {
   };
 
   useEffect(() => {
-    access === 1 ? navigate("/pets") : navigate("/manage");
-    setUploadedImg(null);
+    if (access === 1) navigate("/pets");
+    if (access === 0) {
+      navigate("/manage");
+      setUploadedImg(null);
+      setShowCreatePostBtn(false);
+      setformData(defaultValues);
+    }
   }, [access]);
 
   const handleSubmit = async (e) => {
