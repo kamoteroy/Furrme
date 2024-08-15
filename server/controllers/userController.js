@@ -116,20 +116,20 @@ async function manageProfile(req, res) {
 
 async function addPost(req, res) {
   const addpost =
-    "INSERT into community(user_name, user_img, description, dates, image) VALUES (?, ?, ?, ?, ?)";
+    "INSERT into community(postNumber, user_name, user_img, description, dates, image, timePosted) VALUES (?, ?, ?, ?, ?, ?, ?)";
   const sql = "SELECT * from community";
-  const token = jwt.verify(req.body.token, "jwtRoy");
-  console.log(req.body);
-  console.log(req.headers);
+  const token = jwt.verify(req.headers.token, "jwtRoy");
   if (token) {
     db.query(
       addpost,
       [
+        req.body.id,
         req.body.user_name,
         req.body.user_img,
         req.body.description,
         req.body.date,
         req.body.image,
+        req.body.timePosted,
       ],
       (err, result) => {
         if (err) console.log(err);
@@ -145,13 +145,16 @@ async function addPost(req, res) {
 }
 
 async function communityList(req, res) {
-  db.query("select * from community ORDER BY dates desc;", (err, postList) => {
-    if (err) {
-      console.log(err);
-    } else {
-      return res.json(postList);
+  db.query(
+    "select * from community ORDER BY postNumber desc",
+    (err, postList) => {
+      if (err) {
+        console.log(err);
+      } else {
+        return res.json(postList);
+      }
     }
-  });
+  );
 }
 
 async function adoptionRequest(req, res) {

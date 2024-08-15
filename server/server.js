@@ -37,6 +37,7 @@ app.listen(3001, () => {
 });
 
 const verifyJWT = (req, res, next) => {
+  console.log("bonak");
   var token;
   token = req.headers.token;
 
@@ -72,7 +73,7 @@ app.get("/pets/dogs", page.getDogs);
 
 app.post("/login", user.logIn);
 app.post("/signup", user.signUp);
-app.post("/manage", user.manageProfile);
+app.post("/manage", verifyJWT, user.manageProfile);
 app.post("/addpost", verifyJWT, user.addPost);
 app.get("/community", verifyJWT, user.communityList);
 app.post("/adoptReq", verifyJWT, user.adoptionRequest);

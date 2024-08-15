@@ -1,14 +1,14 @@
 
 
-POST http://localhost:3001/manage
+POST http://localhost:3001/addpost
 Content-Type: application/json
 
 {
-    "fname": "bobo",
-    "lname": "bobooooooooooooooo",
-    "newEmail": "aaaa@aaaag.com",
-    "pass": "123123123",
-    "image": "https://res.cloudinary.com/dmquudoki/image/upload/v1723305746/k5ldlecxhvoo3mkhznn0.jpg",
-    "prevEmail": "aaaa@aaaag.com",
-    "token": "eyJhbGciOiJIUzI1NiJ9.YWFhYUBhYWFhZy5jb20.QO2a74D_qjYaWwRFFEkpfCa3-WPPUsw3xYSoAhUCCkA"
+    "id": 11,
+    "image": "https://res.cloudinary.com/dmquudoki/image/upload/v1716304356/2_afjlhh.jpg",
+    "description": "bonaks",
+    "date": "2024-05-19",
+    "user_name": "ROY",
+    "user_img": "https://res.cloudinary.com/dmquudoki/image/upload/v1723607507/ttamuytkcopoxzps3qbh.jpg",
+    "timePosted": "16:30"
 }

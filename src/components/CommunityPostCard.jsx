@@ -12,6 +12,15 @@ function CommunityPostCard(props) {
   const shouldRenderPostContent =
     props.postContent && props.postContent.trim() !== "";
 
+  function convertTo12HourFormat(time) {
+    let [hours, minutes] = time.split(":").map(Number);
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12; // Convert 0 (midnight) or 12 (noon) to 12
+    return `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+  }
+
+  const timePosted = convertTo12HourFormat(props.timePosted);
+
   return (
     <div className="postCard">
       <div className="postCardHeaders">
@@ -20,7 +29,11 @@ function CommunityPostCard(props) {
         </div>
         <div className="postInfo">
           <h2 className="userAccntName">{props.accountName}</h2>
-          <p className="datePosted">{props.datePosted}</p>
+          <p className="datePosted">
+            {props.datePosted}
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            {timePosted}
+          </p>
         </div>
       </div>
       {shouldRenderPostContent && (

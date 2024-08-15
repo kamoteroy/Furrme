@@ -18,6 +18,9 @@ function Community() {
   const user = getData.user;
   const token = getData.token;
   const [refreshKey, setRefreshKey] = useState(0);
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  const highestID = Math.max(...postList.map((item) => item.postNumber));
 
   const refreshComponent = () => {
     setRefreshKey((prevKey) => prevKey + 1);
@@ -82,11 +85,13 @@ function Community() {
         .post(
           "http://localhost:3001/addpost",
           {
+            id: highestID + 1,
             image: res.data,
             description: postContent,
             date: todaysDate,
             user_name: user.fname + " " + user.lname,
             user_img: user.image,
+            timePosted: hours + ":" + minutes,
           },
           {
             headers: {
@@ -166,6 +171,7 @@ function Community() {
                 datePosted={post.dates}
                 postImage={post.image}
                 postContent={post.description}
+                timePosted={post.timePosted}
               />
             );
           })}
