@@ -37,7 +37,6 @@ app.listen(3001, () => {
 });
 
 const verifyJWT = (req, res, next) => {
-  console.log("bonak");
   var token;
   token = req.headers.token;
 
