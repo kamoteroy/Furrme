@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 //PUBLIC
 import Login from "./pages/Public/Login";
@@ -25,12 +26,11 @@ import AdminEvaluation from "./pages/Admin/AdminEvaluation";
 import AdminPetPreview from "./pages/Admin/AdminPetPreview";
 
 function App() {
-  const login = window.localStorage.getItem("isLogged");
-
+  const user = useSelector((state) => state.value);
   return (
     <Router>
       <Routes>
-        <Route path="/" element={login ? <Homepage /> : <AllPets />} />
+        <Route path="/" element={user ? <AllPets /> : <Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/pets" element={<AllPets />} />
