@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const db = require("./mysql");
 const cors = require("cors");
-
 const cookieParser = require("cookie-parser");
 const cloud = require("cloudinary").v2;
 const jwt = require("jsonwebtoken");
@@ -10,13 +9,13 @@ const saltRounds = 10; // Change 'salt' to 'saltRounds'
 const app = express();
 const page = require("./controllers/pageController");
 const user = require("./controllers/userController");
-const admin = require("./controllers/pageController");
+const admin = require("./controllers/adminController");
 
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ limit: "25mb" }));
 
 cloud.config({
   api_key: process.env.api_key,
@@ -37,6 +36,7 @@ app.listen(3001, () => {
 });
 
 const verifyJWT = (req, res, next) => {
+  console.log("bobo");
   var token;
   token = req.headers.token;
 
@@ -77,9 +77,11 @@ app.post("/addpost", verifyJWT, user.addPost);
 app.get("/community", verifyJWT, user.communityList);
 app.post("/adoptReq", verifyJWT, user.adoptionRequest);
 
+app.get("/admin", verifyJWT, admin.adminPetList);
+
 app.get("/petDetails/:id", async (req, res) => {
   db.query(
-    "select * from pets where pet_id = ?",
+    "select * from pets inner join pet_img on pets.pet_id = pet_img.pet_id",
     req.params["id"],
     (err, pets) => {
       if (err) {
@@ -133,19 +135,6 @@ app.post("/admin/create", async (req, res) => {
       }
     });
   });
-});
-
-app.get("/admin", (req, res) => {
-  db.query(
-    "select * from pets inner join pet_img on pets.pet_id = pet_img.pet_id",
-    (err, petList) => {
-      if (err) {
-        console.log(err);
-      } else {
-        return res.json(petList);
-      }
-    }
-  );
 });
 
 app.post("/admin/evaluation/pet", (req, res) => {
