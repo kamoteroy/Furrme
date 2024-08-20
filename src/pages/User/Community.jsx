@@ -49,6 +49,11 @@ function Community() {
     setShowCreatePostBtn(event.target.value.trim().length > 0 || uploadedImg);
   };
 
+  const handleRemoveImage = () => {
+    setUploadedImg(null);
+    setShowCreatePostBtn(postContent.trim().length > 0);
+  };
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
@@ -64,13 +69,9 @@ function Community() {
     }
   };
 
-  const handleRemoveImage = () => {
-    setUploadedImg(null);
-    setShowCreatePostBtn(postContent.trim().length > 0);
-  };
-
   const handleCreatePost = async (e) => {
     e.preventDefault();
+    console.log(uploadedImg);
     if (!uploadedImg) {
       // Remove the uploaded image
       setUploadedImg(null);

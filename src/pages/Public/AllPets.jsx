@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function AllPets() {
   const [ageClick, setAgeClick] = useState(false);
@@ -15,6 +16,11 @@ function AllPets() {
   const colorRef = useRef(null); // Ref for color dropdown
   const [petList, setList] = useState([]);
   const user = useSelector((state) => state.value);
+  const navigate = useNavigate();
+
+  user.user.email === "admin@furrme.com"
+    ? navigate("/admin/pets")
+    : navigate("/pets");
 
   useEffect(() => {
     axios

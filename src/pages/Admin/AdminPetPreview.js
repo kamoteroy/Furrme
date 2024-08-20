@@ -16,6 +16,7 @@ function AdminPetPreview() {
   const [petImage, setpetImage] = useState([]);
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
+  const [base64s, setbase64s] = useState([]);
 
   useEffect(() => {
     setImages(Object.values(petImage));
@@ -41,16 +42,6 @@ function AdminPetPreview() {
     };
   }, []);
 
-  const update = async () => {
-    await axios
-      .post("http://localhost:3001/admin/infoUpdate", {
-        info: petInfo,
-        images: petImage,
-      })
-      .then((res) => alert("Success"))
-      .catch((err) => console.log(err));
-  };
-
   const [selectedType, setSelectedType] = useState(petInfo.type);
   const [selectedGender, setSelectedGender] = useState(petInfo.gender);
   const [name, setName] = useState(petInfo.name);
@@ -60,8 +51,7 @@ function AdminPetPreview() {
   const [behavior, setBehavior] = useState(petInfo.behavior);
   const [health, setHealth] = useState(petInfo.health);
   const [description, setDescription] = useState(petInfo.description);
-  // State to track if changes were made
-  const [isChanged, setIsChanged] = useState(false);
+  const [isChanged, setIsChanged] = useState(false); // State to track if changes were made
 
   const typeDropdownRef = useRef(null);
   const genderDropdownRef = useRef(null);
@@ -81,17 +71,22 @@ function AdminPetPreview() {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "image/*";
     fileInput.multiple = true;
+
     fileInput.onchange = (event) => {
       const files = Array.from(event.target.files);
-      if (files.length + images.length > 8) {
-        alert("You can only upload up to 8 photos.");
+      if (files.length + images.length > 5) {
+        alert("You can only upload up to 5 photos.");
         return;
       }
+      files.map(async (file) => {
+        const result = await convertBlobToBase64(file);
+        return result;
+      });
       const newImages = files.map((file) => URL.createObjectURL(file));
       setImages((prevImages) => [...prevImages, ...newImages]);
       setIsChanged(true);
@@ -99,8 +94,67 @@ function AdminPetPreview() {
     fileInput.click();
   };
 
+  function convertBlobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result); // This will be the Base64 string
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob); // Reads the Blob as a Data URL (base64)
+    }).then((res) => base64s.push(res));
+  }
+
+  const removeBlob = () => {
+    const index2 = images.findIndex((item) => item.includes("blob"));
+
+    if (index2 !== -1) {
+      images.splice(index2, 1); // Remove the item at the found index
+    }
+  };
+
+  const handleSubmit = (e) => {
+    const length = images.length;
+    if (!images[0]) {
+      // Remove the uploaded image
+      alert("No image");
+      setImages([]);
+      return;
+    }
+    if (base64s) {
+      console.log("base64s", base64s);
+      console.log("images, ", images.length);
+      base64s.forEach(async function (item, index) {
+        try {
+          const res = await axios.post("http://localhost:3001/upload", {
+            image_url: item,
+          });
+          images.push(res.data);
+        } catch (err) {
+          console.log(err);
+        }
+
+        if (images.some((item) => item.includes("blob"))) {
+          console.log(`naa pay blob`);
+          removeBlob(); // remove blob links from the images list
+
+          console.log(`${index}`, images);
+        } else {
+          axios
+            .post("http://localhost:3001/admin/infoUpdate", {
+              info: petInfo,
+              images: images,
+            })
+            .then((res) => alert("Success"))
+            .catch((err) => console.log(err));
+        }
+      });
+    }
+  };
+
   const handleRemoveImage = (index) => {
     setImages(images.filter((_, i) => i !== index));
+    setbase64s(base64s.filter((_, i) => i !== index));
     setIsChanged(true);
   };
 
@@ -272,7 +326,10 @@ function AdminPetPreview() {
                     </div>
                   </div>
                   {isChanged && (
-                    <button onClick={() => update()} className="saveChanges">
+                    <button
+                      onClick={() => handleSubmit()}
+                      className="saveChanges"
+                    >
                       Save Changes
                     </button>
                   )}

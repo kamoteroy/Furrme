@@ -1,27 +1,26 @@
 require("dotenv").config();
 const express = require("express");
+const app = express();
 const db = require("./mysql");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const cloud = require("cloudinary").v2;
+const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const saltRounds = 10; // Change 'salt' to 'saltRounds'
-const app = express();
 const page = require("./controllers/pageController");
 const user = require("./controllers/userController");
 const admin = require("./controllers/adminController");
+const { upload, uploadMulti } = require("./controllers/upload");
 
-app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-app.use(express.json({ limit: "25mb" }));
-app.use(express.urlencoded({ limit: "25mb" }));
+// Increase the limit to accommodate large payloads
+app.use(bodyParser.json({ limit: "50mb" })); // For JSON payloads
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true })); // For URL-encoded payloads
 
-cloud.config({
-  api_key: process.env.api_key,
-  cloud_name: process.env.cloud_name,
-  api_secret: process.env.api_secret,
-});
+// Alternatively, with Express 4.16+:
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 db.connect((err) => {
   if (err) {
@@ -53,18 +52,7 @@ const verifyJWT = (req, res, next) => {
   }
 };
 
-app.post("/upload", async (req, res, next) => {
-  const image_url = req.body.image_url;
-  try {
-    const uploadResult = await cloud.uploader
-      .upload(image_url)
-      .then((result) => {
-        return res.json(result.secure_url);
-      });
-  } catch (error) {
-    console.log(error);
-  }
-});
+app.post("/upload", upload);
 
 app.get("/pets", page.getPets);
 app.get("/pets/cats", page.getCats);
@@ -135,6 +123,10 @@ app.post("/admin/create", async (req, res) => {
       }
     });
   });
+});
+
+app.post("/admin/infoUpdate", (req, res) => {
+  console.log(req.body);
 });
 
 app.post("/admin/evaluation/pet", (req, res) => {
