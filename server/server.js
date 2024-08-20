@@ -67,9 +67,9 @@ app.post("/adoptReq", verifyJWT, user.adoptionRequest);
 
 app.get("/admin", verifyJWT, admin.adminPetList);
 
-app.get("/petDetails/:id", async (req, res) => {
+app.get("/admin/petDetails/:id", async (req, res) => {
   db.query(
-    "select * from pets inner join pet_img on pets.pet_id = pet_img.pet_id",
+    "select * from pets where pet_id = ?",
     req.params["id"],
     (err, pets) => {
       if (err) {
@@ -81,7 +81,7 @@ app.get("/petDetails/:id", async (req, res) => {
   );
 });
 
-app.get("/petImage/:id", async (req, res) => {
+app.get("/admin/petImage/:id", async (req, res) => {
   db.query(
     "select img1,img2,img3,img4,img5 from pet_img where pet_id = ?",
     req.params["id"],
@@ -90,6 +90,38 @@ app.get("/petImage/:id", async (req, res) => {
         console.log(err);
       } else {
         return res.json(pets[0]);
+      }
+    }
+  );
+});
+
+app.post("/admin/petInfoUpdate", (req, res) => {
+  const pet = req.body.info;
+  const img = req.body.images;
+  console.log(img[0]);
+
+  const infoQuery = `UPDATE pets set name = ?, description = ?, color = ?, age = ?, behavior = ?, health = ? where pet_id = ?`;
+  const imgQuery = `UPDATE pet_img set img1 = ?, img2 = ?, img3 = ?, img4 = ?, img5 = ? where pet_id=?`;
+  db.query(
+    infoQuery,
+    [
+      pet.name,
+      pet.description,
+      pet.color,
+      pet.age,
+      pet.behavior,
+      pet.health,
+      pet.pet_id,
+    ],
+    (err, result) => {
+      if (result.warningCount === 0) {
+        db.query(
+          imgQuery,
+          [img[0], img[1], img[2], img[3], img[4], pet.pet_id],
+          (err, result) => {
+            console.log(result.warningCount);
+          }
+        );
       }
     }
   );
@@ -123,10 +155,6 @@ app.post("/admin/create", async (req, res) => {
       }
     });
   });
-});
-
-app.post("/admin/infoUpdate", (req, res) => {
-  console.log(req.body);
 });
 
 app.post("/admin/evaluation/pet", (req, res) => {
