@@ -6,12 +6,13 @@ import AdminDashboardSidebar from "./AdminDashboardSidebar";
     MdOutlineKeyboardArrowUp,
 } from "react-icons/md";*/
 import { IoCloseCircle } from "react-icons/io5";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 
 function AdminPetPreview() {
   const petData = useLocation().state; //get previous page data
+  const navigate = useNavigate();
   const [petInfo, setpetInfo] = useState([]);
   const [petImage, setpetImage] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,14 +20,12 @@ function AdminPetPreview() {
   const [base64s, setbase64s] = useState([]);
   const [isChanged, setIsChanged] = useState(false); // State to track if changes were made
 
-  console.log(petImage);
-
   useEffect(() => {
     setLoading(false);
     let array = Object.values(petImage);
     array = array.filter((item) => item !== null);
     setImages(Object.values(array));
-  }, [petImage, petInfo]);
+  }, [petImage]);
 
   useEffect(() => {
     axios
@@ -127,7 +126,14 @@ function AdminPetPreview() {
         info: info,
         images: imagess,
       })
-      .then((res) => alert("Success"))
+      .then((res) => {
+        if (res.data === 0) {
+          navigate(0);
+          alert("Updated Successfully");
+        } else {
+          alert("Error Updating");
+        }
+      })
       .catch((err) => console.log(err));
   };
 

@@ -119,7 +119,7 @@ app.post("/admin/petInfoUpdate", (req, res) => {
           imgQuery,
           [img[0], img[1], img[2], img[3], img[4], pet.pet_id],
           (err, result) => {
-            console.log(result.warningCount);
+            return res.json(result.warningCount);
           }
         );
       }
