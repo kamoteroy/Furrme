@@ -9,10 +9,14 @@ import { IoCloseCircle } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
+import { useSelector } from "react-redux";
 
 function AdminPetPreview() {
   const petData = useLocation().state; //get previous page data
   const navigate = useNavigate();
+  const getData = useSelector((state) => state.value);
+  const token = getData.token;
+
   const [petInfo, setpetInfo] = useState([]);
   const [petImage, setpetImage] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,12 +33,20 @@ function AdminPetPreview() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/admin/petDetails/${petData.pet_id}`)
+      .get(`http://localhost:3001/admin/petDetails/${petData.pet_id}`, {
+        headers: {
+          token: token,
+        },
+      })
       .then((res) => setpetInfo(res.data))
       .catch((err) => console.log(err));
 
     axios
-      .get(`http://localhost:3001/admin/petImage/${petData.pet_id}`)
+      .get(`http://localhost:3001/admin/petImage/${petData.pet_id}`, {
+        headers: {
+          token: token,
+        },
+      })
       .then((result) => setpetImage(result.data))
       .catch((err) => console.log(err));
   }, []);
@@ -125,6 +137,7 @@ function AdminPetPreview() {
       .post("http://localhost:3001/admin/petInfoUpdate", {
         info: info,
         images: imagess,
+        token: token,
       })
       .then((res) => {
         if (res.data === 0) {

@@ -5,6 +5,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import validID from "../../assets/avatar-dp.jpg";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function AdminEvaluation() {
   const [charCount, setCharCount] = useState(0);
@@ -14,9 +15,12 @@ function AdminEvaluation() {
   const [openDropdown, setOpenDropdown] = useState(null);
   const adoptRequest = useLocation().state;
   const navigate = useNavigate();
+  const getData = useSelector((state) => state.value);
+  const token = getData.token;
   const [accInfo, setaccInfo] = useState([]);
   const [petInfo, setpetInfo] = useState([]);
   const [adoptInfo, setAdoptInfo] = useState([]);
+  const [color, setColor] = useState("");
   const maxChar = 500;
 
   const handleTextChange = (event) => {
@@ -46,19 +50,30 @@ function AdminEvaluation() {
 
   useEffect(() => {
     setAdoptInfo(adoptRequest);
+
+    if (adoptRequest.status === "Approved") {
+      setColor("green");
+    } else if (adoptRequest.status === "Pending") {
+      setColor("#f29339");
+    } else {
+      setColor("red");
+    }
     axios
-      .post("http://localhost:3001/admin/evaluation/acc", {
+      .post("http://localhost:3001/admin/evaluation/accDetails", {
         email: adoptRequest.email,
         pet_Id: adoptRequest.pet_id,
+        token: token,
       })
       .then((res) => setaccInfo(res.data[0]))
       .catch((err) => console.log(err));
 
     axios
-      .post("http://localhost:3001/admin/evaluation/pet", {
-        id: adoptRequest.pet_id,
+      .get(`http://localhost:3001/admin/petDetails/${adoptRequest.pet_id}`, {
+        headers: {
+          token: token,
+        },
       })
-      .then((res) => setpetInfo(res.data[0]))
+      .then((res) => setpetInfo(res.data))
       .catch((err) => console.log(err));
 
     const textarea = document.getElementById("rejectionReason");
@@ -99,6 +114,10 @@ function AdminEvaluation() {
     navigate("/admin/request");
   };
 
+  const styles = {
+    background: `${color}`,
+  };
+
   return (
     <div className="adminEvaluation">
       <div className="sidebarComp">
@@ -110,7 +129,9 @@ function AdminEvaluation() {
           <p>Application Date: {adoptRequest.dates}</p>
           <div className="appStatus">
             <p>Application Status: </p>
-            <p className="appStatusVal">{adoptRequest.status}</p>
+            <p className="appStatusVal" style={styles}>
+              {adoptRequest.status}
+            </p>
           </div>
         </div>
         <div className="InformationContainer applicantInfoCont">
@@ -295,51 +316,55 @@ function AdminEvaluation() {
             </div>
           </div>
         </div>
-        <div className="evalResultCont">
-          <div className="buttons">
-            <button
-              className={`btnApprove ${
-                selectedButton === "approve" ? "selected" : ""
-              }`}
-              onClick={() => handleButtonClick("approve")}
-              style={{
-                backgroundColor: selectedButton === "Approved" ? "#3CB371" : "",
-              }}
-            >
-              Approve
-            </button>
-            <button
-              className={`btnReject ${
-                selectedButton === "reject" ? "selected" : ""
-              }`}
-              onClick={() => handleButtonClick("reject")}
-              style={{
-                backgroundColor: selectedButton === "Rejected" ? "#C41E3A" : "",
-              }}
-            >
-              {rejectButtonText}
-            </button>
-          </div>
-          {showRejectReason && (
-            <div className="rejectReasonCont">
-              <textarea
-                name="rejectionReason"
-                id="rejectionReason"
-                placeholder="Please state the reason for rejection"
-                onChange={handleTextChange}
-                maxLength={maxChar}
-              ></textarea>
-              <p className="charCount">
-                {charCount} / {maxChar}
-              </p>
+        {adoptRequest.status === "Pending" ? (
+          <div className="evalResultCont">
+            <div className="buttons">
+              <button
+                className={`btnApprove ${
+                  selectedButton === "approve" ? "selected" : ""
+                }`}
+                onClick={() => handleButtonClick("approve")}
+                style={{
+                  backgroundColor:
+                    selectedButton === "Approved" ? "#3CB371" : "",
+                }}
+              >
+                Approve
+              </button>
+              <button
+                className={`btnReject ${
+                  selectedButton === "reject" ? "selected" : ""
+                }`}
+                onClick={() => handleButtonClick("reject")}
+                style={{
+                  backgroundColor:
+                    selectedButton === "Rejected" ? "#C41E3A" : "",
+                }}
+              >
+                {rejectButtonText}
+              </button>
             </div>
-          )}
-          {selectedButton && (
-            <button onClick={() => Submit()} className="evalSubmitButton">
-              Submit
-            </button>
-          )}
-        </div>
+            {showRejectReason && (
+              <div className="rejectReasonCont">
+                <textarea
+                  name="rejectionReason"
+                  id="rejectionReason"
+                  placeholder="Please state the reason for rejection"
+                  onChange={handleTextChange}
+                  maxLength={maxChar}
+                ></textarea>
+                <p className="charCount">
+                  {charCount} / {maxChar}
+                </p>
+              </div>
+            )}
+            {selectedButton && (
+              <button onClick={() => Submit()} className="evalSubmitButton">
+                Submit
+              </button>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );

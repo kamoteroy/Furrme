@@ -6,9 +6,12 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function AdminAdoptionRequests() {
   const navigate = useNavigate();
+  const getData = useSelector((state) => state.value);
+  const token = getData.token;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
   const [selectedPet, setSelectedPet] = useState("All Pets");
@@ -24,7 +27,11 @@ function AdminAdoptionRequests() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/requestlist")
+      .get("http://localhost:3001/adoption/list", {
+        headers: {
+          token: token,
+        },
+      })
       .then((res) => setAdminPetRequests(res.data))
       .catch((err) => console.log(err));
   }, []);

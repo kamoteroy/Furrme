@@ -35,13 +35,13 @@ app.listen(3001, () => {
 });
 
 const verifyJWT = (req, res, next) => {
-  console.log("bobo");
   var token;
   token = req.headers.token;
 
   if (!token) {
     token = req.body.token;
   }
+  console.log(token);
   try {
     const validToken = jwt.verify(token, "jwtRoy");
     if (validToken) {
@@ -66,80 +66,12 @@ app.get("/community", verifyJWT, user.communityList);
 app.post("/adoptReq", verifyJWT, user.adoptionRequest);
 
 app.get("/admin", verifyJWT, admin.adminPetList);
+app.get("/admin/petDetails/:id", verifyJWT, admin.getpetDetails);
+app.get("/admin/petImage/:id", verifyJWT, admin.getpetImages);
+app.post("/admin/petInfoUpdate", verifyJWT, admin.updatePetInfo);
 
-app.get("/admin/petDetails/:id", async (req, res) => {
-  db.query(
-    "select * from pets where pet_id = ?",
-    req.params["id"],
-    (err, pets) => {
-      if (err) {
-        console.log(err);
-      } else {
-        return res.json(pets[0]);
-      }
-    }
-  );
-});
-
-app.get("/admin/petImage/:id", async (req, res) => {
-  db.query(
-    "select img1,img2,img3,img4,img5 from pet_img where pet_id = ?",
-    req.params["id"],
-    (err, pets) => {
-      if (err) {
-        console.log(err);
-      } else {
-        return res.json(pets[0]);
-      }
-    }
-  );
-});
-
-app.post("/admin/petInfoUpdate", (req, res) => {
-  const pet = req.body.info;
-  const img = req.body.images;
-  console.log(img[0]);
-
-  const infoQuery = `UPDATE pets set name = ?, description = ?, color = ?, age = ?, behavior = ?, health = ? where pet_id = ?`;
-  const imgQuery = `UPDATE pet_img set img1 = ?, img2 = ?, img3 = ?, img4 = ?, img5 = ? where pet_id=?`;
-  db.query(
-    infoQuery,
-    [
-      pet.name,
-      pet.description,
-      pet.color,
-      pet.age,
-      pet.behavior,
-      pet.health,
-      pet.pet_id,
-    ],
-    (err, result) => {
-      if (result.warningCount === 0) {
-        db.query(
-          imgQuery,
-          [img[0], img[1], img[2], img[3], img[4], pet.pet_id],
-          (err, result) => {
-            return res.json(result.warningCount);
-          }
-        );
-      }
-    }
-  );
-});
-
-app.post("/admin/preview", (req, res) => {
-  db.query(
-    "select * from accounts where email = ?",
-    [req.body.email],
-    (err, accInfo) => {
-      if (err) {
-        console.log(err);
-      } else {
-        return res.json(accInfo[0]);
-      }
-    }
-  );
-});
+app.get("/adoption/list", verifyJWT, admin.adoptionList);
+app.post("/admin/evaluation/accDetails", verifyJWT, admin.accDetails);
 
 app.post("/admin/create", async (req, res) => {
   const email = "update from * from accounts where email = ?";
@@ -170,32 +102,6 @@ app.post("/admin/evaluation/pet", (req, res) => {
   );
 });
 
-app.post("/admin/evaluation/acc", (req, res) => {
-  db.query(
-    "select * from accounts where email = ?",
-    [req.body.email],
-    (err, accInfo) => {
-      if (err) {
-        console.log(err);
-      }
-      return res.json(accInfo);
-    }
-  );
-});
-
-app.post("/admin/evaluation/pet", (req, res) => {
-  db.query(
-    "select * from pets where pet_id = ?",
-    [req.body.id],
-    (err, petInfo) => {
-      if (err) {
-        console.log(err);
-      }
-      return res.json(petInfo);
-    }
-  );
-});
-
 app.post("/admin/setStatus", (req, res) => {
   db.query(
     "UPDATE adoptreq SET status = ? WHERE pet_id = ? and email = ?",
@@ -207,14 +113,4 @@ app.post("/admin/setStatus", (req, res) => {
       return res.json({ Status: `${req.body.status} Successfully!` });
     }
   );
-});
-
-app.get("/requestlist", (req, res) => {
-  db.query("select * from adoptreq", (err, petList) => {
-    if (err) {
-      console.log(err);
-    } else {
-      return res.json(petList);
-    }
-  });
 });
