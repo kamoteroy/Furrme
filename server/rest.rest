@@ -1,6 +1,6 @@
 
 
-POST http://localhost:3001/uploadMultipleImages
+POST http://localhost:3001/admin/create
 Content-Type: application/json
 
 {

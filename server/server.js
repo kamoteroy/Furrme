@@ -23,33 +23,33 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 db.connect((err) => {
-  if (err) {
-    console.error("Error connecting to the database: " + err.stack);
-    return;
-  }
-  console.log("Connected to the database");
+	if (err) {
+		console.error("Error connecting to the database: " + err.stack);
+		return;
+	}
+	console.log("Connected to the database");
 });
 
 app.listen(3001, () => {
-  console.log("Running on port 3001...");
+	console.log("Running on port 3001...");
 });
 
 const verifyJWT = (req, res, next) => {
-  var token;
-  token = req.headers.token;
+	var token;
+	token = req.headers.token;
 
-  if (!token) {
-    token = req.body.token;
-  }
-  console.log(token);
-  try {
-    const validToken = jwt.verify(token, "jwtRoy");
-    if (validToken) {
-      next();
-    }
-  } catch (err) {
-    res.json({ auth: false, message: "No Access" });
-  }
+	if (!token) {
+		token = req.body.token;
+	}
+	console.log(token);
+	try {
+		const validToken = jwt.verify(token, "jwtRoy");
+		if (validToken) {
+			next();
+		}
+	} catch (err) {
+		res.json({ auth: false, message: "No Access" });
+	}
 };
 
 app.post("/upload", upload);
@@ -74,43 +74,72 @@ app.get("/adoption/list", verifyJWT, admin.adoptionList);
 app.post("/admin/evaluation/accDetails", verifyJWT, admin.accDetails);
 
 app.post("/admin/create", async (req, res) => {
-  const email = "update from * from accounts where email = ?";
-
-  db.query(email, [req.body.email], (err, result_email) => {
-    if (!result_email[0]) return res.json({ Status: "No Email Found!" });
-    db.query(password, [req.body.email], async (err, result_pass) => {
-      if (err) throw err;
-      if (req.body.password === result_pass[0].pass) {
-        res.json(result_email[0]);
-      } else {
-        return res.json({ Status: "Incorrect Password!" });
-      }
-    });
-  });
+	const creator = jwt.verify(req.body.token, "jwtRoy");
+	const petInfo = req.body.data;
+	const images = req.body.images;
+	const getMax = "SELECT MAX(pet_id) AS maxID FROM pets;";
+	const updateQuery =
+		"INSERT INTO pets (`pet_id`, `name`, `category`, `address`, `description`, `color`, `gender`, `image`, `breed`, `age`, `behavior`, `health`, `status`, createdBy, adoptedBy) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	const imgQuery =
+		"INSERT INTO pet_img (`pet_id`, `img1`, `img2`, `img3`, `img4`, `img5`) VALUES (?,?,?,?,?,?)";
+	db.query(getMax, (err, resultMax) => {
+		const maxID = resultMax[0].maxID + 1;
+		db.query(
+			updateQuery,
+			[
+				maxID,
+				petInfo.name,
+				req.body.type,
+				petInfo.address,
+				petInfo.description,
+				petInfo.color,
+				req.body.gender,
+				req.body.images[0],
+				petInfo.breed,
+				petInfo.age,
+				petInfo.behavior,
+				petInfo.health,
+				"Available",
+				creator,
+				null,
+			],
+			(err, result) => {
+				if (err) return err;
+				db.query(
+					imgQuery,
+					[maxID, images[0], images[1], images[2], images[3], images[4]],
+					(err, resImg) => {
+						if (err) return err;
+						return res.json(resImg);
+					}
+				);
+			}
+		);
+	});
 });
 
 app.post("/admin/evaluation/pet", (req, res) => {
-  db.query(
-    "select * from pets where pet_id = ?",
-    [req.body.id],
-    (err, petInfo) => {
-      if (err) {
-        console.log(err);
-      }
-      return res.json(petInfo);
-    }
-  );
+	db.query(
+		"select * from pets where pet_id = ?",
+		[req.body.id],
+		(err, petInfo) => {
+			if (err) {
+				console.log(err);
+			}
+			return res.json(petInfo);
+		}
+	);
 });
 
 app.post("/admin/setStatus", (req, res) => {
-  db.query(
-    "UPDATE adoptreq SET status = ? WHERE pet_id = ? and email = ?",
-    [req.body.status, req.body.id, req.body.email],
-    (err, accInfo) => {
-      if (err) {
-        console.log(err);
-      }
-      return res.json({ Status: `${req.body.status} Successfully!` });
-    }
-  );
+	db.query(
+		"UPDATE adoptreq SET status = ? WHERE pet_id = ? and email = ?",
+		[req.body.status, req.body.id, req.body.email],
+		(err, accInfo) => {
+			if (err) {
+				console.log(err);
+			}
+			return res.json({ Status: `${req.body.status} Successfully!` });
+		}
+	);
 });
