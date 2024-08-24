@@ -32,7 +32,7 @@ function AdminAdoptionRequests() {
 					token: token,
 				},
 			})
-			.then((res) => setAdminPetRequests([]))
+			.then((res) => setAdminPetRequests(res.data))
 			.catch((err) => console.log(err));
 	}, []);
 
@@ -216,7 +216,7 @@ function AdminAdoptionRequests() {
 								</tr>
 							) : (
 								currentRequests.map((request) => (
-									<tr onClick={() => petPreview(request)} key={request.pet_id}>
+									<tr onClick={() => petPreview(request)}>
 										<td>{request.dates}</td>
 										<td>{request.pet_name}</td>
 										<td>{request.email}</td>

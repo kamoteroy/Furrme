@@ -101,8 +101,8 @@ function CreatePetListing() {
 				token: token,
 			})
 			.then((res) =>
-				res === 0
-					? (alert("Success"), navigate("admin/pets"))
+				res.data.warningCount === 0
+					? (alert("Success"), navigate("/admin/pets"))
 					: (alert("Creation Failed"), console.log(res))
 			)
 			.catch((err) => console.log(err));
