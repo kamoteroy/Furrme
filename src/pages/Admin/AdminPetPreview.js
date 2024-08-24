@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import { useSelector } from "react-redux";
+import { BeatLoader } from "react-spinners";
 
 function AdminPetPreview() {
 	const petData = useLocation().state; //get previous page data
@@ -20,6 +21,8 @@ function AdminPetPreview() {
 	const [petInfo, setpetInfo] = useState([]);
 	const [petImage, setpetImage] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [uploading, setUploading] = useState(false);
+	const [uploadingText, setUploadingText] = useState("Uploading...");
 	const [images, setImages] = useState([]);
 	const [base64s, setbase64s] = useState([]);
 	const [isChanged, setIsChanged] = useState(false); // State to track if changes were made
@@ -101,6 +104,7 @@ function AdminPetPreview() {
 	};
 
 	const handleSubmit = (e) => {
+		setUploading(true);
 		if (!images[0]) {
 			// Remove the uploaded image
 			alert("No image");
@@ -123,11 +127,13 @@ function AdminPetPreview() {
 				}
 				base64s.splice(0, 1);
 				if (!base64s[0]) {
+					setUploadingText("Updating...");
 					update(petInfo, images);
 				}
 			});
 		}
 		if (!base64s[0]) {
+			setUploadingText("Updating...");
 			update(petInfo, images);
 		}
 	};
@@ -140,6 +146,7 @@ function AdminPetPreview() {
 				token: token,
 			})
 			.then((res) => {
+				setUploadingText("Successful");
 				if (res.data === 0) {
 					navigate(0);
 					alert("Updated Successfully");
@@ -161,148 +168,158 @@ function AdminPetPreview() {
 	};
 
 	return (
-		<div>
-			{loading ? (
-				<div>
-					<ClipLoader color={"#123abc"} loading={loading} size={100} />
-					<p>Loading, please wait...</p>
-				</div>
-			) : (
-				<div className="adminPetPreview">
-					<div className="sidebarComp">
-						<AdminDashboardSidebar />
+		<>
+			{uploading ? (
+				<div className="overlay">
+					<div className="loading-content">
+						<BeatLoader className="loading-spinner" />
+						<p className="loading-label">{uploadingText}</p>
 					</div>
-					<div className="mainContent">
-						<div className="divider">
-							<div className="petInfoCont">
-								<h2>Pet Information</h2>
-								<div className="allPetInfo">
-									<div className="infoCont name-type">
-										<div className="infoSet nameSet">
-											<label htmlFor="name">Name</label>
-											<input
-												type="text"
-												id="name"
-												name="name"
-												value={petInfo.name}
-												onChange={handleInputChange}
-											/>
+				</div>
+			) : null}
+			<div>
+				{loading ? (
+					<div>
+						<ClipLoader color={"#123abc"} loading={loading} size={100} />
+						<p>Loading, please wait...</p>
+					</div>
+				) : (
+					<div className="adminPetPreview">
+						<div className="sidebarComp">
+							<AdminDashboardSidebar />
+						</div>
+						<div className="mainContent">
+							<div className="divider">
+								<div className="petInfoCont">
+									<h2>Pet Information</h2>
+									<div className="allPetInfo">
+										<div className="infoCont name-type">
+											<div className="infoSet nameSet">
+												<label htmlFor="name">Name</label>
+												<input
+													type="text"
+													id="name"
+													name="name"
+													value={petInfo.name}
+													onChange={handleInputChange}
+												/>
+											</div>
+											<div className="infoSet TypeSet">
+												<label htmlFor="type">Type</label>
+												<input
+													readOnly
+													type="text"
+													id="type"
+													value={petInfo.category}
+												/>
+											</div>
 										</div>
-										<div className="infoSet TypeSet">
-											<label htmlFor="type">Type</label>
-											<input
-												readOnly
-												type="text"
-												id="type"
-												value={petInfo.category}
-											/>
+										<div className="infoCont breed-color">
+											<div className="infoSet breedSet">
+												<label htmlFor="breed">Breed</label>
+												<input
+													readOnly
+													type="text"
+													id="breed"
+													value={petInfo.breed}
+												/>
+											</div>
+											<div className="infoSet colorSet">
+												<label htmlFor="color">Color</label>
+												<input
+													type="text"
+													name="color"
+													value={petInfo.color}
+													onChange={handleInputChange}
+												/>
+											</div>
 										</div>
+										<div className="infoCont age-gender">
+											<div className="infoSet ageSet">
+												<label htmlFor="age">Age</label>
+												<input
+													type="text"
+													name="age"
+													value={petInfo.age}
+													onChange={handleInputChange}
+												/>
+											</div>
+											<div className="infoSet genderSet">
+												<label htmlFor="gender">Gender</label>
+												<input readOnly type="text" value={petInfo.gender} />
+											</div>
+										</div>
+										<div className="textAreaConts">
+											<div className="TA-set behavior">
+												<label htmlFor="behavior">Behavior</label>
+												<textarea
+													name="behavior"
+													id="behavior"
+													maxLength="100"
+													value={petInfo.behavior}
+													onChange={handleInputChange}
+												></textarea>
+												<p className="charCount"></p>
+											</div>
+											<div className="TA-set health">
+												<label htmlFor="health">Health</label>
+												<textarea
+													name="health"
+													id="health"
+													maxLength="200"
+													value={petInfo.health}
+													onChange={handleInputChange}
+												></textarea>
+												<p className="charCount"></p>
+											</div>
+											<div className="TA-set description">
+												<label htmlFor="description">Description</label>
+												<textarea
+													name="description"
+													id="description"
+													maxLength="300"
+													value={petInfo.description}
+													onChange={handleInputChange}
+												></textarea>
+												<p className="charCount"></p>
+											</div>
+										</div>
+										{isChanged && (
+											<button
+												onClick={() => handleSubmit()}
+												className="saveChanges"
+											>
+												Save Changes
+											</button>
+										)}
 									</div>
-									<div className="infoCont breed-color">
-										<div className="infoSet breedSet">
-											<label htmlFor="breed">Breed</label>
-											<input
-												readOnly
-												type="text"
-												id="breed"
-												value={petInfo.breed}
-											/>
-										</div>
-										<div className="infoSet colorSet">
-											<label htmlFor="color">Color</label>
-											<input
-												type="text"
-												name="color"
-												value={petInfo.color}
-												onChange={handleInputChange}
-											/>
-										</div>
-									</div>
-									<div className="infoCont age-gender">
-										<div className="infoSet ageSet">
-											<label htmlFor="age">Age</label>
-											<input
-												type="text"
-												name="age"
-												value={petInfo.age}
-												onChange={handleInputChange}
-											/>
-										</div>
-										<div className="infoSet genderSet">
-											<label htmlFor="gender">Gender</label>
-											<input readOnly type="text" value={petInfo.gender} />
-										</div>
-									</div>
-									<div className="textAreaConts">
-										<div className="TA-set behavior">
-											<label htmlFor="behavior">Behavior</label>
-											<textarea
-												name="behavior"
-												id="behavior"
-												maxLength="100"
-												value={petInfo.behavior}
-												onChange={handleInputChange}
-											></textarea>
-											<p className="charCount"></p>
-										</div>
-										<div className="TA-set health">
-											<label htmlFor="health">Health</label>
-											<textarea
-												name="health"
-												id="health"
-												maxLength="200"
-												value={petInfo.health}
-												onChange={handleInputChange}
-											></textarea>
-											<p className="charCount"></p>
-										</div>
-										<div className="TA-set description">
-											<label htmlFor="description">Description</label>
-											<textarea
-												name="description"
-												id="description"
-												maxLength="300"
-												value={petInfo.description}
-												onChange={handleInputChange}
-											></textarea>
-											<p className="charCount"></p>
-										</div>
-									</div>
-									{isChanged && (
-										<button
-											onClick={() => handleSubmit()}
-											className="saveChanges"
-										>
-											Save Changes
-										</button>
-									)}
 								</div>
-							</div>
-							<div className="petImagesContainer">
-								<div className="petImgBox">
-									{images.map((image, index) => (
-										<div className="img-container" key={index}>
-											<img
-												src={image}
-												alt={`pet-${index}`}
-												onClick={() => handleImageClick(image)}
-											/>
-											<IoCloseCircle
-												className="closeIcon"
-												onClick={() => handleRemoveImage(index)}
-											/>
-										</div>
-									))}
+								<div className="petImagesContainer">
+									<div className="petImgBox">
+										{images.map((image, index) => (
+											<div className="img-container" key={index}>
+												<img
+													src={image}
+													alt={`pet-${index}`}
+													onClick={() => handleImageClick(image)}
+												/>
+												<IoCloseCircle
+													className="closeIcon"
+													onClick={() => handleRemoveImage(index)}
+												/>
+											</div>
+										))}
+									</div>
+									<button className="uploadPhotos" onClick={handleUploadClick}>
+										Upload Photos
+									</button>
 								</div>
-								<button className="uploadPhotos" onClick={handleUploadClick}>
-									Upload Photos
-								</button>
 							</div>
 						</div>
 					</div>
-				</div>
-			)}
-		</div>
+				)}
+			</div>
+		</>
 	);
 }
 
