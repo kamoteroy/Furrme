@@ -18,7 +18,7 @@
 .loading-gif {
 	width: 300px; /* Adjust size as needed */
 	height: 180px;
-	margin-bottom: 10px; /* Space between GIF and label */
+	margin-bottom: -20px; /* Space between GIF and label */
 }
 
 .loading-label {

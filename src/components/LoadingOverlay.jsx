@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/LoadingOverlay.css";
 
-const LoadingOverlayWithGif = ({ gifSrc, label }) => {
+const LoadingOverlay = ({ gifSrc, label }) => {
 	return (
 		<div className="overlay">
 			<div className="loading-content">
@@ -12,4 +12,4 @@ const LoadingOverlayWithGif = ({ gifSrc, label }) => {
 	);
 };
 
-export default LoadingOverlayWithGif;
+export default LoadingOverlay;
