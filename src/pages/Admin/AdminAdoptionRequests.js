@@ -162,8 +162,8 @@ function AdminAdoptionRequests() {
 										<li onClick={() => handleOptionClick("All Pets")}>
 											All Pets
 										</li>
-										<li onClick={() => handleOptionClick("Dogs")}>Dog</li>
-										<li onClick={() => handleOptionClick("Cats")}>Cat</li>
+										<li onClick={() => handleOptionClick("Dogs")}>Dogs</li>
+										<li onClick={() => handleOptionClick("Cats")}>Cats</li>
 									</ul>
 								</div>
 							)}
