@@ -1,5 +1,5 @@
 import React from "react";
-import "./LoadingOverlayWithGif.css";
+import "../styles/LoadingOverlay.css";
 
 const LoadingOverlayWithGif = ({ gifSrc, label }) => {
 	return (
