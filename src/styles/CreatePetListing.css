@@ -84,6 +84,66 @@
 	align-items: flex-start;
 }
 
+/* Basic styling */
+.input-container {
+	margin-bottom: 20px;
+}
+
+input {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	transition: border-color 0.3s ease;
+}
+
+button {
+	padding: 10px 15px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+/* Error input styles */
+.error-input {
+	border-color: red;
+}
+
+/* Shake animation for invalid inputs */
+@keyframes shake {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+	20%,
+	60% {
+		transform: translateX(-5px);
+	}
+	40%,
+	80% {
+		transform: translateX(5px);
+	}
+}
+
+.shake {
+	animation: shake 0.5s ease;
+}
+
+/* Error message styles */
+.error-message {
+	color: red;
+	font-size: 14px;
+	margin-top: 5px;
+}
+
 .createPetListing
 	.mainContent
 	.inputsContainer

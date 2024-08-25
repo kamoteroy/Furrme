@@ -10,6 +10,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../../components/LoadingOverlay";
+import AnimatedModal from "../../components/Modal";
 
 function CreatePetListing() {
 	const getData = useSelector((state) => state.value);
@@ -82,9 +83,15 @@ function CreatePetListing() {
 	};
 
 	const handleInputChange = (e) => {
-		e.preventDefault();
 		const { name, value } = e.target;
-		setformData((prevState) => ({ ...prevState, [name]: value }));
+		setformData({
+			...formData,
+			[name]: value,
+		});
+		setErrors({
+			...errors,
+			[name]: false, // Reset error state on change
+		});
 	};
 
 	/*const handleCharacterLimit = (event, setter, maxChars) => {
@@ -114,10 +121,13 @@ function CreatePetListing() {
 	};
 
 	const handleSumbit = async () => {
+		if (!validateForm()) {
+			return;
+		}
 		if (!images[0]) {
 			// Remove the uploaded image
-			alert("No image");
 			setImages([]);
+			setIsModalOpen(!isModalOpen);
 			return;
 		}
 		if (base64s[0]) {
@@ -194,8 +204,59 @@ function CreatePetListing() {
 		window.open(image, "_blank");
 	};
 
+	const [shaking, setShaking] = useState(false);
+	const [errors, setErrors] = useState({
+		name: false,
+		breed: false,
+		age: false,
+		address: false,
+		gender: false,
+		type: false,
+		color: false,
+		behavior: false,
+		health: false,
+		description: false,
+	});
+
+	const validateForm = () => {
+		const newErrors = {
+			name: formData.name.trim() === "",
+			breed: formData.breed.trim() === "",
+			age: formData.age.trim() === "",
+			gender: selectedPetGender === "Select Gender",
+			type: selectedPetType === "Select Pet Type",
+			address: formData.address.trim() === "",
+			color: formData.color.trim() === "",
+			behavior: formData.behavior.trim() === "",
+			health: formData.health.trim() === "",
+			description: formData.description.trim() === "",
+			//email: !/\S+@\S+\.\S+/.test(formData.email),
+			//password: formData.password.length < 6,
+		};
+		setErrors(newErrors);
+
+		// If any input is invalid, trigger the shake animation
+		if (Object.values(newErrors).includes(true)) {
+			setShaking(true);
+			setTimeout(() => setShaking(false), 500); // Remove the shake class after 500ms
+		} else return true;
+	};
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const toggleModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
+
 	return (
 		<>
+			<AnimatedModal
+				isOpen={isModalOpen}
+				onClose={toggleModal}
+				title="No Image Uploaded!"
+			>
+				<p>Please upload at least one image!</p>
+			</AnimatedModal>
 			<div>
 				{uploading && (
 					<LoadingOverlay
@@ -214,21 +275,28 @@ function CreatePetListing() {
 							<h2>Add New Pet Listing</h2>
 							<div className="basicInfo">
 								<div className="nameGenderContainer">
-									<div className="inputs petNamePrev">
+									<div
+										className={`inputs petNamePrev ${shaking && errors.name ? "shake" : ""}`}
+									>
 										<label htmlFor="petName">Name</label>
 										<input
 											id="name"
 											type="text"
 											name="name"
-											className="signup-firstname"
+											className={errors.name ? "error-input" : ""}
+											style={errors.name ? { border: "1px solid red" } : {}}
 											placeholder="Name"
 											onChange={handleInputChange}
 										/>
 									</div>
-									<div className="inputs petGender" ref={genderDropdownRef}>
+									<div
+										className={`inputs petGender ${shaking && errors.gender ? "shake" : ""}`}
+										ref={genderDropdownRef}
+									>
 										<label htmlFor="petGender">Gender</label>
 										<p
-											className="petGenderHeader"
+											style={errors.gender ? { border: "1px solid red" } : {}}
+											className={`${errors.gender ? "error-input" : ""} petGenderHeader `}
 											onClick={toggleGenderDropdown}
 										>
 											{selectedPetGender}
@@ -254,9 +322,16 @@ function CreatePetListing() {
 									</div>
 								</div>
 								<div className="containers">
-									<div className="inputs type" ref={dropdownRef}>
+									<div
+										className={`inputs type ${shaking && errors.type ? "shake" : ""}`}
+										ref={dropdownRef}
+									>
 										<label htmlFor="petType">Pet Type</label>
-										<p className="petTypeDP-Header" onClick={toggleDropdown}>
+										<p
+											style={errors.type ? { border: "1px solid red" } : {}}
+											className={`${errors.type ? "error-input" : ""} petTypeDP-Header `}
+											onClick={toggleDropdown}
+										>
 											{selectedPetType}
 											{dropdownOpen ? (
 												<MdOutlineKeyboardArrowUp />
@@ -274,41 +349,55 @@ function CreatePetListing() {
 											</ul>
 										)}
 									</div>
-									<div className="inputs breed">
+									<div
+										className={`inputs breed ${shaking && errors.breed ? "shake" : ""}`}
+									>
 										<label htmlFor="petBreed">Breed</label>
 										<input
 											id="breed"
 											type="text"
 											name="breed"
 											placeholder="Breed"
+											className={errors.breed ? "error-input" : ""}
+											style={errors.breed ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
 										/>
 									</div>
 								</div>
 								<div className="containers">
-									<div className="inputs age">
+									<div
+										className={`inputs age ${shaking && errors.age ? "shake" : ""}`}
+									>
 										<label htmlFor="petAge">Age</label>
 										<input
 											id="age"
 											type="text"
 											name="age"
 											placeholder="Age"
+											className={errors.age ? "error-input" : ""}
+											style={errors.age ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
 										/>
 									</div>
-									<div className="inputs color">
+									<div
+										className={`inputs color ${shaking && errors.age ? "shake" : ""}`}
+									>
 										<label htmlFor="petColor">Color</label>
 										<input
 											id="color"
 											type="text"
 											name="color"
 											placeholder="Color"
+											className={errors.color ? "error-input" : ""}
+											style={errors.color ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
 										/>
 									</div>
 								</div>
 							</div>
-							<div className="addressContainer">
+							<div
+								className={`addressContainer ${shaking && errors.address ? "shake" : ""}`}
+							>
 								<label htmlFor="petBehavior">Address</label>
 								<textarea
 									name="address"
@@ -316,11 +405,15 @@ function CreatePetListing() {
 									value={formData.address}
 									type="text"
 									placeholder="Address Information"
+									className={errors.address ? "error-input" : ""}
+									style={errors.address ? { border: "1px solid red" } : {}}
 									onChange={handleInputChange}
 								></textarea>
 							</div>
 							<div className="descriptionInfo">
-								<div className="descContainer behavior">
+								<div
+									className={`descContainer behavior ${shaking && errors.behavior ? "shake" : ""}`}
+								>
 									<label htmlFor="petBehavior">Behavior</label>
 									<textarea
 										name="behavior"
@@ -328,11 +421,15 @@ function CreatePetListing() {
 										value={formData.behavior}
 										type="text"
 										placeholder="Behavior Information"
+										className={errors.behavior ? "error-input" : ""}
+										style={errors.behavior ? { border: "1px solid red" } : {}}
 										onChange={handleInputChange}
 									></textarea>
 									<p>{formData.behavior.length} / 100 characters</p>
 								</div>
-								<div className="descContainer health">
+								<div
+									className={`descContainer health ${shaking && errors.health ? "shake" : ""}`}
+								>
 									<label htmlFor="petHealth">Health</label>
 									<textarea
 										name="health"
@@ -340,11 +437,15 @@ function CreatePetListing() {
 										value={formData.health}
 										type="text"
 										placeholder="Health Information"
+										className={errors.health ? "error-input" : ""}
+										style={errors.health ? { border: "1px solid red" } : {}}
 										onChange={handleInputChange}
 									></textarea>
 									<p>{formData.health.length} / 200 characters</p>
 								</div>
-								<div className="descContainer petDescription">
+								<div
+									className={`descContainer petDescription ${shaking && errors.description ? "shake" : ""}`}
+								>
 									<label htmlFor="petDescription">Description</label>
 									<textarea
 										name="description"
@@ -352,6 +453,10 @@ function CreatePetListing() {
 										value={formData.description}
 										type="text"
 										placeholder="Brief Description"
+										className={errors.description ? "error-input" : ""}
+										style={
+											errors.description ? { border: "1px solid red" } : {}
+										}
 										onChange={handleInputChange}
 									></textarea>
 									<p>{formData.description.length} / 400 characters</p>
