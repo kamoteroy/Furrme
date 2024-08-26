@@ -21,7 +21,7 @@ function CreatePetListing() {
 	const [selectedPetType, setSelectedPetType] = useState("Select Pet Type");
 	const [selectedPetGender, setSelectedPetGender] = useState("Select Gender");
 	const [uploading, setUploading] = useState(false);
-	const [uploadingText, setUploadingText] = useState("Uploading Images...");
+	const [uploadingText, setUploadingText] = useState("");
 	const [images, setImages] = useState([]);
 	const [base64s, setbase64s] = useState([]);
 	const dropdownRef = useRef(null);
@@ -36,6 +36,53 @@ function CreatePetListing() {
 		health: "",
 		description: "",
 	});
+	const [shaking, setShaking] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [errors, setErrors] = useState({
+		name: false,
+		breed: false,
+		age: false,
+		address: false,
+		gender: false,
+		type: false,
+		color: false,
+		behavior: false,
+		health: false,
+		description: false,
+	});
+	const [modalContents, setmodalContents] = useState({
+		title: "",
+		contents: "",
+	});
+	const [link, setLink] = useState("");
+
+	const validateForm = () => {
+		const newErrors = {
+			name: formData.name.trim() === "",
+			breed: formData.breed.trim() === "",
+			age: formData.age.trim() === "",
+			gender: selectedPetGender === "Select Gender",
+			type: selectedPetType === "Select Pet Type",
+			address: formData.address.trim() === "",
+			color: formData.color.trim() === "",
+			behavior: formData.behavior.trim() === "",
+			health: formData.health.trim() === "",
+			description: formData.description.trim() === "",
+			//email: !/\S+@\S+\.\S+/.test(formData.email),
+			//password: formData.password.length < 6,
+		};
+		setErrors(newErrors);
+
+		// If any input is invalid, trigger the shake animation
+		if (Object.values(newErrors).includes(true)) {
+			setShaking(true);
+			setTimeout(() => setShaking(false), 500); // Remove the shake class after 500ms
+		} else return true;
+	};
+
+	const toggleModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
 
 	const toggleDropdown = () => {
 		setDropdownOpen(!dropdownOpen);
@@ -112,26 +159,45 @@ function CreatePetListing() {
 			})
 			.then((res) =>
 				res.data.warningCount === 0
-					? (alert("Success"),
-						setUploadingText("Successfull"),
-						navigate("/admin/pets"))
-					: (alert("Creation Failed"), console.log(res))
+					? (setIsModalOpen(!isModalOpen),
+						setmodalContents({
+							title: "Listing Successful!",
+							contents: "",
+						}),
+						setUploadingText("Successful"),
+						setUploading(false),
+						setLink("/admin/pets"))
+					: (setIsModalOpen(!isModalOpen),
+						setmodalContents({
+							title: "Listing Failed!",
+							contents: "",
+						}),
+						setUploading(false),
+						setLink(0),
+						console.log(res))
 			)
 			.catch((err) => console.log(err));
 	};
 
 	const handleSumbit = async () => {
+		var size = images.length;
 		if (!validateForm()) {
 			return;
 		}
 		if (!images[0]) {
 			// Remove the uploaded image
 			setImages([]);
+			setmodalContents({
+				title: "No image uploaded!",
+				contents: "Upload at least one image",
+			});
 			setIsModalOpen(!isModalOpen);
 			return;
 		}
 		if (base64s[0]) {
 			setUploading(true);
+			var ctr = 1;
+			setUploadingText(`Uploading Images 1/${size}...`);
 			base64s.forEach(async function (item, index) {
 				try {
 					const res = await axios.post("http://localhost:3001/upload", {
@@ -150,6 +216,8 @@ function CreatePetListing() {
 					setUploadingText("Adding Pet Listing");
 					create(images);
 				}
+				if (ctr <= size) ctr = ctr + 1;
+				setUploadingText(`Uploading Images ${ctr}/${size}...`);
 			});
 		}
 	};
@@ -204,58 +272,15 @@ function CreatePetListing() {
 		window.open(image, "_blank");
 	};
 
-	const [shaking, setShaking] = useState(false);
-	const [errors, setErrors] = useState({
-		name: false,
-		breed: false,
-		age: false,
-		address: false,
-		gender: false,
-		type: false,
-		color: false,
-		behavior: false,
-		health: false,
-		description: false,
-	});
-
-	const validateForm = () => {
-		const newErrors = {
-			name: formData.name.trim() === "",
-			breed: formData.breed.trim() === "",
-			age: formData.age.trim() === "",
-			gender: selectedPetGender === "Select Gender",
-			type: selectedPetType === "Select Pet Type",
-			address: formData.address.trim() === "",
-			color: formData.color.trim() === "",
-			behavior: formData.behavior.trim() === "",
-			health: formData.health.trim() === "",
-			description: formData.description.trim() === "",
-			//email: !/\S+@\S+\.\S+/.test(formData.email),
-			//password: formData.password.length < 6,
-		};
-		setErrors(newErrors);
-
-		// If any input is invalid, trigger the shake animation
-		if (Object.values(newErrors).includes(true)) {
-			setShaking(true);
-			setTimeout(() => setShaking(false), 500); // Remove the shake class after 500ms
-		} else return true;
-	};
-
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	const toggleModal = () => {
-		setIsModalOpen(!isModalOpen);
-	};
-
 	return (
 		<>
 			<AnimatedModal
 				isOpen={isModalOpen}
 				onClose={toggleModal}
-				title="No Image Uploaded!"
+				title={modalContents.title}
+				link={link}
 			>
-				<p>Please upload at least one image!</p>
+				<p>{modalContents.contents}</p>
 			</AnimatedModal>
 			<div>
 				{uploading && (

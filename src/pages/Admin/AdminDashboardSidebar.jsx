@@ -52,12 +52,13 @@ function AdminDashboardSidebar() {
 							Create Pet Listing
 						</li>
 					</Link>
-					<button onClick={() => Logout()} className="logout">
-						<li>
-							<CiLogout className="navIcon" />
+
+					<li>
+						<CiLogout className="navIcon" />
+						<button onClick={() => Logout()} className="logout">
 							Logout
-						</li>
-					</button>
+						</button>
+					</li>
 				</ul>
 			</div>
 		</div>
