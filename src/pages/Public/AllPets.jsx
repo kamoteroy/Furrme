@@ -20,9 +20,7 @@ function AllPets() {
 
 	useEffect(() => {
 		if (user) {
-			user.user.email === "admin@furrme.com"
-				? navigate("/admin/pets")
-				: navigate("/pets");
+			user.user.role === "Admin" ? navigate("/admin/pets") : navigate("/pets");
 		}
 
 		axios

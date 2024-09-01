@@ -143,3 +143,34 @@ app.post("/admin/setStatus", (req, res) => {
 		}
 	);
 });
+
+app.post("/emailValidate", (req, res) => {
+	db.query("select email from accounts;", (err, list) => {
+		if (err) {
+			console.log(err);
+		} else {
+			return res.json(list);
+		}
+	});
+});
+
+app.post("/createAdmin", (req, res) => {
+	db.query(
+		"CREATE TABLE accounts(fname varchar(200),image varchar(2000),lname varchar(200),email varchar(200) unique,pass varchar(200),role varchar(200),primary key(email));",
+		(err, result) => {
+			if (err) {
+				//console.log(err);
+			}
+			db.query(
+				"INSERT into accounts values ('Admin', 'https://res.cloudinary.com/dmquudoki/image/upload/v1716289449/fmzaxpxgzginvhs4ljcn.jpg', 'Admin', 'admin@furrme.com', '$2b$10$JYTpEfThYPGO5Jbiq/20Ruj.Qn64BJutsLF3Qses7lCnO1s/aPKOm', 'Admin')",
+				(err, result1) => {
+					if (err) {
+						//console.log(err);
+					} else {
+						console.log("Admin Created");
+					}
+				}
+			);
+		}
+	);
+});

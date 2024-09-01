@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import "../../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,20 +10,33 @@ import { basic_eye_closed } from "react-icons-kit/linea/basic_eye_closed";
 import { arrows_exclamation } from "react-icons-kit/linea/arrows_exclamation";
 import { arrows_circle_check } from "react-icons-kit/linea/arrows_circle_check";
 import { androidAlert } from "react-icons-kit/ionicons/androidAlert";
+import { checkmarkCircled } from "react-icons-kit/ionicons/checkmarkCircled";
 
 function Signup() {
 	const [formData, setformData] = useState({
 		fname: "",
 		lname: "",
 		email: "",
-		password: "",
 		cpass: "",
 		image:
 			"https://res.cloudinary.com/dmquudoki/image/upload/v1716289449/fmzaxpxgzginvhs4ljcn.jpg", //default image for new accounts
 		role: "User",
 	});
 	const [errors, setErrors] = useState({});
+	const [password, setPassword] = useState("");
+	const [emailList, setEmailList] = useState([]);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		axios
+			.post("http://localhost:3001/emailValidate", formData.email)
+			.then((res) => {
+				setEmailList(res.data);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}, []);
 
 	const handleInputChange = (e) => {
 		e.preventDefault();
@@ -48,59 +61,53 @@ function Signup() {
 	}
 
 	function email_validate(email) {
-		//check pass of at least 1 upper and lowercase, symbol and number
 		var re = {
 			check: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 			lower: /(?=.*[a-z])/,
 		};
-		return re.check.test(email) && re.lower.test(email);
+		const emails = emailList.map((user) => user.email);
+		if (emails.includes(email)) return 2;
+		if (re.check.test(email) && re.lower.test(email)) return 1;
+		return 0;
 	}
-	const handleSubmit = (e) => {
-		e.preventDefault();
+
+	const validateForm = () => {
 		const validationErrors = {};
 		if (!formData.fname.trim()) {
-			//if no string is cut means no text entered
 			validationErrors.fname = "First Name is required";
 		}
 		if (!formData.lname.trim()) {
-			//if no string is cut means no text entered
 			validationErrors.lname = "Last Name is required";
 		}
 		if (!formData.email.trim()) {
-			//if no string is cut means no text entered
 			validationErrors.email = "Email is required";
 		}
-		if (!password_validate(formData.password)) {
-			//returns true if it meets all conditions in password_validate
+		if (!password_validate(password)) {
 			validationErrors.password =
 				"Must contain one upper, lower case, a symbol and a number";
 		}
-		if (!email_validate(formData.email)) {
-			//returns true if it meets all conditions in password_validate
-			validationErrors.email = "Invalid Email Format";
-		}
-		if (formData.password.length > 30) {
-			//not exceed 16 char
+		if (password.length > 30) {
 			validationErrors.password = "Password too long";
 		}
-		if (formData.password.length < 8 && formData.password.length > 0) {
-			//not below 8 but above 0
+		if (password.length < 8 && password.length > 0) {
 			validationErrors.password =
 				"Password too short should be at least 8 characters";
 		}
-		if (!formData.password.trim()) {
-			//no password entered
+		if (password.length === 0) {
 			validationErrors.password = "Password is required";
 		}
-		if (formData.password !== formData.cpass) {
-			//password not match
+		if (password !== formData.cpass) {
 			validationErrors.cpass = "Password is dont match";
 		}
 		setErrors(validationErrors);
+	};
 
-		if (Object.keys(validationErrors).length === 0) {
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		validateForm();
+		if (Object.keys(errors).length === 0 && password === formData.cpass) {
 			axios
-				.post("http://localhost:3001/signup", formData) // Use formData directly as the data object
+				.post("http://localhost:3001/signup", { formData, password }) // Use formData directly as the data object
 				.then((res) => {
 					if (res.data.message !== "Success") {
 						alert(res.data.message);
@@ -127,6 +134,7 @@ function Signup() {
 	const [lengthValidated, setLengthValidated] = useState(false);
 
 	const handleChange = (value) => {
+		setPassword(value);
 		const lower = new RegExp("(?=.*[a-z])");
 		const upper = new RegExp("(?=.*[A-Z])");
 		const number = new RegExp("(?=.*[0-9])");
@@ -159,13 +167,6 @@ function Signup() {
 		}
 	};
 
-	const [isPopupVisible, setIsPopupVisible] = useState(false);
-
-	// Function to toggle the popup visibility
-	const handleTogglePopup = () => {
-		setIsPopupVisible(!isPopupVisible);
-	};
-
 	return (
 		<div>
 			<Navbar />
@@ -190,7 +191,6 @@ function Signup() {
 								placeholder="First Name"
 								onChange={handleInputChange}
 							/>
-							<h1>{errors.fname && <span> {errors.fname} </span>}</h1>
 							<input
 								id="lastname"
 								type="text"
@@ -199,7 +199,6 @@ function Signup() {
 								placeholder="Last Name"
 								onChange={handleInputChange}
 							/>
-							<h2>{errors.lname && <span> {errors.lname} </span>}</h2>
 							<input
 								type="email"
 								name="email"
@@ -207,7 +206,6 @@ function Signup() {
 								value={formData.email}
 								onChange={handleInputChange}
 							/>
-							<h4>{errors.email && <span> {errors.email} </span>}</h4>
 							<input
 								id="password"
 								type={type}
@@ -225,76 +223,6 @@ function Signup() {
 									<Icon icon={basic_eye} size={18} />
 								</span>
 							)}
-							<main className="tracker-box">
-								<div className={lowerValidated ? "validated" : "not-validated"}>
-									{lowerValidated ? (
-										<span className="list-icon green">
-											<Icon icon={arrows_circle_check} />
-										</span>
-									) : (
-										<span className="list-icon">
-											<Icon icon={arrows_exclamation} />
-										</span>
-									)}
-									At least one lowercase letter
-								</div>
-								<div className={upperValidated ? "validated" : "not-validated"}>
-									{upperValidated ? (
-										<span className="list-icon green">
-											<Icon icon={arrows_circle_check} />
-										</span>
-									) : (
-										<span className="list-icon">
-											<Icon icon={arrows_exclamation} />
-										</span>
-									)}
-									At least one uppercase letter
-								</div>
-								<div
-									className={numberValidated ? "validated" : "not-validated"}
-								>
-									{numberValidated ? (
-										<span className="list-icon green">
-											<Icon icon={arrows_circle_check} />
-										</span>
-									) : (
-										<span className="list-icon">
-											<Icon icon={arrows_exclamation} />
-										</span>
-									)}
-									At least one number
-								</div>
-								<div
-									className={specialValidated ? "validated" : "not-validated"}
-								>
-									{specialValidated ? (
-										<span className="list-icon green">
-											<Icon icon={arrows_circle_check} />
-										</span>
-									) : (
-										<span className="list-icon">
-											<Icon icon={arrows_exclamation} />
-										</span>
-									)}
-									At least one special character
-								</div>
-								<div
-									className={lengthValidated ? "validated" : "not-validated"}
-								>
-									{lengthValidated ? (
-										<span className="list-icon green">
-											<Icon icon={arrows_circle_check} />
-										</span>
-									) : (
-										<span className="list-icon">
-											<Icon icon={arrows_exclamation} />
-										</span>
-									)}
-									At least 8 characters
-								</div>
-							</main>
-
-							<h5>{errors.password && <span> {errors.password} </span>}</h5>
 							<input
 								id="cnfrm-password"
 								type="password"
@@ -303,24 +231,239 @@ function Signup() {
 								placeholder="Confirm Password"
 								onChange={handleInputChange}
 							/>
-							<h6>{errors.cpass && <span> {errors.cpass} </span>}</h6>
 						</div>
 						<div className="signup-inputs-warning">
-							<button className="fname-icon" onClick={handleTogglePopup}>
-								<Icon icon={androidAlert} size={18} />
-							</button>
-							<button className="lname-icon" onClick={handleTogglePopup}>
-								<Icon icon={androidAlert} size={18} />
-							</button>
-							<button className="email-icon" onClick={handleTogglePopup}>
-								<Icon icon={androidAlert} size={18} />
-							</button>
-							<button className="pass-icon" onClick={handleTogglePopup}>
-								<Icon icon={androidAlert} size={18} />
-							</button>
-							<button className="cpass-icon" onClick={handleTogglePopup}>
-								<Icon icon={androidAlert} size={18} />
-							</button>
+							<div class="button-item">
+								{errors.fname ? (
+									<div>
+										<button className="fname-icon">
+											{formData.fname.length === 0 ? (
+												<Icon
+													icon={androidAlert}
+													size={18}
+													style={{
+														color: "red",
+													}}
+												/>
+											) : (
+												<Icon
+													icon={checkmarkCircled}
+													size={18}
+													style={{
+														color: "green",
+													}}
+												/>
+											)}
+										</button>
+										{formData.fname.length === 0 ? (
+											<div class="popup-content">First Name is required</div>
+										) : null}
+									</div>
+								) : (
+									<button className="fname-hidden"></button>
+								)}
+							</div>
+							<div class="button-item">
+								{errors.lname ? (
+									<div>
+										<button className="lname-icon">
+											{formData.lname.length === 0 ? (
+												<Icon
+													icon={androidAlert}
+													size={18}
+													style={{
+														color: "red",
+													}}
+												/>
+											) : (
+												<Icon
+													icon={checkmarkCircled}
+													size={18}
+													style={{
+														color: "green",
+													}}
+												/>
+											)}
+										</button>
+										{formData.lname.length === 0 ? (
+											<div class="popup-content">Last Name is required</div>
+										) : null}
+									</div>
+								) : (
+									<button className="lname-hidden"></button>
+								)}
+							</div>
+							<div class="button-item">
+								{formData.email.length !== 0 || errors.email ? (
+									<div>
+										<button className="email-icon">
+											{email_validate(formData.email) === 1 ? (
+												<Icon
+													icon={checkmarkCircled}
+													size={18}
+													style={{ color: "green" }}
+												/>
+											) : (
+												<Icon
+													icon={androidAlert}
+													size={18}
+													style={{ color: "red" }}
+												/>
+											)}
+										</button>
+										{email_validate(formData.email) === 2 && (
+											<div class="popup-content">Email already taken!</div>
+										)}
+										{email_validate(formData.email) === 0 && (
+											<div class="popup-content">Invalid Email Format!</div>
+										)}
+										{formData.email.length === 0 && (
+											<div class="popup-content">Password Required</div>
+										)}
+									</div>
+								) : (
+									<button className="lname-hidden"></button>
+								)}
+							</div>
+							<div class="button-item">
+								{errors.password || password.length !== 0 ? (
+									<div>
+										<button className="pass-icon">
+											{password_validate(password) ? (
+												<Icon
+													icon={checkmarkCircled}
+													size={18}
+													style={{ color: "green" }}
+												/>
+											) : (
+												<Icon
+													icon={androidAlert}
+													size={18}
+													style={{ color: "red" }}
+												/>
+											)}
+										</button>
+										{!password_validate(password) ? (
+											<main className="popup-content">
+												<div
+													className={
+														lowerValidated ? "validated" : "not-validated"
+													}
+												>
+													{lowerValidated ? (
+														<span className="list-icon green">
+															<Icon icon={arrows_circle_check} />
+														</span>
+													) : (
+														<span className="list-icon">
+															<Icon icon={arrows_exclamation} />
+														</span>
+													)}
+													At least one lowercase letter
+												</div>
+												<div
+													className={
+														upperValidated ? "validated" : "not-validated"
+													}
+												>
+													{upperValidated ? (
+														<span className="list-icon green">
+															<Icon icon={arrows_circle_check} />
+														</span>
+													) : (
+														<span className="list-icon">
+															<Icon icon={arrows_exclamation} />
+														</span>
+													)}
+													At least one uppercase letter
+												</div>
+												<div
+													className={
+														numberValidated ? "validated" : "not-validated"
+													}
+												>
+													{numberValidated ? (
+														<span className="list-icon green">
+															<Icon icon={arrows_circle_check} />
+														</span>
+													) : (
+														<span className="list-icon">
+															<Icon icon={arrows_exclamation} />
+														</span>
+													)}
+													At least one number
+												</div>
+												<div
+													className={
+														specialValidated ? "validated" : "not-validated"
+													}
+												>
+													{specialValidated ? (
+														<span className="list-icon green">
+															<Icon icon={arrows_circle_check} />
+														</span>
+													) : (
+														<span className="list-icon">
+															<Icon icon={arrows_exclamation} />
+														</span>
+													)}
+													At least one special character
+												</div>
+												<div
+													className={
+														lengthValidated ? "validated" : "not-validated"
+													}
+												>
+													{lengthValidated ? (
+														<span className="list-icon green">
+															<Icon icon={arrows_circle_check} />
+														</span>
+													) : (
+														<span className="list-icon">
+															<Icon icon={arrows_exclamation} />
+														</span>
+													)}
+													At least 8 characters
+												</div>
+											</main>
+										) : null}
+									</div>
+								) : (
+									<button className="lname-hidden"></button>
+								)}
+							</div>
+							<div class="button-item">
+								{errors.cpass ? (
+									<div>
+										<button className="fname-icon">
+											{formData.cpass.length === 0 ||
+											formData.cpass !== password ? (
+												<Icon
+													icon={androidAlert}
+													size={18}
+													style={{
+														color: "red",
+													}}
+												/>
+											) : (
+												<Icon
+													icon={checkmarkCircled}
+													size={18}
+													style={{
+														color: "green",
+													}}
+												/>
+											)}
+										</button>
+										{formData.cpass.length === 0 ||
+										formData.cpass !== password ? (
+											<div class="popup-content">Password don't match!</div>
+										) : null}
+									</div>
+								) : (
+									<button className="fname-hidden"></button>
+								)}
+							</div>
 						</div>
 					</div>
 
