@@ -72,7 +72,7 @@ function Signup() {
 	}
 
 	const validateForm = () => {
-		const validationErrors = {};
+		let validationErrors = {};
 		if (!formData.fname.trim()) {
 			validationErrors.fname = "First Name is required";
 		}
@@ -100,12 +100,12 @@ function Signup() {
 			validationErrors.cpass = "Password is dont match";
 		}
 		setErrors(validationErrors);
+		return Object.keys(validationErrors).length === 0;
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		validateForm();
-		if (Object.keys(errors).length === 0 && password === formData.cpass) {
+		if (validateForm()) {
 			axios
 				.post("http://localhost:3001/signup", { formData, password }) // Use formData directly as the data object
 				.then((res) => {

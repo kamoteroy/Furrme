@@ -1,8 +1,8 @@
 import React from "react";
-import "./Modal.css";
+import "./RedirectModal.css";
 import { useNavigate } from "react-router-dom";
 
-const AnimatedModal = ({ isOpen, onClose, title, children, link }) => {
+const RedirectModal = ({ isOpen, onClose, title, children, link }) => {
 	const navigate = useNavigate();
 
 	const handleCloseModal = () => {
@@ -16,7 +16,7 @@ const AnimatedModal = ({ isOpen, onClose, title, children, link }) => {
 	return (
 		<div className={`modal-overlay ${isOpen ? "show" : ""}`}>
 			<div className={`modal-content ${isOpen ? "slide-in" : "slide-out"}`}>
-				<button className="close-button" onClick={onClose}>
+				<button className="close-button" onClick={handleCloseModal}>
 					&times;
 				</button>
 				<h2>{title}</h2>
@@ -29,4 +29,4 @@ const AnimatedModal = ({ isOpen, onClose, title, children, link }) => {
 	);
 };
 
-export default AnimatedModal;
+export default RedirectModal;

@@ -39,7 +39,7 @@ async function signUp(req, res) {
 	const user = req.body.formData;
 	const pass = req.body.password;
 	const sql =
-		"INSERT into accounts(fname, lname, email, pass, image) VALUES (?, ?, ?, ?, ?)";
+		"INSERT into accounts(fname, lname, email, pass, image, role) VALUES (?, ?, ?, ?, ?, ?)";
 	const emailQuery = "select email from accounts where email = ?";
 
 	db.query(emailQuery, [user.email], async (err, result_email) => {
@@ -47,7 +47,14 @@ async function signUp(req, res) {
 			const hashedPassword = await bcrypt.hash(pass, 10);
 			db.query(
 				sql,
-				[user.fname, user.lname, user.email, hashedPassword, user.image],
+				[
+					user.fname,
+					user.lname,
+					user.email,
+					hashedPassword,
+					user.image,
+					user.role,
+				],
 				(err, results) => {
 					if (err)
 						return res.json({ message: "Error Inserting data in server" });

@@ -2,184 +2,163 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-decoration: none;
-    scroll-behavior: smooth;
-    font-family: "Poppins", sans-serif;
-    transition: 0.2s;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+	scroll-behavior: smooth;
+	font-family: "Poppins", sans-serif;
+	transition: 0.2s;
 }
 
 :root {
-    --mainColor: #f2e6d6;
-    --primaryTextColor: #474747;
+	--mainColor: #f2e6d6;
+	--primaryTextColor: #474747;
 }
 
 .page-container {
-    padding-top: 80px;
-    display: flex;
-    min-height: 100vh;
+	padding-top: 80px;
+	display: flex;
+	min-height: 100vh;
 }
 
 .bg-container {
-    width: 60%;
-    background-image: url(https://res.cloudinary.com/dmquudoki/image/upload/v1715501271/login_bg_ehxeew.jpg);
-    background-size: cover;
-    background-position: center;
+	width: 60%;
+	background-image: url(https://res.cloudinary.com/dmquudoki/image/upload/v1715501271/login_bg_ehxeew.jpg);
+	background-size: cover;
+	background-position: center;
 }
 
 .login-form {
-    flex: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--mainColor);
+	flex: 1;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--mainColor);
 }
 
 .login-header {
-    color: var(--primaryTextColor);
-    text-align: center;
-    margin-top: 50px;
-    font-size: 3.125rem;
+	color: var(--primaryTextColor);
+	text-align: center;
+	margin-top: 50px;
+	font-size: 3.125rem;
 }
 
-.tagline {
-    font-size: 0.813rem;
-    text-align: center;
-    margin-left: 10px;
-    margin-right: 10px;
+.login-form .tagline {
+	font-size: 0.813rem;
+	text-align: center;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
-.input-container {
-    margin-top: 50px;
-    width: 60%;
-    align-self: center;
-    display: flex;
-    flex-direction: column;
+.login-form .input-container {
+	margin-top: 50px;
+	width: 60%;
+	align-self: center;
+	display: flex;
+	flex-direction: column;
 }
 
-.inputs {
-    display: flex;
-    flex-direction: column;
+.login-form .input-container .signin-input-label {
+	font-size: 17px;
+	color: var(--primaryTextColor);
 }
 
-.signin-input-label {
-    font-size: 17px;
-    color: var(--primaryTextColor);
+.login-form .input-container .inputs {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
 }
 
-.email-error{
-    color:red;
-    font-size: 11px;
-    margin-top: 75px;
-    margin-bottom: -22px;
-    margin-left: 5px;
-    position: absolute;
-}
-.pass-error{
-    color:red;
-    font-size: 11px;
-    margin-top: 80px;
-    margin-bottom: -22px;
-    margin-left: 5px;
-    position: absolute;
+.login-form .input-container .inputs .login-error {
+	color: red;
+	font-size: 11px;
 }
 
 .tbxEmail,
 .tbxPassword {
-    padding: 10px;
-    border: none;
-    font-size: 1rem;
-    width: 360px;
-    outline: none;
-    border-bottom: 2px solid #ccc;
-    border-radius: 5px;
-    box-shadow: -8px 8px 10px -4px rgba(201, 181, 155, 0.8);
-    color: var(--primaryTextColor);
+	padding: 10px;
+	border: none;
+	font-size: 1rem;
+	width: 360px;
+	outline: none;
+	border-bottom: 2px solid #ccc;
+	border-radius: 5px;
+	box-shadow: -8px 8px 10px -4px rgba(201, 181, 155, 0.8);
+	color: var(--primaryTextColor);
 }
 
 .tbxEmail:focus,
 .tbxPassword:focus {
-    border-color: #9c784a;
-}
-
-.tbxEmail {
-    margin-bottom: 35px;
+	border-color: #9c784a;
 }
 
 @media screen and (max-width: 960px) {
-    .signin-input-label {
-        display: none;
-    }
+	.signin-input-label {
+		display: none;
+	}
 
-    .tbxEmail {
-        margin-bottom: 25px;
-    }
-
-    .bg-container {
-        display: none;
-    }
-
-    .tbxEmail,
-    .tbxPassword {
-        font-size: 0.75rem;
-    }
+	.bg-container {
+		display: none;
+	}
 }
 
-.forgotPassword {
-    margin-top: 30px;
-    margin-bottom: -30px;
-    align-self: flex-end;
-    font-size: 0.813rem;
-    color: var(--primaryTextColor);
+.login-form .input-container .forgotPassword {
+	margin-top: 30px;
+	margin-bottom: -30px;
+	align-self: flex-end;
+	font-size: 0.813rem;
+	color: var(--primaryTextColor);
 }
 
-.forgotPassword:hover {
-    text-decoration: underline;
-    color: #9c784a;
+.login-form .input-container .forgotPassword:hover {
+	text-decoration: underline;
+	color: #9c784a;
 }
 
-.button-container {
-    margin-top: 40px;
-    width: 60%;
-    align-self: center;
+.login-form .button-container {
+	margin-top: 40px;
+	width: 60%;
+	align-self: center;
 }
 
 .login-button {
-    border: none;
-    border-radius: 5px;
-    font-size: 0.938rem;
-    width: 100%;
-    align-self: center;
-    height: 50px;
-    color: var(--primaryTextColor);
-    background-color: var(--mainColor);
-    cursor: pointer;
-    align-self: center;
-    box-shadow: -8px 8px 10px -4px rgba(201, 181, 155, 0.8);
+	border: none;
+	border-radius: 5px;
+	font-size: 0.938rem;
+	width: 100%;
+	align-self: center;
+	height: 50px;
+	color: var(--primaryTextColor);
+	background-color: var(--mainColor);
+	cursor: pointer;
+	align-self: center;
+	box-shadow: -8px 8px 10px -4px rgba(201, 181, 155, 0.8);
 }
 
 .login-button:hover {
-    background-color: #d4bb9a;
+	background-color: #d4bb9a;
 }
 
-.login-footer {
-    display: flex;
-    color: var(--primaryTextColor);
-    align-self: center;
-    margin-top: 50px;
-    font-size: 0.813rem;
+.login-form .login-footer {
+	display: flex;
+	color: var(--primaryTextColor);
+	align-self: center;
+	margin-top: 50px;
+	font-size: 0.813rem;
+}
+.login-form p {
+	margin-bottom: 10px;
 }
 
 .lblCreateAccount {
-    color: #000000;
+	color: #000000;
 }
 
 .lblCreateAccount:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }

@@ -10,7 +10,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../../components/LoadingOverlay";
-import AnimatedModal from "../../components/Modal";
+import RedirectModal from "../../components/RedirectModal";
 
 function CreatePetListing() {
 	const getData = useSelector((state) => state.value);
@@ -274,14 +274,14 @@ function CreatePetListing() {
 
 	return (
 		<>
-			<AnimatedModal
+			<RedirectModal
 				isOpen={isModalOpen}
 				onClose={toggleModal}
 				title={modalContents.title}
 				link={link}
 			>
 				<p>{modalContents.contents}</p>
-			</AnimatedModal>
+			</RedirectModal>
 			<div>
 				{uploading && (
 					<LoadingOverlay
