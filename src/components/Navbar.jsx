@@ -8,14 +8,7 @@ import {
 } from "react-icons/md";
 import { FaAngleRight } from "react-icons/fa6";
 import { FiBook } from "react-icons/fi";
-import {
-	FaFacebook,
-	FaInstagram,
-	FaTiktok,
-	FaQuestion,
-	FaCat,
-	FaDog,
-} from "react-icons/fa";
+import { FaTiktok, FaQuestion, FaCat, FaDog } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { MdContactSupport } from "react-icons/md";
 import { IoIosLogOut } from "react-icons/io";

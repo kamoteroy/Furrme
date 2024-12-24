@@ -10,11 +10,11 @@ import RedirectModal from "../../components/RedirectModal";
 
 function Login() {
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-	const [link, setLink] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [errors, setErrors] = useState({});
 	const dispatch = useDispatch();
+	const [link, setLink] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContents, setmodalContents] = useState({
 		title: "",
@@ -40,15 +40,12 @@ function Login() {
 	const validate = () => {
 		const validationErrors = {};
 		if (!email.trim()) {
-			//if no string is cut means no text entered
 			validationErrors.email = "Email is required";
 		}
 		if (!password.trim()) {
-			//if no string is cut means no text entered
 			validationErrors.password = "Password is required";
 		}
 		if (password.length < 8 && password.length > 0) {
-			//not below 8 but above 0
 			validationErrors.password =
 				"Password too short should be at least 8 characters";
 		}
@@ -73,16 +70,14 @@ function Login() {
 						dispatch(login({ token: res.data.token, user: res.data.userData }));
 						setmodalContents({
 							title: "Login Successful",
-							contents: res.data.message,
+							contents: "Redirecting to Pets Page...",
 						});
 						setIsModalOpen(!isModalOpen);
 						setLink("/pets");
-
-						//alert("Success redirecting to dashboard");
 					}
 				})
 				.catch((error) => {
-					console.error(error); // Log any errors that occur during the request
+					console.error(error);
 				});
 		}
 	};

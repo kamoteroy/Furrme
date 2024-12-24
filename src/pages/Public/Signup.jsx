@@ -3,6 +3,8 @@ import Navbar from "../../components/Navbar";
 import "../../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import LoginModal from "../../components/LoginModal";
+import RedirectModal from "../../components/RedirectModal";
 
 import Icon from "react-icons-kit";
 import { basic_eye } from "react-icons-kit/linea/basic_eye";
@@ -26,6 +28,12 @@ function Signup() {
 	const [password, setPassword] = useState("");
 	const [emailList, setEmailList] = useState([]);
 	const navigate = useNavigate();
+	const [link, setLink] = useState("");
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [modalContents, setmodalContents] = useState({
+		title: "",
+		contents: "",
+	});
 
 	useEffect(() => {
 		axios
@@ -42,6 +50,10 @@ function Signup() {
 		e.preventDefault();
 		const { name, value } = e.target;
 		setformData((prevState) => ({ ...prevState, [name]: value }));
+	};
+
+	const toggleModal = () => {
+		setIsModalOpen(!isModalOpen);
 	};
 
 	function password_validate(password) {
@@ -112,10 +124,12 @@ function Signup() {
 					if (res.data.message !== "Success") {
 						alert(res.data.message);
 					} else {
-						alert(
-							"Registered Successfully you can log in now. Redirecting to Log In page!"
-						);
-						navigate("/login"); // redirect to log in page
+						setmodalContents({
+							title: "Register Successful",
+							contents: "Redirecting to Login Page",
+						});
+						setIsModalOpen(!isModalOpen);
+						setLink("/login");
 					}
 				})
 				.catch((error) => {
@@ -169,6 +183,18 @@ function Signup() {
 
 	return (
 		<div>
+			{link === "" ? (
+				""
+			) : (
+				<RedirectModal
+					isOpen={true}
+					onClose={toggleModal}
+					title={modalContents.title}
+					link={link}
+				>
+					<p>{modalContents.contents}</p>
+				</RedirectModal>
+			)}
 			<Navbar />
 			<div className="signup-page-container">
 				<div className="signupbg"></div>
