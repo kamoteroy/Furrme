@@ -9,14 +9,18 @@ import { useNavigate } from "react-router-dom";
 
 function AllPets() {
 	const [ageClick, setAgeClick] = useState(false);
-	const [colorClick, setColorClick] = useState(false); // State for color filter
+	const [colorClick, setColorClick] = useState(false);
 	const [ageCaretDirection, setAgeCaretDirection] = useState("down");
-	const [colorCaretDirection, setColorCaretDirection] = useState("down"); // State for color caret direction
+	const [colorCaretDirection, setColorCaretDirection] = useState("down");
 	const ageRef = useRef(null);
-	const colorRef = useRef(null); // Ref for color dropdown
-	const [petList, setList] = useState([]);
+	const colorRef = useRef(null);
+	const [petList, setPetList] = useState([]);
+	const [filteredPets, setFilteredPets] = useState([]);
 	const user = useSelector((state) => state.value);
 	const navigate = useNavigate();
+	const [searchTerm, setSearchTerm] = useState("");
+	const [selectedAge, setSelectedAge] = useState("");
+	const [selectedColor, setSelectedColor] = useState("");
 
 	useEffect(() => {
 		if (user) {
@@ -24,27 +28,24 @@ function AllPets() {
 		}
 
 		axios
-			.get(
-				"http://localhost:3001/pets" /*, {
-                headers: {
-                  'Authorization': `Basic ${token}`
-                }
-              }*/
-			)
-			.then((res) => setList(res.data))
+			.get("http://localhost:3001/pets")
+			.then((res) => {
+				setPetList(res.data); // Store the fetched pet data in state
+				setFilteredPets(res.data); // Initially, show all pets
+			})
 			.catch((err) => console.log(err));
 
 		const handleClickOutside = (event) => {
 			if (
 				ageRef.current &&
 				!ageRef.current.contains(event.target) &&
-				colorRef.current && // Check if colorRef exists
+				colorRef.current &&
 				!colorRef.current.contains(event.target)
 			) {
 				setAgeClick(false);
 				setAgeCaretDirection("down");
-				setColorClick(false); // Set colorClick to false
-				setColorCaretDirection("down"); // Reset color caret direction
+				setColorClick(false);
+				setColorCaretDirection("down");
 			}
 		};
 
@@ -52,7 +53,7 @@ function AllPets() {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, []);
+	}, [user, navigate]);
 
 	const handleFilterClick = (setState, setDirection, currentState) => {
 		setState(!currentState);
@@ -64,6 +65,37 @@ function AllPets() {
 			setColorCaretDirection("down");
 		}
 	};
+
+	const handleSearchChange = (e) => {
+		setSearchTerm(e.target.value);
+	};
+
+	const handleAgeSelect = (age) => {
+		setSelectedAge(age);
+	};
+
+	const handleColorSelect = (color) => {
+		setSelectedColor(color);
+	};
+
+	const applyFilters = () => {
+		let filteredList = petList;
+
+		if (searchTerm) {
+			filteredList = filteredList.filter(
+				(pet) =>
+					pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					pet.breed.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					pet.address.toLowerCase().includes(searchTerm.toLowerCase())
+			);
+		}
+
+		setFilteredPets(filteredList);
+	};
+
+	useEffect(() => {
+		applyFilters();
+	}, [searchTerm, selectedAge, selectedColor, petList]);
 
 	return (
 		<div>
@@ -77,7 +109,9 @@ function AllPets() {
 							<input
 								type="text"
 								className="searchBar"
-								placeholder="Search..."
+								placeholder="Search name, breed, or location"
+								value={searchTerm}
+								onChange={handleSearchChange}
 							/>
 							<IoIosSearch className="searchIcon" />
 						</div>
@@ -90,21 +124,17 @@ function AllPets() {
 								belonging for every lonely paw that wanders in. In their patient
 								hands, hope is not just a word but a promise, whispered through
 								gentle strokes and warm embraces, guiding each forgotten soul
-								towards a brighter tomorrow
+								towards a brighter tomorrow.
 							</p>
 						</div>
 					</div>
 				</div>
 				<div className="filter-dropdowns">
+					{/* Age filter dropdown */}
 					<div
 						className="petFilter ageFilter"
 						onClick={() =>
-							handleFilterClick(
-								setAgeClick,
-								setAgeCaretDirection,
-								ageClick,
-								ageCaretDirection
-							)
+							handleFilterClick(setAgeClick, setAgeCaretDirection, ageClick)
 						}
 						ref={ageRef}
 					>
@@ -113,19 +143,22 @@ function AllPets() {
 							<i className={`fa-solid fa-caret-${ageCaretDirection}`}></i>
 						</div>
 						<ul className={ageClick ? "filterMenu active" : "filterMenu"}>
-							<li>Puppy</li>
-							<li>Middle-Aged</li>
-							<li>Adult</li>
+							<li onClick={() => handleAgeSelect("Puppy")}>Puppy</li>
+							<li onClick={() => handleAgeSelect("Middle-Aged")}>
+								Middle-Aged
+							</li>
+							<li onClick={() => handleAgeSelect("Adult")}>Adult</li>
 						</ul>
 					</div>
+
+					{/* Color filter dropdown */}
 					<div
 						className="petFilter colorFilter"
 						onClick={() =>
 							handleFilterClick(
 								setColorClick,
 								setColorCaretDirection,
-								colorClick,
-								colorCaretDirection
+								colorClick
 							)
 						}
 						ref={colorRef}
@@ -135,14 +168,15 @@ function AllPets() {
 							<i className={`fa-solid fa-caret-${colorCaretDirection}`}></i>
 						</div>
 						<ul className={colorClick ? "filterMenu active" : "filterMenu"}>
-							<li>Orange</li>
-							<li>White</li>
-							<li>Black</li>
+							<li onClick={() => handleColorSelect("Orange")}>Orange</li>
+							<li onClick={() => handleColorSelect("White")}>White</li>
+							<li onClick={() => handleColorSelect("Black")}>Black</li>
 						</ul>
 					</div>
 				</div>
 				<div className="petsContainer">
-					{petList.map((pet, i) => {
+					{/* Display filtered pets */}
+					{filteredPets.map((pet, i) => {
 						return <PetCard key={i} data={pet} />;
 					})}
 				</div>

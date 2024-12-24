@@ -2,213 +2,264 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-decoration: none;
-    scroll-behavior: smooth;
-    font-family: "Poppins", sans-serif;
-    transition: 0.2s;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+	scroll-behavior: smooth;
+	font-family: "Poppins", sans-serif;
+	transition: 0.2s;
 }
 
 :root {
-    --mainColor: #f2e6d6;
-    --primaryTextColor: #474747;
-    --hoverColor: #d4bb9a;
+	--mainColor: #f2e6d6;
+	--primaryTextColor: #474747;
+	--hoverColor: #d4bb9a;
 }
 
 .navbar {
-    background-color: var(--mainColor);
-    width: 100%;
-    height: 80px;
-    font-size: 18px;
-    padding: 0 80px 0 50px;
-    position: fixed;
-    z-index: 1000;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
+	background-color: var(--mainColor);
+	width: 100%;
+	height: 80px;
+	font-size: 18px;
+	padding: 0 80px 0 50px;
+	position: fixed;
+	z-index: 1000;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
 }
 
 .navbar .logo {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
 }
 
 .navbar .logo img {
-    width: 55px;
-    height: auto;
-    color: var(--primaryTextColor);
+	width: 55px;
+	height: auto;
+	color: var(--primaryTextColor);
 }
 
 .navbar .logo h2 {
-    color: var(--primaryTextColor);
-    font-size: 40px;
+	color: var(--primaryTextColor);
+	font-size: 40px;
 }
 
 .navbar .navList {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 75%;
-    height: 100%;
-    padding: 0 50px;
-    gap: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-evenly;
+	width: 75%;
+	height: 100%;
+	padding: 0 50px;
+	gap: 20px;
 }
 
 .navbar .navList .navItem {
-    text-align: center;
-    position: relative;
-    width: 25%;
+	text-align: center;
+	position: relative;
+	width: 25%;
 }
 
 .navbar .navList .navItem p {
-    border-radius: 7px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    padding: 5px 0;
+	border-radius: 7px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	padding: 5px 0;
+	color: var(--primaryTextColor);
 }
 
 .navbar .navList .navItem p:hover {
-    background-color: var(--hoverColor);
+	background-color: var(--hoverColor);
 }
 
 .navbar .navList .navItem .dropdown {
-    position: absolute;
-    max-width: 350px;
-    background-color: var(--mainColor);
-    border-radius: 7px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 15px 20px;
-    border: 1px solid var(--hoverColor);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-    font-size: 16px;
+	position: absolute;
+	max-width: 350px;
+	background-color: var(--mainColor);
+	border-radius: 7px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 15px 20px;
+	border: 1px solid var(--hoverColor);
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+	font-size: 16px;
 }
 
-.navbar .navList .navItem .dropdown.pets,
-.dropdown.socials {
-    left: 35%;
+.navbar .navList .navItem .dropdown.pets {
+	position: absolute;
+	width: 70%;
+	left: 50%;
+	transform: translateX(-50%);
+	box-sizing: border-box;
+	z-index: 1000;
+	overflow-x: auto;
+	white-space: nowrap;
 }
 
+.navbar .navList .navItem .dropdown.resources {
+	position: absolute;
+	width: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	box-sizing: border-box;
+	z-index: 1000;
+	overflow-x: auto;
+	white-space: nowrap;
+}
 .navbar .navList .navItem .dropdown.socials {
-    left: 15%;
+	position: absolute;
+	width: 80%;
+	left: 50%;
+	transform: translateX(-50%);
+	box-sizing: border-box;
+	z-index: 1000;
+	overflow-x: auto;
+	white-space: nowrap;
+	color: var(--primaryTextColor);
 }
 
 .navbar .navList .navItem .dropdown li {
-    cursor: pointer;
-    border-radius: 7px;
-    gap: 10px;
-    padding: 5px 25px 5px 10px;
-    text-wrap: nowrap;
-    display: flex;
-    align-items: center;
-    position: relative;
+	cursor: pointer;
+	border-radius: 7px;
+	gap: 10px;
+	padding: 5px 25px 5px 10px;
+	text-wrap: nowrap;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	display: flex;
+	align-items: center;
 }
 
-.navbar .navList .navItem .dropdown li:hover {
-    background-color: var(--hoverColor);
+.navbar .navList .navItem .dropdown li .rightIcon {
+	height: 15px;
+	width: 15px;
+	position: absolute;
+	right: 10px;
+	margin-top: 1px;
 }
 
 .navbar .navList .navItem .dropdown .rightIcon {
-    height: 15px;
-    width: 15px;
-    position: absolute;
-    right: 5px;
+	height: 15px;
+	width: 15px;
+	position: absolute;
+	right: 8px;
+	margin-top: 1px;
 }
 
 .navbar .loginBtn-accountIcon {
-    flex: 1;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+	flex: 1;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
 }
 
 .navbar .loginBtn-accountIcon button {
-    background-color: var(--primaryTextColor);
-    height: 40px;
-    color: white;
-    padding: 10px 50px;
-    border-radius: 7px;
-    border: none;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
+	background-color: var(--primaryTextColor);
+	height: 40px;
+	color: white;
+	padding: 10px 50px;
+	border-radius: 7px;
+	border: none;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
 }
 
 .navbar .loginBtn-accountIcon button:hover {
-    background-color: rgb(85, 85, 85);
+	background-color: rgb(85, 85, 85);
 }
 
 .navbar .DP-Icon {
-    min-width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    border: px solid var(--primaryTextColor);
-    margin-left: auto;
+	min-width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	overflow: hidden;
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+	border: px solid var(--primaryTextColor);
+	margin-left: auto;
 }
 
 .navbar .DP-Icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .navbar .loginBtn-accountIcon .userDropdown {
-    background-color: var(--mainColor);
-    border-radius: 7px;
-    border: 1px solid var(--hoverColor);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-    font-size: 16px;
-    padding: 15px 20px;
-    width: 240px;
-    position: absolute;
-    top: 80px;
-    right: 0;    
+	background-color: var(--mainColor);
+	border-radius: 7px;
+	border: 1px solid var(--hoverColor);
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+	font-size: 16px;
+	padding: 15px 20px;
+	width: 200px;
+	position: absolute;
+	top: 100%;
+	left: 80%;
+	transform: translateX(-50%);
+	box-sizing: border-box;
+	z-index: 1000;
+	overflow-x: auto;
+	white-space: nowrap;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 }
 
 .navbar .loginBtn-accountIcon .userDropdown li {
-    padding: 5px 5px;
-    cursor: pointer;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    text-wrap: nowrap;
-    position: relative;
-    gap: 3px;
+	padding: 5px 5px;
+	cursor: pointer;
+	border-radius: 7px;
+	display: flex;
+	align-items: center;
+	text-wrap: nowrap;
+	position: relative;
+	gap: 3px;
 }
 
 .navbar .loginBtn-accountIcon .userDropdown li:hover {
-    background-color: var(--hoverColor);
+	background-color: var(--hoverColor);
 }
 
 .navbar .loginBtn-accountIcon .userDropdown .dropdownIcon {
-    height: 15px;
-    width: 15px;
+	height: 15px;
+	width: 15px;
+	margin-bottom: -2.5px;
+	margin-right: 4px;
 }
 
-.navbar .loginBtn-accountIcon .userDropdown .rightIcon-UDP {
-    position: absolute;
-    right: 5px;
+.navbar .loginBtn-accountIcon .userDropdown .colorDrop .rightIcon-UDP {
+	height: 15px;
+	width: 15px;
+	position: absolute;
+	right: 15px;
+	margin-top: 4px;
 }
-.navbar .colorText{
-    color: var(--primaryTextColor);
+.navbar .colorText {
+	color: var(--primaryTextColor);
+	display: flex;
+	justify-content: center;
+	gap: 5px;
+	display: flex;
+	align-items: center;
 }
 
-.navbar .colorDrop{
-    color: var(--primaryTextColor);
-    display: block;
+.navbar .colorDrop {
+	color: var(--primaryTextColor);
+	top: 15px;
+	gap: 20px;
 }
