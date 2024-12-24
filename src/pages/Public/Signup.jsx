@@ -3,7 +3,6 @@ import Navbar from "../../components/Navbar";
 import "../../styles/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import LoginModal from "../../components/LoginModal";
 import RedirectModal from "../../components/RedirectModal";
 
 import Icon from "react-icons-kit";

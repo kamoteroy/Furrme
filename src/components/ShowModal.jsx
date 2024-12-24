@@ -1,7 +1,7 @@
 import React from "react";
 import "./RedirectModal.css";
 
-const LoginModal = ({ isOpen, onClose, title, children, link }) => {
+const ShowModal = ({ isOpen, onClose, title, children, link }) => {
 	return (
 		<div className={`modal-overlay ${isOpen ? "show" : ""}`}>
 			<div className={`modal-content ${isOpen ? "slide-in" : "slide-out"}`}>
@@ -18,4 +18,4 @@ const LoginModal = ({ isOpen, onClose, title, children, link }) => {
 	);
 };
 
-export default LoginModal;
+export default ShowModal;

@@ -5,13 +5,14 @@ import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../../store/Users";
+import CountDownModal from "../../components/CountdownModal";
 
 function ManageProfile() {
 	const dispatch = useDispatch();
 	const getData = useSelector((state) => state.value);
 	const user = getData.user;
 	const [uploadedImg, setUploadedImg] = useState(user.image);
-	const [showCreatePostBtn, setShowCreatePostBtn] = useState(false);
+	const [showSaveBtn, setSaveBtn] = useState(false);
 	const navigate = useNavigate();
 	const [errors, setErrors] = useState({});
 	const defaultValues = {
@@ -23,6 +24,11 @@ function ManageProfile() {
 	const [formData, setformData] = useState(defaultValues);
 	const token = getData.token;
 	const [access, setAccess] = useState("");
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [modalContents, setmodalContents] = useState({
+		title: "",
+		contents: "",
+	});
 
 	const handleInputChange = (e) => {
 		e.preventDefault();
@@ -31,18 +37,31 @@ function ManageProfile() {
 	};
 
 	useEffect(() => {
-		if (access === 1) navigate("/pets");
-		if (access === 0) {
+		if (access === 1) {
 			navigate("/manage");
-			setUploadedImg(null);
-			setShowCreatePostBtn(false);
-			setformData(defaultValues);
+			setSaveBtn(false);
+			setformData(defaultValues); // reset other fields but not password yet
 		}
 	}, [access]);
+
+	// Handle the modal toggle
+	const toggleModal = () => {
+		setIsModalOpen(!isModalOpen);
+
+		if (!isModalOpen) {
+			// Reset password field when the modal closes
+			setformData((prevState) => ({
+				...prevState,
+				pass: "", // Reset password here after the modal closes
+			}));
+		}
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const validationErrors = {};
+
+		// Validate the form fields
 		if (!formData.fname.trim()) {
 			validationErrors.fname = "First Name is required";
 		}
@@ -55,29 +74,44 @@ function ManageProfile() {
 		if (!formData.pass.trim()) {
 			validationErrors.pass = "Password is required";
 		}
+
 		setErrors(validationErrors);
 		if (Object.keys(validationErrors).length === 0) {
-			if (!uploadedImg) {
-				setUploadedImg(null);
-			}
 			try {
-				const res = await axios.post("http://localhost:3001/upload", {
-					image_url: uploadedImg,
-				});
+				let imageUrl = uploadedImg;
 
+				if (!uploadedImg || uploadedImg === user.image) {
+					imageUrl = user.image;
+				} else {
+					const res = await axios.post("http://localhost:3001/upload", {
+						image_url: uploadedImg,
+					});
+					imageUrl = res.data;
+				}
+
+				// Proceed with updating the user details
 				await axios
 					.post("http://localhost:3001/manage", {
 						fname: formData.fname,
 						lname: formData.lname,
 						newEmail: formData.email,
 						pass: formData.pass,
-						image: res.data,
+						image: imageUrl,
 						prevEmail: user.email,
 						token: token,
 					})
 					.then((result) => {
-						alert(result.data.message);
 						setAccess(result.data.access);
+						setmodalContents({
+							title: result.data.message,
+						});
+						setIsModalOpen(true); // Open the modal on success
+						// Reset the password field after success
+						setformData({
+							...formData,
+							pass: "", // Reset password here after success
+						});
+
 						result.data.access === 1
 							? dispatch(
 									login({
@@ -100,16 +134,32 @@ function ManageProfile() {
 			const reader = new FileReader();
 			reader.onloadend = () => {
 				setUploadedImg(reader.result);
-				setShowCreatePostBtn(true);
 			};
 			reader.readAsDataURL(file);
-		} else {
-			alert("Please upload a valid JPEG or PNG image.");
 		}
 	};
 
+	useEffect(() => {
+		const isValidPassword = formData.pass.trim() !== "";
+		const isValidForm =
+			formData.fname.trim() &&
+			formData.lname.trim() &&
+			formData.email.trim() &&
+			isValidPassword;
+
+		setSaveBtn(isValidForm);
+	}, [formData]);
+
 	return (
 		<div>
+			<CountDownModal
+				isOpen={isModalOpen}
+				onClose={toggleModal}
+				title={modalContents.title}
+			>
+				<p>{modalContents.contents}</p>
+			</CountDownModal>
+
 			<Navbar />
 			<div className="manageProfile">
 				<div className="container">
@@ -123,13 +173,9 @@ function ManageProfile() {
 						<label>Photo</label>
 						<div className="profilePictureContainer">
 							{uploadedImg ? (
-								<>
-									<img src={uploadedImg} alt={user.fname} />
-								</>
+								<img src={uploadedImg} alt={user.fname} />
 							) : (
-								<>
-									<img src={user.image} alt={user.fname} />
-								</>
+								<img src={user.image} alt={user.fname} />
 							)}
 						</div>
 						<label htmlFor="uploadImg" className="btnChangeDP">
@@ -149,7 +195,7 @@ function ManageProfile() {
 						<input
 							type="text"
 							id="firstName"
-							defaultValue={user.fname}
+							value={formData.fname}
 							name="fname"
 							onChange={handleInputChange}
 						/>
@@ -161,7 +207,7 @@ function ManageProfile() {
 						<input
 							type="text"
 							id="lastName"
-							defaultValue={user.lname}
+							value={formData.lname}
 							name="lname"
 							onChange={handleInputChange}
 						/>
@@ -172,7 +218,7 @@ function ManageProfile() {
 						<input
 							type="email"
 							id="email"
-							defaultValue={user.email}
+							value={formData.email}
 							name="email"
 							onChange={handleInputChange}
 						/>
@@ -183,28 +229,29 @@ function ManageProfile() {
 						<input
 							type="password"
 							id="password"
+							value={formData.pass}
 							name="pass"
 							onChange={handleInputChange}
 						/>
 					</div>
 					<hr />
-					{showCreatePostBtn && (
+					{showSaveBtn && (
 						<button onClick={handleSubmit} className="btnSaveChanges">
 							Save Changes
 						</button>
 					)}
 				</div>
 				<div className="fnameWarning">
-					{errors.fname && <span> {errors.fname} </span>}
+					{errors.fname && <span>{errors.fname}</span>}
 				</div>
 				<div className="lnameWarning">
-					{errors.lname && <span> {errors.lname} </span>}
+					{errors.lname && <span>{errors.lname}</span>}
 				</div>
 				<div className="emailWarning">
-					{errors.email && <span> {errors.email} </span>}
+					{errors.email && <span>{errors.email}</span>}
 				</div>
 				<div className="passWarning">
-					{errors.pass && <span> {errors.pass} </span>}
+					{errors.pass && <span>{errors.pass}</span>}
 				</div>
 			</div>
 		</div>

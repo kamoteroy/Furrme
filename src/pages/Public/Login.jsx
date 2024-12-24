@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/Users";
-import LoginModal from "../../components/LoginModal";
+import ShowModal from "../../components/ShowModal";
 import RedirectModal from "../../components/RedirectModal";
 
 function Login() {
@@ -85,13 +85,13 @@ function Login() {
 	return (
 		<div>
 			{link === "" ? (
-				<LoginModal
+				<ShowModal
 					isOpen={isModalOpen}
 					onClose={toggleModal}
 					title={modalContents.title}
 				>
 					<p>{modalContents.contents}</p>
-				</LoginModal>
+				</ShowModal>
 			) : (
 				<RedirectModal
 					isOpen={isModalOpen}
