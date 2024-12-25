@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../../store/Users";
 import CountDownModal from "../../components/CountdownModal";
+import uploadingImg from "../../assets/uploadingImg.gif";
 
 function ManageProfile() {
 	const dispatch = useDispatch();
@@ -30,6 +31,9 @@ function ManageProfile() {
 		contents: "",
 	});
 
+	const [isUploading, setIsUploading] = useState(false);
+	const [uploadMessage, setUploadMessage] = useState("Uploading...");
+
 	const handleInputChange = (e) => {
 		e.preventDefault();
 		const { name, value } = e.target;
@@ -40,19 +44,17 @@ function ManageProfile() {
 		if (access === 1) {
 			navigate("/manage");
 			setSaveBtn(false);
-			setformData(defaultValues); // reset other fields but not password yet
+			setformData(defaultValues);
 		}
 	}, [access]);
 
-	// Handle the modal toggle
 	const toggleModal = () => {
 		setIsModalOpen(!isModalOpen);
 
 		if (!isModalOpen) {
-			// Reset password field when the modal closes
 			setformData((prevState) => ({
 				...prevState,
-				pass: "", // Reset password here after the modal closes
+				pass: "",
 			}));
 		}
 	};
@@ -82,14 +84,21 @@ function ManageProfile() {
 
 				if (!uploadedImg || uploadedImg === user.image) {
 					imageUrl = user.image;
+					setUploadMessage("Updating...");
 				} else {
+					setIsUploading(true);
+					setUploadMessage("Uploading...");
+
 					const res = await axios.post("http://localhost:3001/upload", {
 						image_url: uploadedImg,
 					});
+
 					imageUrl = res.data;
+					setUploadMessage("Upload complete!");
+					setUploadedImg("");
+					setIsUploading(false);
 				}
 
-				// Proceed with updating the user details
 				await axios
 					.post("http://localhost:3001/manage", {
 						fname: formData.fname,
@@ -105,11 +114,10 @@ function ManageProfile() {
 						setmodalContents({
 							title: result.data.message,
 						});
-						setIsModalOpen(true); // Open the modal on success
-						// Reset the password field after success
+						setIsModalOpen(true);
 						setformData({
 							...formData,
-							pass: "", // Reset password here after success
+							pass: "",
 						});
 
 						result.data.access === 1
@@ -124,6 +132,7 @@ function ManageProfile() {
 					.catch((err) => console.log(err));
 			} catch (err) {
 				console.log(err);
+				setIsUploading(false);
 			}
 		}
 	};
@@ -253,6 +262,14 @@ function ManageProfile() {
 				<div className="passWarning">
 					{errors.pass && <span>{errors.pass}</span>}
 				</div>
+
+				{/* Loading overlay with an image */}
+				{isUploading && (
+					<div className="loadingOverlay">
+						<img src={uploadingImg} alt="loading" className="loadingImage" />
+						<p>{uploadMessage}</p>
+					</div>
+				)}
 			</div>
 		</div>
 	);

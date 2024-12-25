@@ -28,7 +28,7 @@
 
 .bg-container {
 	width: 60%;
-	background-image: url(https://res.cloudinary.com/dmquudoki/image/upload/v1715501271/login_bg_ehxeew.jpg);
+	background-image: url("../assets/loginPage.jpg");
 	background-size: cover;
 	background-position: center;
 }

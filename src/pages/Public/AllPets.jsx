@@ -175,10 +175,15 @@ function AllPets() {
 					</div>
 				</div>
 				<div className="petsContainer">
-					{/* Display filtered pets */}
-					{filteredPets.map((pet, i) => {
-						return <PetCard key={i} data={pet} />;
-					})}
+					{filteredPets.length === 0 ? (
+						<h1 className="noPetsMessage">
+							No pets available for adoption at the moment.
+						</h1>
+					) : (
+						filteredPets.map((pet, i) => {
+							return <PetCard key={i} data={pet} />;
+						})
+					)}
 				</div>
 			</div>
 		</div>

@@ -2,192 +2,192 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-decoration: none;
-    scroll-behavior: smooth;
-    font-family: "Poppins", sans-serif;
-    transition: 0.2s;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	text-decoration: none;
+	scroll-behavior: smooth;
+	font-family: "Poppins", sans-serif;
+	transition: 0.2s;
 }
 
 :root {
-    --mainColor: #f2e6d6;
-    --primaryTextColor: #474747;
-    --hoverColor: #d4bb9a;
+	--mainColor: #f2e6d6;
+	--primaryTextColor: #474747;
+	--hoverColor: #d4bb9a;
 }
 
 .allPets {
-    padding-top: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+	padding-top: 80px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .allPetsHeader {
-    width: 80%;
-    height: 55vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 50px 0 60px 0;
+	width: 80%;
+	height: 55vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 50px 0 60px 0;
 }
 
 @media screen and (max-width: 960px) {
-    .allPetsHeader {
-        flex-direction: column;
-    }
+	.allPetsHeader {
+		flex-direction: column;
+	}
 }
 
 .headerImgContainer {
-    width: 80%;
-    height: 100%;
+	width: 80%;
+	height: 100%;
 }
 
 .bannerImg {
-    background-image: url(https://res.cloudinary.com/dmquudoki/image/upload/v1715501278/allPetsBanner_djtywu.jpg);
-    min-width: 100%;
-    min-height: 100%;
-    background-position: center;
-    background-size: cover;
-    display: flex;
+	background-image: url("../assets/allPetsBanner.jpg");
+	min-width: 100%;
+	min-height: 100%;
+	background-position: center;
+	background-size: cover;
+	display: flex;
 }
 
 .bannerImg p {
-    text-align: center;
-    align-self: center;
-    justify-self: center;
-    padding: 0 50px;
-    color: #fff;
-    font-weight: 800;
-    font-size: 18px;
-    cursor: pointer;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+	text-align: center;
+	align-self: center;
+	justify-self: center;
+	padding: 0 50px;
+	color: #fff;
+	font-weight: 800;
+	font-size: 18px;
+	cursor: pointer;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .headerTitle {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    justify-items: center;
-    align-items: center;
-    cursor: default;
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	justify-items: center;
+	align-items: center;
+	cursor: default;
 }
 
 .headerTitle:hover,
 .bannerImg p:hover,
 .bannerImg:hover {
-    transform: scale(1.02);
+	transform: scale(1.02);
 }
 
 .allPetsHeader h1 {
-    font-size: 60px;
-    margin: 50px 0;
-    text-align: center;
+	font-size: 60px;
+	margin: 50px 0;
+	text-align: center;
 }
 
 .allPetsHeader hr {
-    margin-top: -30px;
-    margin-bottom: 50px;
-    border-radius: 10px;
-    height: 4px;
-    width: 40%;
-    background: var(--primaryTextColor);
+	margin-top: -30px;
+	margin-bottom: 50px;
+	border-radius: 10px;
+	height: 4px;
+	width: 40%;
+	background: var(--primaryTextColor);
 }
 
 .searchBarContainer {
-    display: flex;
-    height: 30px;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin: 0 20px;
+	display: flex;
+	height: 30px;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	margin: 0 20px;
 }
 
 .searchBarContainer .searchBar {
-    padding: 8px 10px;
-    border-radius: 5px;
-    border: 1px solid gray;
-    width: 400px;
-    font-size: 12;
+	padding: 8px 10px;
+	border-radius: 5px;
+	border: 1px solid gray;
+	width: 400px;
+	font-size: 12;
 }
 
 .searchBarContainer .searchIcon {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
+	position: absolute;
+	right: 10px;
+	cursor: pointer;
 }
 
 .filter-dropdowns {
-    width: 80%;
-    display: flex;
-    justify-content: space-evenly;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 5%;
+	width: 80%;
+	display: flex;
+	justify-content: space-evenly;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin-bottom: 5%;
 }
 
 .petFilter {
-    width: 200px;
-    position: relative;
+	width: 200px;
+	position: relative;
 }
 
 .filterTitle {
-    background: var(--mainColor);
-    color: var(--primaryTextColor);
-    padding: 7px 15px;
-    justify-content: space-between;
-    align-items: center;
-    display: flex;
-    border: 1px solid var(--primaryTextColor);
-    border-radius: 10px;
-    cursor: pointer;
+	background: var(--mainColor);
+	color: var(--primaryTextColor);
+	padding: 7px 15px;
+	justify-content: space-between;
+	align-items: center;
+	display: flex;
+	border: 1px solid var(--primaryTextColor);
+	border-radius: 10px;
+	cursor: pointer;
 }
 
 .filterTitle:hover {
-    background: var(--hoverColor);
+	background: var(--hoverColor);
 }
 
 .filterMenu {
-    padding: 20px 10px;
-    background: var(--mainColor);
-    border: 1px solid var(--primaryTextColor);
-    border-radius: 10px;
-    color: var(--primaryTextColor);
-    width: 100%;
-    position: absolute;
-    top: 45px;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.2s;
+	padding: 20px 10px;
+	background: var(--mainColor);
+	border: 1px solid var(--primaryTextColor);
+	border-radius: 10px;
+	color: var(--primaryTextColor);
+	width: 100%;
+	position: absolute;
+	top: 45px;
+	opacity: 0;
+	visibility: hidden;
+	transition: 0.2s;
 }
 
 .filterMenu.active {
-    opacity: 1;
-    visibility: visible;
-    z-index: 999;
+	opacity: 1;
+	visibility: visible;
+	z-index: 999;
 }
 
 .filterMenu li {
-    padding: 5px 15px;
-    cursor: pointer;
-    border-radius: 5px;
+	padding: 5px 15px;
+	cursor: pointer;
+	border-radius: 5px;
 }
 
 .filterMenu li:hover {
-    background: var(--hoverColor);
+	background: var(--hoverColor);
 }
 
 .petsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start; /* Align items to the start of the cross axis */
-    gap: 40px; /* Adjust the gap between cards */
-    margin-bottom: 60px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: flex-start; /* Align items to the start of the cross axis */
+	gap: 40px; /* Adjust the gap between cards */
+	margin-bottom: 60px;
 }

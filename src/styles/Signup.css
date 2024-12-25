@@ -28,7 +28,7 @@
 
 .signupbg {
 	width: 60%;
-	background-image: url(https://res.cloudinary.com/dmquudoki/image/upload/v1715501288/signup_background_mqjzy6.jpg);
+	background-image: url("../assets/signupPage.jpg");
 	background-size: cover;
 	background-position: center;
 }
