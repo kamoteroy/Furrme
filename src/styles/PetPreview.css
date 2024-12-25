@@ -24,12 +24,19 @@
 .petPreview {
 	padding-top: 80px;
 	display: flex;
+	flex-direction: column;
+}
+
+.petPreviewDetails {
+	display: flex;
+	flex-direction: row;
+	margin-top: -10px;
 }
 
 .petImgSec {
-	padding-top: 40px;
+	padding-top: 90px;
 	width: 60%;
-	height: calc(100vh - 80px);
+	height: calc(90vh - 10px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -52,7 +59,7 @@
 }
 
 .petImgCollection {
-	margin-top: 40px;
+	margin-top: 10px;
 	padding: 10px;
 	height: 20%;
 	width: 80%;
@@ -85,7 +92,7 @@
 }
 
 .petInfoContainer {
-	padding: 25px 0;
+	padding: 30px 0;
 	padding-right: 5%;
 	display: flex;
 	flex-direction: column;
