@@ -132,7 +132,7 @@ function Navbar(props) {
 								<MdOutlineDocumentScanner />
 								Terms & Conditions <FaAngleRight className="rightIcon" />
 							</Link>
-							<Link to="/education" className="colorText">
+							<Link to="/resources" className="colorText">
 								<FiBook />
 								Education <FaAngleRight className="rightIcon" />
 							</Link>

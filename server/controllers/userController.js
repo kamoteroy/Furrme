@@ -186,6 +186,21 @@ async function adoptionRequest(req, res) {
 	);
 }
 
+async function getpetPreview(req, res) {
+	console.log(req.params.id);
+	db.query(
+		"SELECT * FROM pets INNER JOIN pet_img ON pets.pet_id = pet_img.pet_id WHERE pets.pet_id = ?;",
+		req.params["id"],
+		(err, pets) => {
+			if (err) {
+				console.log(err);
+			} else {
+				return res.json(pets[0]);
+			}
+		}
+	);
+}
+
 module.exports = {
 	logIn,
 	signUp,
@@ -193,4 +208,5 @@ module.exports = {
 	addPost,
 	communityList,
 	adoptionRequest,
+	getpetPreview,
 };

@@ -13,7 +13,7 @@ import { arrows_circle_check } from "react-icons-kit/linea/arrows_circle_check";
 import { androidAlert } from "react-icons-kit/ionicons/androidAlert";
 import { checkmarkCircled } from "react-icons-kit/ionicons/checkmarkCircled";
 
-function Signup() {
+function Register() {
 	const [formData, setformData] = useState({
 		fname: "",
 		lname: "",
@@ -199,7 +199,7 @@ function Signup() {
 				<div className="signupbg"></div>
 				<div className="signup-form">
 					<div className="signup-header">
-						<h1>Sign up</h1>
+						<h1>Register</h1>
 						<p>
 							Join us in making a difference by opening your heart and home to a
 							pet in need today. Together, we can create countless tail-wagging
@@ -516,4 +516,4 @@ function Signup() {
 	);
 }
 
-export default Signup;
+export default Register;

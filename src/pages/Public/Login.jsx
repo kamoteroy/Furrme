@@ -149,7 +149,7 @@ function Login() {
 									{errors.password && <span> {errors.password} </span>}
 								</h4>
 							</div>
-							<Link to="/forgotpassword" className="forgotPassword">
+							<Link to="/forgot" className="forgotPassword">
 								Forgot Password
 							</Link>
 						</div>
@@ -162,7 +162,7 @@ function Login() {
 					<div className="login-footer">
 						<p>
 							Don't have an account?{" "}
-							<Link to="/signup" className="lblCreateAccount">
+							<Link to="/register" className="lblCreateAccount">
 								Create an Account
 							</Link>
 						</p>

@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import LoadingOverlay from "../../components/LoadingOverlay";
 
-function AdminPetPreview() {
+function PetDetails() {
 	const petData = useLocation().state; //get previous page data
 	const navigate = useNavigate();
 	const getData = useSelector((state) => state.value);
@@ -318,4 +318,4 @@ function AdminPetPreview() {
 	);
 }
 
-export default AdminPetPreview;
+export default PetDetails;

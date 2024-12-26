@@ -8,7 +8,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-function AdminAdoptionRequests() {
+function AdoptionRequests() {
 	const navigate = useNavigate();
 	const getData = useSelector((state) => state.value);
 	const token = getData.token;
@@ -247,4 +247,4 @@ function AdminAdoptionRequests() {
 	);
 }
 
-export default AdminAdoptionRequests;
+export default AdoptionRequests;
