@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/AdminDashboardSidebar.css";
+import "../styles/Components/AdminSidebar.css";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { IoPawOutline } from "react-icons/io5";
 import { IoPeopleOutline } from "react-icons/io5";
@@ -7,7 +7,7 @@ import { CiCirclePlus } from "react-icons/ci";
 import { CiLogout } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../../store/Users";
+import { logout } from "../store/Users";
 
 function AdminDashboardSidebar() {
 	const navigate = useNavigate();

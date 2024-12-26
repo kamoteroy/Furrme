@@ -50,7 +50,7 @@
 }
 
 .bannerImg {
-	background-image: url("../assets/allPetsBanner.jpg");
+	background-image: url("../../assets/allPetsBanner.jpg");
 	min-width: 100%;
 	min-height: 100%;
 	background-position: center;

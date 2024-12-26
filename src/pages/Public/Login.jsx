@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/Login.css";
+import "../../styles/Public/Login.css";
 import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 import axios from "axios";

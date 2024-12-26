@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../../styles/PetPreview.css";
+import "../../styles/Public/PetPreview.css";
 import Navbar from "../../components/Navbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";

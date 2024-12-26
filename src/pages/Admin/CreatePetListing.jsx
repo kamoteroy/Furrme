@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../styles/CreatePetListing.css";
-import AdminDashboardSidebar from "./AdminDashboardSidebar";
+import "../../styles/Admin/CreatePetListing.css";
+import AdminDashboardSidebar from "../../components/AdminSidebar";
 import {
 	MdOutlineKeyboardArrowDown,
 	MdOutlineKeyboardArrowUp,

@@ -28,7 +28,7 @@
 
 .signupbg {
 	width: 60%;
-	background-image: url("../assets/signupPage.jpg");
+	background-image: url("../../assets/signupPage.jpg");
 	background-size: cover;
 	background-position: center;
 }

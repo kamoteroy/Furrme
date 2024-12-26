@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Navbar from "../../components/Navbar";
 import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
-import "../../styles/DogsPage.css";
+import "../../styles/Public/DogsPage.css";
 import PetCard from "../../components/PetCard";
 
 function DogsPage() {

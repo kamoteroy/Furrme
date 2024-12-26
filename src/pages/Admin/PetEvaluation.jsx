@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../styles/AdminEvaluation.css";
-import AdminDashboardSidebar from "./AdminDashboardSidebar";
+import "../../styles/Admin/PetEvaluation.css";
+import AdminDashboardSidebar from "../../components/AdminSidebar";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import validID from "../../assets/avatar-dp.jpg";
 import axios from "axios";

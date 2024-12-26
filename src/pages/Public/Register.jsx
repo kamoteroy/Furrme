@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import "../../styles/Signup.css";
+import "../../styles/Public/Signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import RedirectModal from "../../components/RedirectModal";

@@ -1,5 +1,5 @@
 import React from "react";
-import "./RedirectModal.css";
+import "../styles/Components/RedirectModal.css";
 
 const ShowModal = ({ isOpen, onClose, title, children, link }) => {
 	return (

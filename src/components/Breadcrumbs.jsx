@@ -1,5 +1,5 @@
 import React from "react";
-import "./Breadcrumbs.css";
+import "../styles/Components/Breadcrumbs.css";
 import { useLocation, Link } from "react-router-dom";
 
 function Breadcrumbs() {

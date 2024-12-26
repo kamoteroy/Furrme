@@ -1,4 +1,4 @@
-import PetPreview from "../pages/User/PetPreview";
+import PetPreview from "../pages/Public/PetPreview";
 import AdoptPage from "../pages/User/AdoptPage";
 import Profile from "../pages/User/ManageProfile";
 import Community from "../pages/User/Community";

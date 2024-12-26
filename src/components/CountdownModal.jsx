@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./CountDownModal.css";
+import "../styles/Components/CountDownModal.css";
 
 const CountDownModal = ({ isOpen, onClose, title, children, link }) => {
 	const [countdown, setCountdown] = useState(5);

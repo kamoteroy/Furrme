@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import "../../styles/Homepage.css";
+import "../../styles/Public/Homepage.css";
 import { Link } from "react-router-dom";
 import { logout } from "../../store/Users";
 import { useEffect } from "react";

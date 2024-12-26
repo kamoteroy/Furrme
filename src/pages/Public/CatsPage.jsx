@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IoIosSearch } from "react-icons/io";
-import "../../styles/CatsPage.css";
+import "../../styles/Public/CatsPage.css";
 import PetCard from "../../components/PetCard";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 function CatsPage() {
 	const [ageClick, setAgeClick] = useState(false);

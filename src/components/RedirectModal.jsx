@@ -1,5 +1,5 @@
 import React from "react";
-import "./RedirectModal.css";
+import "../styles/Components/RedirectModal.css";
 import { useNavigate } from "react-router-dom";
 
 const RedirectModal = ({ isOpen, onClose, title, children, link }) => {

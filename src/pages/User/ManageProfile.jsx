@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../../styles/ManageProfile.css";
+import "../../styles/User/ManageProfile.css";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../styles/AllPets.css";
+import "../../styles/Public/AllPets.css";
 import PetCard from "../../components/PetCard";
 import Navbar from "../../components/Navbar";
 import { IoIosSearch } from "react-icons/io";

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import "../../styles/AdminAdoptionRequests.css";
-import AdminDashboardSidebar from "./AdminDashboardSidebar";
+import "../../styles/Admin/AdoptionRequests.css";
+import AdminDashboardSidebar from "../../components/AdminSidebar";
 import { IoIosSearch } from "react-icons/io";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";

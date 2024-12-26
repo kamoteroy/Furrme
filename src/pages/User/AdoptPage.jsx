@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../../styles/Adoption.css";
+import "../../styles/User/Adoption.css";
 import Navbar from "../../components/Navbar";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { IoIosCloseCircleOutline } from "react-icons/io";

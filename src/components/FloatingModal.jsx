@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./FloatingModal.css"; // Import your CSS styles
+import "../styles/Components/FloatingModal.css"; // Import your CSS styles
 
 const FloatingModal = ({ isOpen, onClose, title, countdownTime }) => {
 	const [timeLeft, setTimeLeft] = useState(countdownTime);
