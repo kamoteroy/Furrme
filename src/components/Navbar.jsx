@@ -178,7 +178,7 @@ function Navbar(props) {
 				{/*To here : Replace with <Button>Login<Button/> kay gi modify rana pang simulation sa Login Button og Avatar Icon if naka login or wala */}
 				{openDropdown === "user" && (
 					<ul className="userDropdown" onClick={closeDropdown}>
-						<Link to="/manage" className="colorDrop">
+						<Link to="/profile" className="colorDrop">
 							<CgProfile className="dropdownIcon" />
 							My Profile
 							<FaAngleRight className="rightIcon-UDP" />

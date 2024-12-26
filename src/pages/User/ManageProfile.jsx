@@ -42,7 +42,7 @@ function ManageProfile() {
 
 	useEffect(() => {
 		if (access === 1) {
-			navigate("/manage");
+			navigate("/profile");
 			setSaveBtn(false);
 			setformData(defaultValues);
 		}

@@ -3,7 +3,7 @@ import "../../styles/User/Adoption.css";
 import Navbar from "../../components/Navbar";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Breadcrumbs from "../../components/Breadcrumbs";
@@ -19,6 +19,7 @@ function AdoptPage() {
 	const navigate = useNavigate();
 	let d = new Date();
 	const todaysDate = d.toISOString().split("T")[0];
+	const { category, id } = useParams();
 	const [formData, setformData] = useState({
 		email: "",
 		address: "",
@@ -31,6 +32,11 @@ function AdoptPage() {
 	const getData = useSelector((state) => state.value);
 	const userData = getData.user;
 	const token = getData.token;
+	const customNames = petData
+		? {
+				[id]: petData.name,
+			}
+		: {};
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -168,7 +174,7 @@ function AdoptPage() {
 			<Navbar />
 
 			<div className="adoptionVerificationContainer">
-				<Breadcrumbs />
+				<Breadcrumbs customNames={customNames} />
 				<div className="petDetails">
 					<h3>Pet for Adoption: </h3>
 					<div className="petDetailsImgContainer">

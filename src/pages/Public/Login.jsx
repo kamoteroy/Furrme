@@ -45,10 +45,6 @@ function Login() {
 		if (!password.trim()) {
 			validationErrors.password = "Password is required";
 		}
-		if (password.length < 8 && password.length > 0) {
-			validationErrors.password =
-				"Password too short should be at least 8 characters";
-		}
 		setErrors(validationErrors);
 		return Object.keys(validationErrors).length === 0;
 	};
