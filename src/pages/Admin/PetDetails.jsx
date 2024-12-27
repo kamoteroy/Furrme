@@ -8,10 +8,9 @@ import AdminDashboardSidebar from "../../components/AdminSidebar";
 import { IoCloseCircle } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ClipLoader } from "react-spinners";
 import { useSelector } from "react-redux";
-import { BeatLoader } from "react-spinners";
 import LoadingOverlay from "../../components/LoadingOverlay";
+import catLoading2 from "../../assets/catLoading2.gif";
 
 function PetDetails() {
 	const petData = useLocation().state; //get previous page data
@@ -173,12 +172,7 @@ function PetDetails() {
 		<>
 			<div>
 				{uploading && (
-					<LoadingOverlay
-						gifSrc={
-							"https://res.cloudinary.com/dmquudoki/image/upload/v1724513882/output-onlinegiftools_2_mnt8b3.gif"
-						}
-						label={uploadingText}
-					/>
+					<LoadingOverlay gifSrc={catLoading2} label={uploadingText} />
 				)}
 				<div className="adminPetPreview">
 					<div className="sidebarComp">

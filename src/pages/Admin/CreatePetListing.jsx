@@ -7,6 +7,7 @@ import {
 } from "react-icons/md";
 import { IoCloseCircle } from "react-icons/io5";
 import axios from "axios";
+import catLoading from "../../assets/catLoading.gif";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../../components/LoadingOverlay";
@@ -284,12 +285,7 @@ function CreatePetListing() {
 			</RedirectModal>
 			<div>
 				{uploading && (
-					<LoadingOverlay
-						gifSrc={
-							"https://res.cloudinary.com/dmquudoki/image/upload/v1724513882/output-onlinegiftools_2_mnt8b3.gif"
-						}
-						label={uploadingText}
-					/>
+					<LoadingOverlay gifSrc={catLoading} label={uploadingText} />
 				)}
 				<div className="createPetListing">
 					<div className="sidebarComp">

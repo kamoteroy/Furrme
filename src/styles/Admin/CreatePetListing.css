@@ -57,8 +57,6 @@
 	padding: 20px 0;
 }
 
-/* nameGender */
-
 .createPetListing
 	.mainContent
 	.inputsContainer
@@ -84,12 +82,10 @@
 	align-items: flex-start;
 }
 
-/* Error input styles */
 .error-input {
 	border-color: red;
 }
 
-/* Shake animation for invalid inputs */
 @keyframes shake {
 	0%,
 	100% {
@@ -109,7 +105,6 @@
 	animation: shake 0.5s ease;
 }
 
-/* Error message styles */
 .error-message {
 	color: red;
 	font-size: 14px;
@@ -194,8 +189,6 @@
 	li:hover {
 	background-color: rgb(221, 221, 221);
 }
-
-/* Name gender */
 
 .createPetListing .mainContent .inputsContainer .basicInfo input {
 	padding: 5px 10px;
