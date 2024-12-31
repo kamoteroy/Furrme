@@ -188,11 +188,12 @@ function CreatePetListing() {
 				token: token,
 			})
 			.then((res) =>
-				res.data.warningCount === 0
+				res.data.resImg.warningCount === 0
 					? (setIsModalOpen(!isModalOpen),
 						setmodalContents({
 							title: "Listing Successful!",
-							contents: "",
+							contents: `See Listing`,
+							link: `http://localhost:3000/admin/pets/${selectedPetType}/${res.data.maxID}`,
 						}),
 						setUploadingText("Successful"),
 						setUploading(false),
@@ -309,6 +310,7 @@ function CreatePetListing() {
 				isOpen={isModalOpen}
 				onClose={toggleModal}
 				title={modalContents.title}
+				link={modalContents.link}
 			>
 				<p>{modalContents.contents}</p>
 			</CountDownModal>

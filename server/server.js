@@ -111,7 +111,7 @@ app.post("/admin/create", async (req, res) => {
 					[maxID, images[0], images[1], images[2], images[3], images[4]],
 					(err, resImg) => {
 						if (err) return err;
-						return res.json(resImg);
+						return res.json({ resImg: resImg, maxID: maxID });
 					}
 				);
 			}

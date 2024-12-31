@@ -6,7 +6,7 @@ import AdminDashboardSidebar from "../../components/AdminSidebar";
     MdOutlineKeyboardArrowUp,
 } from "react-icons/md";*/
 import { IoCloseCircle } from "react-icons/io5";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import LoadingOverlay from "../../components/LoadingOverlay";
@@ -17,7 +17,7 @@ function PetDetails() {
 	const navigate = useNavigate();
 	const getData = useSelector((state) => state.value);
 	const token = getData.token;
-
+	const { category, id } = useParams();
 	const [petInfo, setpetInfo] = useState([]);
 	const [petImage, setpetImage] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ function PetDetails() {
 
 	useEffect(() => {
 		axios
-			.get(`http://localhost:3001/admin/petDetails/${petData.pet_id}`, {
+			.get(`http://localhost:3001/admin/petDetails/${id}`, {
 				headers: {
 					token: token,
 				},
@@ -45,7 +45,7 @@ function PetDetails() {
 			.catch((err) => console.log(err));
 
 		axios
-			.get(`http://localhost:3001/admin/petImage/${petData.pet_id}`, {
+			.get(`http://localhost:3001/admin/petImage/${id}`, {
 				headers: {
 					token: token,
 				},

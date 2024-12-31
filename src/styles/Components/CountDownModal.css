@@ -29,6 +29,14 @@
 	transform: translate(-50%, -1200%); /* Slide out upwards */
 }
 
+.modal-body {
+	color: #474747;
+}
+.modal-body a {
+	color: black;
+	text-decoration: underline;
+}
+
 /* Close button */
 .close-button {
 	position: absolute;

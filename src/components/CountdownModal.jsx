@@ -42,7 +42,13 @@ const CountDownModal = ({ isOpen, onClose, title, children, link }) => {
 				&times;
 			</button>
 			<h2>{title}</h2>
-			<div className="modal-body">{children}</div>
+			{link ? (
+				<div className="modal-body">
+					See Listing <a href={link}>here</a>
+				</div>
+			) : (
+				<div className="modal-body">{children}</div>
+			)}
 
 			{/* Countdown Timer */}
 			<div className="countdown-timer">
