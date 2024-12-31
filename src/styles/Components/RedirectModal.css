@@ -1,5 +1,5 @@
 /* Overlay that covers the whole screen */
-.modal-overlay {
+.rmodal-overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -17,13 +17,13 @@
 	z-index: 1000;
 }
 
-.modal-overlay.show {
+.rmodal-overlay.show {
 	opacity: 1;
 	visibility: visible;
 }
 
 /* Modal content container */
-.modal-content {
+.rmodal-content {
 	background: white;
 	padding: 20px;
 	border-radius: 8px;
@@ -37,17 +37,17 @@
 }
 
 /* Slide-in animation */
-.modal-content.slide-in {
+.rmodal-content.slide-in {
 	transform: translateY(0);
 }
 
 /* Slide-out animation */
-.modal-content.slide-out {
+.rmodal-content.slide-out {
 	transform: translateY(-50%);
 }
 
 /* Close button */
-.close-button {
+.rclose-button {
 	position: absolute;
 	top: 10px;
 	right: 10px;
@@ -58,7 +58,7 @@
 }
 
 /* Okay button style */
-.okay-button {
+.rokay-button {
 	background-color: #474747;
 	color: white;
 	border: none;
@@ -69,18 +69,18 @@
 	margin-top: 20px;
 }
 
-.okay-button:hover {
+.rokay-button:hover {
 	background-color: #9c784a;
 }
 
 /* Responsive styles */
 @media (max-width: 600px) {
-	.modal-content {
+	.rmodal-content {
 		max-width: 90%;
 		padding: 15px;
 	}
 
-	.close-button {
+	.rclose-button {
 		font-size: 20px;
 	}
 
@@ -88,7 +88,7 @@
 		font-size: 20px;
 	}
 
-	.okay-button {
+	.rokay-button {
 		font-size: 14px;
 	}
 }

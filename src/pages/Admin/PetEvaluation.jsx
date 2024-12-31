@@ -153,9 +153,11 @@ function PetEvaluation() {
 						</div>
 						<div className="lbl-disp validIdPrev">
 							<p className="dispLabels">Valid ID</p>
-							<p className="validID-fileName" onClick={openImageInNewTab}>
-								{adoptInfo.image}
-							</p>
+							<input
+								className="validID-fileName"
+								onClick={openImageInNewTab}
+								value={adoptInfo.image}
+							/>
 						</div>
 					</div>
 					<div className="applicantInfo address-cNumPrev">

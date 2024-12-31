@@ -24,9 +24,9 @@ const FloatingModal = ({ isOpen, onClose, title, countdownTime }) => {
 	if (!isOpen) return null;
 
 	return (
-		<div className="modal-overlay">
-			<div className="modal-content" onClick={(e) => e.stopPropagation()}>
-				<button className="close-button" onClick={onClose}>
+		<div className="fmodal-overlay">
+			<div className="fmodal-content" onClick={(e) => e.stopPropagation()}>
+				<button className="fclose-button" onClick={onClose}>
 					X
 				</button>
 				<h2>{title}</h2>

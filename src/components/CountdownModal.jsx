@@ -37,21 +37,16 @@ const CountDownModal = ({ isOpen, onClose, title, children, link }) => {
 	};
 
 	return (
-		<div
-			className={`modal-overlay ${isOpen ? "show" : ""}`}
-			onClick={handleOverlayClick}
-		>
-			<div className={`modal-content ${isOpen ? "slide-in" : "slide-out"}`}>
-				<button className="close-button" onClick={onClose}>
-					&times;
-				</button>
-				<h2>{title}</h2>
-				<div className="modal-body">{children}</div>
+		<div className={`modal-content ${isOpen ? "slide-in" : "slide-out"}`}>
+			<button className="close-button" onClick={onClose}>
+				&times;
+			</button>
+			<h2>{title}</h2>
+			<div className="modal-body">{children}</div>
 
-				{/* Countdown Timer */}
-				<div className="countdown-timer">
-					<p>Closing in: {countdown} seconds</p>
-				</div>
+			{/* Countdown Timer */}
+			<div className="countdown-timer">
+				<p>Closing in: {countdown} seconds</p>
 			</div>
 		</div>
 	);

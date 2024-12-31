@@ -11,12 +11,11 @@ import catLoading from "../../assets/catLoading.gif";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../../components/LoadingOverlay";
-import RedirectModal from "../../components/RedirectModal";
+import CountDownModal from "../../components/CountdownModal";
 
 function CreatePetListing() {
 	const getData = useSelector((state) => state.value);
 	const token = getData.token;
-	const navigate = useNavigate();
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [genderDropdownOpen, setGenderDropdownOpen] = useState(false);
 	const [selectedPetType, setSelectedPetType] = useState("Select Pet Type");
@@ -79,6 +78,35 @@ function CreatePetListing() {
 			setShaking(true);
 			setTimeout(() => setShaking(false), 500); // Remove the shake class after 500ms
 		} else return true;
+	};
+
+	const clearInputs = () => {
+		setformData({
+			name: "",
+			breed: "",
+			age: "",
+			address: "",
+			color: "",
+			behavior: "",
+			health: "",
+			description: "",
+		});
+		setSelectedPetType("Select Pet Type");
+		setSelectedPetGender("Select Gender");
+		setImages([]);
+		setbase64s([]);
+		setErrors({
+			name: false,
+			breed: false,
+			age: false,
+			address: false,
+			gender: false,
+			type: false,
+			color: false,
+			behavior: false,
+			health: false,
+			description: false,
+		});
 	};
 
 	const toggleModal = () => {
@@ -150,6 +178,7 @@ function CreatePetListing() {
     };*/
 
 	const create = (pictures) => {
+		console.log("bobo1");
 		axios
 			.post("http://localhost:3001/admin/create", {
 				data: formData,
@@ -167,7 +196,8 @@ function CreatePetListing() {
 						}),
 						setUploadingText("Successful"),
 						setUploading(false),
-						setLink("/admin/pets"))
+						setLink("/admin/pets"),
+						clearInputs())
 					: (setIsModalOpen(!isModalOpen),
 						setmodalContents({
 							title: "Listing Failed!",
@@ -275,14 +305,13 @@ function CreatePetListing() {
 
 	return (
 		<>
-			<RedirectModal
+			<CountDownModal
 				isOpen={isModalOpen}
 				onClose={toggleModal}
 				title={modalContents.title}
-				link={link}
 			>
 				<p>{modalContents.contents}</p>
-			</RedirectModal>
+			</CountDownModal>
 			<div>
 				{uploading && (
 					<LoadingOverlay gifSrc={catLoading} label={uploadingText} />
@@ -304,6 +333,7 @@ function CreatePetListing() {
 											id="name"
 											type="text"
 											name="name"
+											value={formData.name}
 											className={errors.name ? "error-input" : ""}
 											style={errors.name ? { border: "1px solid red" } : {}}
 											placeholder="Name"
@@ -379,6 +409,7 @@ function CreatePetListing() {
 											type="text"
 											name="breed"
 											placeholder="Breed"
+											value={formData.breed}
 											className={errors.breed ? "error-input" : ""}
 											style={errors.breed ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
@@ -395,6 +426,7 @@ function CreatePetListing() {
 											type="text"
 											name="age"
 											placeholder="Age"
+											value={formData.age}
 											className={errors.age ? "error-input" : ""}
 											style={errors.age ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
@@ -409,6 +441,7 @@ function CreatePetListing() {
 											type="text"
 											name="color"
 											placeholder="Color"
+											value={formData.color}
 											className={errors.color ? "error-input" : ""}
 											style={errors.color ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}

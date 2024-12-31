@@ -1,28 +1,3 @@
-/* Overlay that covers the whole screen */
-.modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
-	display: flex;
-	justify-content: center;
-	align-items: flex-start; /* Align at the top */
-	opacity: 0;
-	visibility: hidden;
-	transition:
-		opacity 0.3s ease,
-		visibility 0.3s ease;
-	z-index: 1000;
-}
-
-/* Show the modal */
-.modal-overlay.show {
-	opacity: 1;
-	visibility: visible;
-}
-
 /* Modal content container */
 .modal-content {
 	background: white;
@@ -32,19 +7,26 @@
 	max-width: 500px;
 	width: 90%;
 	text-align: center;
-	margin-top: 7%; /* 30% margin from the top of the screen */
+	position: fixed; /* Fixed to the screen */
+	top: 0%; /* Vertically center the modal */
+	left: 50%; /* Horizontally center the modal */
+	transform: translate(
+		-50%,
+		-50%
+	); /* Offset the modal to ensure perfect centering */
 	transition: transform 0.5s ease;
-	position: relative;
+	background-color: #f2e6d6;
+	z-index: 1000; /* Ensure the modal appears above other content */
 }
 
 /* Slide-in animation */
 .modal-content.slide-in {
-	transform: translateY(0);
+	transform: translate(-50%, 50%); /* Centered position */
 }
 
 /* Slide-out animation */
 .modal-content.slide-out {
-	transform: translateY(-50%);
+	transform: translate(-50%, -1200%); /* Slide out upwards */
 }
 
 /* Close button */

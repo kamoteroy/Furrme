@@ -126,7 +126,7 @@ function AdminDashboard() {
 	};
 
 	const petPreview = (pet) => {
-		navigate(`/admin/pets/${pet.category}/${pet.name}`, { state: pet });
+		navigate(`/admin/pets/${pet.category}/${pet.pet_id}`, { state: pet });
 	};
 
 	return (

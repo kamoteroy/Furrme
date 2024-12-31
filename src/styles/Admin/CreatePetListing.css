@@ -53,7 +53,7 @@
 .createPetListing .mainContent .inputsContainer .basicInfo {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 15px;
 	padding: 20px 0;
 }
 
@@ -190,11 +190,25 @@
 	background-color: rgb(221, 221, 221);
 }
 
-.createPetListing .mainContent .inputsContainer .basicInfo input {
+.createPetListing
+	.mainContent
+	.inputsContainer
+	.basicInfo
+	.nameGenderContainer
+	input {
 	padding: 5px 10px;
 	border: 1px solid rgb(200, 200, 200);
 	border-radius: 7px;
 	font-size: 14px;
+	background-color: none;
+}
+
+.createPetListing .mainContent .inputsContainer .basicInfo .containers input {
+	padding: 5px 10px;
+	border: 1px solid rgb(200, 200, 200);
+	border-radius: 7px;
+	font-size: 14px;
+	margin-left: 10px;
 }
 
 .createPetListing .mainContent .inputsContainer .petNameContainer {
@@ -205,6 +219,11 @@
 .createPetListing .mainContent .inputsContainer .containers {
 	display: flex;
 	gap: 20px;
+}
+
+.createPetListing .mainContent .inputsContainer .containers label {
+	align-self: center;
+	color: var(--primaryTextColor);
 }
 
 .createPetListing .mainContent .inputsContainer .containers .inputs {
@@ -236,6 +255,8 @@
 	.inputs.type
 	.petTypeDP-Header {
 	position: relative;
+	color: var(--primaryTextColor);
+	margin-left: 10px;
 }
 
 .createPetListing

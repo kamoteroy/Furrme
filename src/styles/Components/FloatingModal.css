@@ -1,5 +1,5 @@
 /* The overlay covers the whole screen with semi-transparent background */
-.modal-overlay {
+.fmodal-overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -19,13 +19,13 @@
 }
 
 /* When the modal is open, show the overlay with visibility and opacity */
-.modal-overlay.show {
+.fmodal-overlay.show {
 	opacity: 1;
 	visibility: visible;
 }
 
 /* Modal content styling */
-.modal-content {
+.fmodal-content {
 	background: white;
 	padding: 20px;
 	border-radius: 8px;
@@ -38,12 +38,12 @@
 	transform: translateY(-50px); /* Start from above */
 }
 
-.modal-content.show {
+.fmodal-content.show {
 	transform: translateY(0); /* Move to its natural position */
 }
 
 /* Close button style */
-.close-button {
+.fclose-button {
 	position: absolute;
 	top: 10px;
 	right: 10px;
@@ -55,12 +55,12 @@
 
 /* Responsive styles */
 @media (max-width: 600px) {
-	.modal-content {
+	.fmodal-content {
 		max-width: 90%;
 		padding: 15px;
 	}
 
-	.close-button {
+	.fclose-button {
 		font-size: 20px;
 	}
 

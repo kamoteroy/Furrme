@@ -16,6 +16,6 @@ export const RoutesData = [
 	{ path: "/admin/pets", element: <AdminDashboard /> },
 	{ path: "/admin/request", element: <AdoptionRequests /> },
 	{ path: "/admin/create", element: <CreatePetListing /> },
-	{ path: "/admin/pets/:category/:name", element: <PetDetails /> },
+	{ path: "/admin/pets/:category/:id", element: <PetDetails /> },
 	{ path: "/admin/evaluate/:name", element: <PetEvaluation /> },
 ];

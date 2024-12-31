@@ -14,14 +14,14 @@ const RedirectModal = ({ isOpen, onClose, title, children, link }) => {
 	};
 
 	return (
-		<div className={`modal-overlay ${isOpen ? "show" : ""}`}>
-			<div className={`modal-content ${isOpen ? "slide-in" : "slide-out"}`}>
-				<button className="close-button" onClick={handleCloseModal}>
+		<div className={`rmodal-overlay ${isOpen ? "show" : ""}`}>
+			<div className={`rmodal-content ${isOpen ? "slide-in" : "slide-out"}`}>
+				<button className="rclose-button" onClick={handleCloseModal}>
 					&times;
 				</button>
 				<h2>{title}</h2>
-				<div className="modal-body">{children}</div>
-				<button className="okay-button" onClick={handleCloseModal}>
+				<div className="rmodal-body">{children}</div>
+				<button className="rokay-button" onClick={handleCloseModal}>
 					Okay
 				</button>
 			</div>
