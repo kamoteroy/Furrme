@@ -37,7 +37,6 @@ function CreatePetListing() {
 		description: "",
 	});
 	const [shaking, setShaking] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [errors, setErrors] = useState({
 		name: false,
 		breed: false,
@@ -54,7 +53,12 @@ function CreatePetListing() {
 		title: "",
 		contents: "",
 	});
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [link, setLink] = useState("");
+
+	const toggleModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
 
 	const validateForm = () => {
 		const newErrors = {
@@ -107,10 +111,6 @@ function CreatePetListing() {
 			health: false,
 			description: false,
 		});
-	};
-
-	const toggleModal = () => {
-		setIsModalOpen(!isModalOpen);
 	};
 
 	const toggleDropdown = () => {

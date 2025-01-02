@@ -11,9 +11,10 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import catLoading2 from "../../assets/catLoading2.gif";
+import catLoading1 from "../../assets/catLoading.gif";
+import CountDownModal from "../../components/CountdownModal";
 
 function PetDetails() {
-	const petData = useLocation().state; //get previous page data
 	const navigate = useNavigate();
 	const getData = useSelector((state) => state.value);
 	const token = getData.token;
@@ -26,6 +27,15 @@ function PetDetails() {
 	const [images, setImages] = useState([]);
 	const [base64s, setbase64s] = useState([]);
 	const [isChanged, setIsChanged] = useState(false); // State to track if changes were made
+	const [modalContents, setmodalContents] = useState({
+		title: "",
+		contents: "",
+	});
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const toggleModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
 
 	useEffect(() => {
 		setLoading(false);
@@ -50,7 +60,7 @@ function PetDetails() {
 					token: token,
 				},
 			})
-			.then((result) => setpetImage(result.data))
+			.then((result) => setpetImage(result.data), setLoading(!loading))
 			.catch((err) => console.log(err));
 	}, []);
 
@@ -70,7 +80,10 @@ function PetDetails() {
 		fileInput.onchange = (event) => {
 			const files = Array.from(event.target.files);
 			if (files.length + images.length > 5) {
-				alert("You can only upload up to 5 photos.");
+				setmodalContents({
+					title: "Update Error!",
+					contents: "You can only upload up to 5 photos.",
+				});
 				return;
 			}
 			files.map(async (file) => {
@@ -104,14 +117,17 @@ function PetDetails() {
 	};
 
 	const handleSubmit = (e) => {
-		setUploading(true);
 		if (!images[0]) {
 			// Remove the uploaded image
-			alert("No image");
+			setIsModalOpen(!isModalOpen);
+			setmodalContents({
+				title: "Select at least one image",
+			});
 			setImages([]);
 			return;
 		}
 		if (base64s[0]) {
+			setUploading(true);
 			base64s.forEach(async function (item, index) {
 				try {
 					const res = await axios.post("http://localhost:3001/upload", {
@@ -149,10 +165,17 @@ function PetDetails() {
 				setUploadingText("Successful");
 				if (res.data === 0) {
 					setUploadingText("Successful");
-					navigate(0);
-					alert("Updated Successfully");
+					setIsModalOpen(!isModalOpen);
+					setmodalContents({
+						title: "Update Successful!",
+						contents: "Information Updated Successfully",
+					});
 				} else {
-					alert("Error Updating");
+					setIsModalOpen(!isModalOpen);
+					setmodalContents({
+						title: "Update Error!",
+						contents: "Error Updating",
+					});
 				}
 			})
 			.catch((err) => console.log(err));
@@ -171,8 +194,18 @@ function PetDetails() {
 	return (
 		<>
 			<div>
+				<CountDownModal
+					isOpen={isModalOpen}
+					onClose={toggleModal}
+					title={modalContents.title}
+				>
+					<p>{modalContents.contents}</p>
+				</CountDownModal>
 				{uploading && (
-					<LoadingOverlay gifSrc={catLoading2} label={uploadingText} />
+					<LoadingOverlay gifSrc={catLoading1} label={uploadingText} />
+				)}
+				{loading && (
+					<LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />
 				)}
 				<div className="adminPetPreview">
 					<div className="sidebarComp">
