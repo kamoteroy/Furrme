@@ -118,10 +118,14 @@ function Register() {
 		e.preventDefault();
 		if (validateForm()) {
 			axios
-				.post("http://localhost:3001/signup", { formData, password }) // Use formData directly as the data object
+				.post("http://localhost:3001/signup", { formData, password })
 				.then((res) => {
 					if (res.data.message !== "Success") {
-						alert(res.data.message);
+						setmodalContents({
+							title: "Register Unsuccessful",
+							contents: res.data.message,
+						});
+						setIsModalOpen(!isModalOpen);
 					} else {
 						setmodalContents({
 							title: "Register Successful",
@@ -132,7 +136,7 @@ function Register() {
 					}
 				})
 				.catch((error) => {
-					console.error(error); // Log any errors that occur during the request
+					console.error(error);
 				});
 		}
 	};

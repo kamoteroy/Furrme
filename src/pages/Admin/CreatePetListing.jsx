@@ -263,7 +263,10 @@ function CreatePetListing() {
 		fileInput.onchange = (event) => {
 			const files = Array.from(event.target.files);
 			if (files.length + images.length > 5) {
-				alert("You can only upload up to 5 photos.");
+				setmodalContents({
+					title: "You can only upload up to 5 photos.",
+				});
+				setIsModalOpen(!isModalOpen);
 				return;
 			}
 			files.map(async (file) => {

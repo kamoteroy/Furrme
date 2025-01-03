@@ -121,7 +121,8 @@ function PetDetails() {
 			// Remove the uploaded image
 			setIsModalOpen(!isModalOpen);
 			setmodalContents({
-				title: "Select at least one image",
+				title: "Image cannot be empty!",
+				contents: "Select at least one image",
 			});
 			setImages([]);
 			return;
@@ -167,14 +168,12 @@ function PetDetails() {
 					setUploadingText("Successful");
 					setIsModalOpen(!isModalOpen);
 					setmodalContents({
-						title: "Update Successful!",
-						contents: "Information Updated Successfully",
+						title: "Information Updated Successfully",
 					});
 				} else {
 					setIsModalOpen(!isModalOpen);
 					setmodalContents({
 						title: "Update Error!",
-						contents: "Error Updating",
 					});
 				}
 			})

@@ -315,3 +315,7 @@
 	font-size: 18px;
 	font-weight: bold;
 }
+
+input[readonly] {
+	cursor: default;
+}
