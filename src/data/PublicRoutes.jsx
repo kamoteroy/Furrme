@@ -13,8 +13,6 @@ export const PublicRoutes = [
 	{ path: "/login", element: <Login /> },
 	{ path: "/register", element: <Register /> },
 	{ path: "/pets", element: <AllPets /> },
-	{ path: "/pets/Dogs", element: <Dogs /> },
-	{ path: "/pets/Cats", element: <Cats /> },
 	{ path: "/forgot", element: <ForgotPassword /> },
 	{ path: "/resources", element: <Resources /> },
 	{ path: "/terms", element: <Terms /> },

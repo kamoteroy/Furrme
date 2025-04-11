@@ -7,6 +7,8 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import LoadingOverlay from "../../components/LoadingOverlay";
+import catLoading2 from "../../assets/catLoading2.gif";
 
 function AdoptionRequests() {
 	const navigate = useNavigate();
@@ -20,10 +22,10 @@ function AdoptionRequests() {
 	const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
 	const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 	const [adminPetRequests, setAdminPetRequests] = useState([]);
-
 	const rowsPerPage = 10;
 	const dropdownRef = useRef(null);
 	const statusDropdownRef = useRef(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		axios
@@ -32,7 +34,7 @@ function AdoptionRequests() {
 					token: token,
 				},
 			})
-			.then((res) => setAdminPetRequests(res.data))
+			.then((res) => setAdminPetRequests(res.data), setLoading(false))
 			.catch((err) => console.log(err));
 	}, []);
 
@@ -122,128 +124,131 @@ function AdoptionRequests() {
 	};
 
 	return (
-		<div className="adminAdoptionRequests">
-			<div className="sidebarComp">
-				<AdminDashboardSidebar />
-			</div>
-			<div className="mainContent">
-				<div className="header">
-					<h2>Adoption Requests</h2>
-					<div
-						className={`searchBar ${isSearchBarFocused ? "highlighted" : ""}`}
-					>
-						<IoIosSearch className="searchIcon" />
-						<input
-							type="text"
-							placeholder="Search by name"
-							value={searchInput}
-							onChange={handleSearchInputChange}
-							onFocus={() => setIsSearchBarFocused(true)}
-							onBlur={() => setIsSearchBarFocused(false)}
-							onClick={() => {
-								setIsDropdownOpen(false);
-								setIsStatusDropdownOpen(false);
-							}}
-						/>
-					</div>
-					<div className="tableFilters">
-						<div className="dropdowns" ref={dropdownRef}>
-							<p className="dropdownItem" onClick={toggleDropdown}>
-								{selectedPet}{" "}
-								{isDropdownOpen ? (
-									<MdKeyboardArrowUp />
-								) : (
-									<MdKeyboardArrowDown />
-								)}
-							</p>
-							{isDropdownOpen && (
-								<div className="dropdown">
-									<ul>
-										<li onClick={() => handleOptionClick("All Pets")}>
-											All Pets
-										</li>
-										<li onClick={() => handleOptionClick("Dogs")}>Dogs</li>
-										<li onClick={() => handleOptionClick("Cats")}>Cats</li>
-									</ul>
-								</div>
-							)}
-						</div>
-						<div className="dropdowns" ref={statusDropdownRef}>
-							<p className="dropdownItem" onClick={toggleStatusDropdown}>
-								{selectedStatus}{" "}
-								{isStatusDropdownOpen ? (
-									<MdKeyboardArrowUp />
-								) : (
-									<MdKeyboardArrowDown />
-								)}
-							</p>
-							{isStatusDropdownOpen && (
-								<div className="dropdown">
-									<ul>
-										<li onClick={() => handleStatusOptionClick("Status")}>
-											Status
-										</li>
-										<li onClick={() => handleStatusOptionClick("Pending")}>
-											Pending
-										</li>
-										<li onClick={() => handleStatusOptionClick("Approved")}>
-											Approved
-										</li>
-										<li onClick={() => handleStatusOptionClick("Rejected")}>
-											Rejected
-										</li>
-									</ul>
-								</div>
-							)}
-						</div>
-					</div>
+		<>
+			{loading && <LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />}
+			<div className="adminAdoptionRequests">
+				<div className="sidebarComp">
+					<AdminDashboardSidebar />
 				</div>
-				<div className="tableContainer">
-					<table>
-						<thead>
-							<tr>
-								<th>Date</th>
-								<th>Name</th>
-								<th>Email</th>
-								<th>Pet</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							{currentRequests.length === 0 ? (
+				<div className="mainContent">
+					<div className="header">
+						<h2>Adoption Requests</h2>
+						<div
+							className={`searchBar ${isSearchBarFocused ? "highlighted" : ""}`}
+						>
+							<IoIosSearch className="searchIcon" />
+							<input
+								type="text"
+								placeholder="Search by name"
+								value={searchInput}
+								onChange={handleSearchInputChange}
+								onFocus={() => setIsSearchBarFocused(true)}
+								onBlur={() => setIsSearchBarFocused(false)}
+								onClick={() => {
+									setIsDropdownOpen(false);
+									setIsStatusDropdownOpen(false);
+								}}
+							/>
+						</div>
+						<div className="tableFilters">
+							<div className="dropdowns" ref={dropdownRef}>
+								<p className="dropdownItem" onClick={toggleDropdown}>
+									{selectedPet}{" "}
+									{isDropdownOpen ? (
+										<MdKeyboardArrowUp />
+									) : (
+										<MdKeyboardArrowDown />
+									)}
+								</p>
+								{isDropdownOpen && (
+									<div className="dropdown">
+										<ul>
+											<li onClick={() => handleOptionClick("All Pets")}>
+												All Pets
+											</li>
+											<li onClick={() => handleOptionClick("Dogs")}>Dogs</li>
+											<li onClick={() => handleOptionClick("Cats")}>Cats</li>
+										</ul>
+									</div>
+								)}
+							</div>
+							<div className="dropdowns" ref={statusDropdownRef}>
+								<p className="dropdownItem" onClick={toggleStatusDropdown}>
+									{selectedStatus}{" "}
+									{isStatusDropdownOpen ? (
+										<MdKeyboardArrowUp />
+									) : (
+										<MdKeyboardArrowDown />
+									)}
+								</p>
+								{isStatusDropdownOpen && (
+									<div className="dropdown">
+										<ul>
+											<li onClick={() => handleStatusOptionClick("Status")}>
+												Status
+											</li>
+											<li onClick={() => handleStatusOptionClick("Pending")}>
+												Pending
+											</li>
+											<li onClick={() => handleStatusOptionClick("Approved")}>
+												Approved
+											</li>
+											<li onClick={() => handleStatusOptionClick("Rejected")}>
+												Rejected
+											</li>
+										</ul>
+									</div>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className="tableContainer">
+						<table>
+							<thead>
 								<tr>
-									<td colSpan="3">No Pet Requests Found</td>
+									<th>Date</th>
+									<th>Name</th>
+									<th>Email</th>
+									<th>Pet</th>
+									<th>Status</th>
 								</tr>
-							) : (
-								currentRequests.map((request) => (
-									<tr onClick={() => petPreview(request)}>
-										<td>{request.dates}</td>
-										<td>{request.pet_name}</td>
-										<td>{request.email}</td>
-										<td>{request.category}</td>
-										<td>{request.status}</td>
+							</thead>
+							<tbody>
+								{currentRequests.length === 0 ? (
+									<tr>
+										<td colSpan="3">No Pet Requests Found</td>
 									</tr>
-								))
-							)}
-						</tbody>
-					</table>
-				</div>
-				<div className="tableNav">
-					<div className="pageNav" onClick={handlePreviousPage}>
-						<FaAngleLeft className="navIcon" />
-						<p>Previous</p>
+								) : (
+									currentRequests.map((request) => (
+										<tr onClick={() => petPreview(request)}>
+											<td>{request.dates}</td>
+											<td>{request.pet_name}</td>
+											<td>{request.email}</td>
+											<td>{request.category}</td>
+											<td>{request.status}</td>
+										</tr>
+									))
+								)}
+							</tbody>
+						</table>
 					</div>
-					<p className="pageNum">
-						Page {currentPage} of{" "}
-						{Math.ceil(filteredRequests.length / rowsPerPage)}
-					</p>
-					<div className="pageNav" onClick={handleNextPage}>
-						<p>Next</p>
-						<FaAngleRight className="navIcon" />
+					<div className="tableNav">
+						<div className="pageNav" onClick={handlePreviousPage}>
+							<FaAngleLeft className="navIcon" />
+							<p>Previous</p>
+						</div>
+						<p className="pageNum">
+							Page {currentPage} of{" "}
+							{Math.ceil(filteredRequests.length / rowsPerPage)}
+						</p>
+						<div className="pageNav" onClick={handleNextPage}>
+							<p>Next</p>
+							<FaAngleRight className="navIcon" />
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 

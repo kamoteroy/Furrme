@@ -10,8 +10,8 @@ import PetDetails from "../pages/Admin/PetDetails";
 
 export const RoutesData = [
 	{ path: "/profile", element: <Profile /> },
-	{ path: "/pets/:category/:id", element: <PetPreview /> },
-	{ path: "/pets/:category/:id/adopt", element: <AdoptPage /> },
+	{ path: "/pets/:id", element: <PetPreview /> },
+	{ path: "/pets/:id/adopt", element: <AdoptPage /> },
 	{ path: "/community", element: <Community /> },
 	{ path: "/admin/pets", element: <AdminDashboard /> },
 	{ path: "/admin/request", element: <AdoptionRequests /> },

@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../styles/Components/RedirectModal.css";
 import { useNavigate } from "react-router-dom";
 
 const RedirectModal = ({ isOpen, onClose, title, children, link }) => {
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			if (e.target.classList.contains("rmodal-overlay")) {
+				onClose();
+				navigate(link);
+			}
+		};
+
+		if (isOpen) {
+			document.body.addEventListener("click", handleClickOutside);
+		}
+		return () => {
+			document.body.removeEventListener("click", handleClickOutside);
+		};
+	}, [isOpen, onClose]);
+
 	const handleCloseModal = () => {
-		onClose = false;
-		// Perform the redirect after closing the modal
+		onClose();
+
 		setTimeout(() => {
-			navigate(link); // Replace '/redirect-path' with your desired route
-		}, 500); // Optional delay for better user experience
+			navigate(link);
+		}, 500);
 	};
 
 	return (

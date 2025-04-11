@@ -8,16 +8,16 @@ import {
 } from "react-icons/md";
 import { FaAngleRight } from "react-icons/fa6";
 import { FiBook } from "react-icons/fi";
-import { FaTiktok, FaQuestion, FaCat, FaDog } from "react-icons/fa";
+import { FaTiktok, FaQuestion } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { MdContactSupport } from "react-icons/md";
-import { IoIosLogOut } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/Users";
 
-function Navbar(props) {
+function Navbar() {
 	const [openDropdown, setOpenDropdown] = useState(null);
-	const [isLoggedIn, setIsLoggedIn] = useState(false); //For Simulation (Please replace with correct authentication logic)
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [menuOpen, setMenuOpen] = useState(false);
 	const navbarRef = useRef(null);
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.value);
@@ -58,7 +58,7 @@ function Navbar(props) {
 		navigate("/");
 	};
 
-	const Community = () => {
+	const navCommunity = () => {
 		if (user === null) {
 			navigate("/login");
 		} else {
@@ -72,6 +72,9 @@ function Navbar(props) {
 		} else {
 			navigate("/pets");
 		}
+	};
+	const navPets = () => {
+		navigate("/pets");
 	};
 
 	return (
@@ -87,87 +90,72 @@ function Navbar(props) {
 					<h2>FurrMe</h2>
 				</a>
 			</div>
-			<div className="navList">
-				<div className="navItem pets">
-					<p onClick={() => toggleDropdown("pets")}>
-						Pets{" "}
-						{openDropdown === "pets" ? (
-							<MdOutlineKeyboardArrowUp />
-						) : (
-							<MdOutlineKeyboardArrowDown />
+			<div className="burger">
+				<div className={`navList ${menuOpen ? "open" : ""}`}>
+					<div className="navItem pets">
+						<p onClick={() => navPets()}>Pets </p>
+					</div>
+
+					<div className="navItem community">
+						<p onClick={() => navCommunity()}>Community</p>
+					</div>
+
+					<div className="navItem resources">
+						<p onClick={() => toggleDropdown("resources")}>
+							Resources{" "}
+							{openDropdown === "resources" ? (
+								<MdOutlineKeyboardArrowUp />
+							) : (
+								<MdOutlineKeyboardArrowDown />
+							)}
+						</p>
+						{openDropdown === "resources" && (
+							<ul className="dropdown resources" onClick={closeDropdown}>
+								<Link to="/FAQS">
+									<FaQuestion />
+									FAQs <FaAngleRight className="rightIcon" />
+								</Link>
+								<Link to="/terms">
+									<MdOutlineDocumentScanner />
+									Terms <FaAngleRight className="rightIcon" />
+								</Link>
+								<Link to="/resources">
+									<FiBook />
+									Education <FaAngleRight className="rightIcon" />
+								</Link>
+							</ul>
 						)}
-					</p>
-					{openDropdown === "pets" && (
-						<ul className="dropdown pets" onClick={closeDropdown}>
-							<Link to="/pets/Cats" className="colorText">
-								<FaCat className="dropdownIcon" />
-								Cats <FaAngleRight className="rightIcon" />
-							</Link>
-							<Link to="/pets/Dogs" className="colorText">
-								<FaDog />
-								Dogs <FaAngleRight className="rightIcon" />
-							</Link>
-						</ul>
-					)}
-				</div>
-				<div className="navItem community">
-					<p onClick={() => Community()}>Community</p>
-				</div>
-				<div className="navItem resources">
-					<p onClick={() => toggleDropdown("resources")}>
-						Resources{" "}
-						{openDropdown === "resources" ? (
-							<MdOutlineKeyboardArrowUp />
-						) : (
-							<MdOutlineKeyboardArrowDown />
+					</div>
+
+					<div className="navItem socials">
+						<p onClick={() => toggleDropdown("socials")}>
+							Socials{" "}
+							{openDropdown === "socials" ? (
+								<MdOutlineKeyboardArrowUp />
+							) : (
+								<MdOutlineKeyboardArrowDown />
+							)}
+						</p>
+						{openDropdown === "socials" && (
+							<ul className="dropdown socials" onClick={closeDropdown}>
+								<Link to="/">
+									<i className="fa-brands fa-instagram"></i>
+									Instagram <FaAngleRight className="rightIcon" />
+								</Link>
+								<Link to="/">
+									<i className="fa-brands fa-facebook"></i>
+									Facebook <FaAngleRight className="rightIcon" />
+								</Link>
+								<Link to="/">
+									<FaTiktok />
+									Tiktok <FaAngleRight className="rightIcon" />
+								</Link>
+							</ul>
 						)}
-					</p>
-					{openDropdown === "resources" && (
-						<ul className="dropdown resources" onClick={closeDropdown}>
-							<Link to="/FAQS" className="colorText">
-								<FaQuestion />
-								FAQs <FaAngleRight className="rightIcon" />
-							</Link>
-							<Link to="/terms" className="colorText">
-								<MdOutlineDocumentScanner />
-								Terms & Conditions <FaAngleRight className="rightIcon" />
-							</Link>
-							<Link to="/resources" className="colorText">
-								<FiBook />
-								Education <FaAngleRight className="rightIcon" />
-							</Link>
-						</ul>
-					)}
-				</div>
-				<div className="navItem socials">
-					<p onClick={() => toggleDropdown("socials")}>
-						Socials{" "}
-						{openDropdown === "socials" ? (
-							<MdOutlineKeyboardArrowUp />
-						) : (
-							<MdOutlineKeyboardArrowDown />
-						)}
-					</p>
-					{openDropdown === "socials" && (
-						<ul className="dropdown socials" onClick={closeDropdown}>
-							<li>
-								<i class="fa-brands fa-instagram"></i>
-								Instagram <FaAngleRight className="rightIcon" />
-							</li>
-							<li>
-								<i class="fa-brands fa-facebook"></i>
-								Facebook <FaAngleRight className="rightIcon" />
-							</li>
-							<li>
-								<FaTiktok />
-								Tiktok <FaAngleRight className="rightIcon" />
-							</li>
-						</ul>
-					)}
+					</div>
 				</div>
 			</div>
 			<div className="loginBtn-accountIcon">
-				{/* From Here */}
 				{isLoggedIn ? (
 					<div className="DP-Icon" onClick={() => toggleDropdown("user")}>
 						<img src={user.user.image} alt={user.user.name} />
@@ -175,23 +163,19 @@ function Navbar(props) {
 				) : (
 					<button onClick={handleLogin}>Login</button>
 				)}
-				{/*To here : Replace with <Button>Login<Button/> kay gi modify rana pang simulation sa Login Button og Avatar Icon if naka login or wala */}
 				{openDropdown === "user" && (
 					<ul className="userDropdown" onClick={closeDropdown}>
 						<Link to="/profile" className="colorDrop">
-							<CgProfile className="dropdownIcon" />
-							My Profile
+							<CgProfile />
+							Profile
 							<FaAngleRight className="rightIcon-UDP" />
 						</Link>
 						<Link to="/help" className="colorDrop">
-							<MdContactSupport className="dropdownIcon" />
-							Help & Support
+							<MdContactSupport />
+							Help
 							<FaAngleRight className="rightIcon-UDP" />
 						</Link>
-						<button onClick={() => Logout()}>
-							<IoIosLogOut className="dropdownIcon" />
-							Logout
-						</button>
+						<button onClick={() => Logout()}>Logout</button>
 					</ul>
 				)}
 			</div>

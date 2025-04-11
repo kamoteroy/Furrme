@@ -12,10 +12,13 @@ function CommunityPostCard(props) {
 	const shouldRenderPostContent =
 		props.postContent && props.postContent.trim() !== "";
 
+	const shouldShowEllipsis =
+		props.postContent && props.postContent.length > 150;
+
 	function convertTo12HourFormat(time) {
 		let [hours, minutes] = time.split(":").map(Number);
 		const ampm = hours >= 12 ? "PM" : "AM";
-		hours = hours % 12 || 12; // Convert 0 (midnight) or 12 (noon) to 12
+		hours = hours % 12 || 12;
 		return `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 	}
 
@@ -40,12 +43,16 @@ function CommunityPostCard(props) {
 				<p className="postTextDesc">
 					{showFullText
 						? props.postContent
-						: `${props.postContent?.split(" ").slice(0, 50).join(" ")}...`}
-					{!showFullText && (
+						: `${props.postContent?.split(" ").slice(0, 50).join(" ")}${
+								shouldShowEllipsis ? "... " : ""
+							}`}
+
+					{shouldShowEllipsis && !showFullText && (
 						<span className="readMore" onClick={toggleText}>
 							Read More
 						</span>
-					)}{" "}
+					)}
+
 					{showFullText && (
 						<span className="showLess" onClick={toggleText}>
 							Show Less

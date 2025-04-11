@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600&display=swap");
+
 *,
 *::before,
 *::after {
@@ -22,7 +23,7 @@
 }
 
 .petPreview {
-	padding-top: 80px;
+	padding-top: 10vh;
 	display: flex;
 	flex-direction: column;
 }
@@ -89,9 +90,6 @@
 
 .petInfoContainer {
 	flex: 1;
-}
-
-.petInfoContainer {
 	padding: 30px 0;
 	padding-right: 5%;
 	display: flex;
@@ -150,17 +148,90 @@
 	background-color: #d4bb9a;
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 768px) {
 	.petPreview {
+		flex-direction: column;
+	}
+
+	.petPreviewDetails {
 		flex-direction: column;
 	}
 
 	.petImgSec {
 		width: 100%;
+		height: auto;
+	}
+
+	.petImgCollection {
+		width: 90%;
+		height: 10vh;
+		overflow-x: auto;
+		flex-direction: row;
+	}
+
+	.selectedImgContainer {
+		width: 60%;
+		border-radius: 5px;
+		overflow: hidden;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		display: flex;
+		justify-content: center;
+	}
+
+	.selectedImgContainer img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.imgBoxes {
+		flex-shrink: 2;
+		height: 100%;
+		min-width: 20%;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+		border-radius: 5px;
+		cursor: pointer;
+		overflow: hidden;
+	}
+
+	.imgBoxes img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
 	}
 
 	.petInfoContainer {
-		padding: 0 10%;
+		padding: 10px;
+		width: 100%;
 		padding-bottom: 10%;
+	}
+
+	.petInfoContainer h1 {
+		font-size: 2.5rem;
+		margin-top: 2%;
+	}
+
+	.petInfoList {
+		margin: 0;
+		font-size: 14px;
+		padding: 0 10% 0 10%;
+	}
+
+	.petInfoList h2 {
+		font-size: 1rem;
+	}
+
+	.petInfoList h3 {
+		font-size: 1rem;
+	}
+
+	.petDescriptionInfo {
+		font-size: 0.95rem;
+	}
+
+	.adoptionInqBtn {
+		width: 80%;
 	}
 }

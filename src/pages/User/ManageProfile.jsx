@@ -59,6 +59,25 @@ function ManageProfile() {
 		}
 	};
 
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			const modalContent = document.querySelector(".modal-content");
+			if (isModalOpen && modalContent && !modalContent.contains(e.target)) {
+				toggleModal();
+			}
+		};
+
+		if (isModalOpen) {
+			document.addEventListener("click", handleClickOutside);
+		} else {
+			document.removeEventListener("click", handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener("click", handleClickOutside);
+		};
+	}, [isModalOpen]);
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const validationErrors = {};
@@ -168,7 +187,6 @@ function ManageProfile() {
 			>
 				<p>{modalContents.contents}</p>
 			</CountDownModal>
-
 			<Navbar />
 			<div className="manageProfile">
 				<div className="container">
@@ -263,7 +281,6 @@ function ManageProfile() {
 					{errors.pass && <span>{errors.pass}</span>}
 				</div>
 
-				{/* Loading overlay with an image */}
 				{isUploading && (
 					<div className="loadingOverlay">
 						<img src={uploadingImg} alt="loading" className="loadingImage" />

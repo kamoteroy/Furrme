@@ -49,7 +49,7 @@ function PetPreview() {
 		if (user === null) {
 			navigate("/login");
 		} else {
-			navigate(`/pets/${petData.category}/${petData.pet_id}/adopt`, {
+			navigate(`/pets/${petData.pet_id}/adopt`, {
 				state: petData,
 			});
 		}

@@ -8,19 +8,39 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 function AllPets() {
-	const [ageClick, setAgeClick] = useState(false);
-	const [colorClick, setColorClick] = useState(false);
-	const [ageCaretDirection, setAgeCaretDirection] = useState("down");
-	const [colorCaretDirection, setColorCaretDirection] = useState("down");
-	const ageRef = useRef(null);
-	const colorRef = useRef(null);
+	const [typeClick, setTypeClick] = useState(false);
+	const [genderClick, setGenderClick] = useState(false);
+	const [typeCaretDirection, setTypeCaretDirection] = useState("down");
+	const [genderCaretDirection, setGenderCaretDirection] = useState("down");
+	const typeRef = useRef(null);
+	const genderRef = useRef(null);
 	const [petList, setPetList] = useState([]);
 	const [filteredPets, setFilteredPets] = useState([]);
 	const user = useSelector((state) => state.value);
 	const navigate = useNavigate();
 	const [searchTerm, setSearchTerm] = useState("");
-	const [selectedAge, setSelectedAge] = useState("");
-	const [selectedColor, setSelectedColor] = useState("");
+	const [selectedType, setSelectedType] = useState("");
+	const [selectedGender, setSelectedGender] = useState("");
+	const [placeholderText, setPlaceholderText] = useState(
+		"Search name, breed, or location"
+	);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth <= 768) {
+				setPlaceholderText("Search");
+			} else {
+				setPlaceholderText("Search name, breed, or location");
+			}
+		};
+
+		window.addEventListener("resize", handleResize);
+		handleResize();
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
 
 	useEffect(() => {
 		if (user) {
@@ -37,15 +57,15 @@ function AllPets() {
 
 		const handleClickOutside = (event) => {
 			if (
-				ageRef.current &&
-				!ageRef.current.contains(event.target) &&
-				colorRef.current &&
-				!colorRef.current.contains(event.target)
+				typeRef.current &&
+				!typeRef.current.contains(event.target) &&
+				genderRef.current &&
+				!genderRef.current.contains(event.target)
 			) {
-				setAgeClick(false);
-				setAgeCaretDirection("down");
-				setColorClick(false);
-				setColorCaretDirection("down");
+				setTypeClick(false);
+				setTypeCaretDirection("down");
+				setGenderClick(false);
+				setGenderCaretDirection("down");
 			}
 		};
 
@@ -59,10 +79,10 @@ function AllPets() {
 		setState(!currentState);
 		setDirection(currentState ? "down" : "up");
 		if (currentState) {
-			setAgeClick(false);
-			setAgeCaretDirection("down");
-			setColorClick(false);
-			setColorCaretDirection("down");
+			setTypeClick(false);
+			setTypeCaretDirection("down");
+			setGenderClick(false);
+			setGenderCaretDirection("down");
 		}
 	};
 
@@ -70,12 +90,12 @@ function AllPets() {
 		setSearchTerm(e.target.value);
 	};
 
-	const handleAgeSelect = (age) => {
-		setSelectedAge(age);
+	const handleTypeSelect = (type) => {
+		setSelectedType(type);
 	};
 
-	const handleColorSelect = (color) => {
-		setSelectedColor(color);
+	const handleGenderSelect = (gender) => {
+		setSelectedGender(gender);
 	};
 
 	const applyFilters = () => {
@@ -90,32 +110,30 @@ function AllPets() {
 			);
 		}
 
+		if (selectedType) {
+			filteredList = filteredList.filter(
+				(pet) => pet.category.toLowerCase() === selectedType.toLowerCase()
+			);
+		}
+
+		if (selectedGender) {
+			filteredList = filteredList.filter(
+				(pet) => pet.gender.toLowerCase() === selectedGender.toLowerCase()
+			);
+		}
+
 		setFilteredPets(filteredList);
 	};
 
 	useEffect(() => {
 		applyFilters();
-	}, [searchTerm, selectedAge, selectedColor, petList]);
+	}, [searchTerm, selectedGender, selectedType, petList]);
 
 	return (
 		<div>
 			<Navbar />
 			<div className="allPets">
 				<div className="allPetsHeader">
-					<div className="headerTitle">
-						<h1>All Pets for Adoption</h1>
-						<hr />
-						<div className="searchBarContainer">
-							<input
-								type="text"
-								className="searchBar"
-								placeholder="Search name, breed, or location"
-								value={searchTerm}
-								onChange={handleSearchChange}
-							/>
-							<IoIosSearch className="searchIcon" />
-						</div>
-					</div>
 					<div className="headerImgContainer">
 						<div className="bannerImg">
 							<p>
@@ -128,49 +146,75 @@ function AllPets() {
 							</p>
 						</div>
 					</div>
+					<div className="headerTitle">
+						<h1>All Pets for Adoption</h1>
+						<hr />
+						<div className="searchBarContainer">
+							<input
+								type="text"
+								className="searchBar"
+								placeholder={placeholderText}
+								value={searchTerm}
+								onChange={handleSearchChange}
+							/>
+							<IoIosSearch className="searchIcon" />
+						</div>
+					</div>
 				</div>
 				<div className="filter-dropdowns">
-					{/* Age filter dropdown */}
 					<div
-						className="petFilter ageFilter"
+						className="petFilter typeFilter"
 						onClick={() =>
-							handleFilterClick(setAgeClick, setAgeCaretDirection, ageClick)
+							handleFilterClick(setTypeClick, setTypeCaretDirection, typeClick)
 						}
-						ref={ageRef}
+						ref={typeRef}
 					>
 						<div className="filterTitle">
-							<p>Age</p>
-							<i className={`fa-solid fa-caret-${ageCaretDirection}`}></i>
+							<p>{selectedType ? `${selectedType}` : "Type"}</p>
+							<i className={`fa-solid fa-caret-${typeCaretDirection}`}></i>
 						</div>
-						<ul className={ageClick ? "filterMenu active" : "filterMenu"}>
-							<li onClick={() => handleAgeSelect("Puppy")}>Puppy</li>
-							<li onClick={() => handleAgeSelect("Middle-Aged")}>
-								Middle-Aged
-							</li>
-							<li onClick={() => handleAgeSelect("Adult")}>Adult</li>
+
+						<ul className={typeClick ? "filterMenu active" : "filterMenu"}>
+							<li onClick={() => handleTypeSelect("Dogs")}>Dogs</li>
+							<li onClick={() => handleTypeSelect("Cats")}>Cats</li>
+							<li onClick={() => handleTypeSelect("Rodents")}>Rodents</li>
+							{selectedType && (
+								<li
+									className="clear-option"
+									onClick={() => setSelectedType("")}
+								>
+									<i class="fa fa-times" aria-hidden="true"></i>
+								</li>
+							)}
 						</ul>
 					</div>
 
-					{/* Color filter dropdown */}
 					<div
 						className="petFilter colorFilter"
 						onClick={() =>
 							handleFilterClick(
-								setColorClick,
-								setColorCaretDirection,
-								colorClick
+								setGenderClick,
+								setGenderCaretDirection,
+								genderClick
 							)
 						}
-						ref={colorRef}
+						ref={genderRef}
 					>
 						<div className="filterTitle">
-							<p>Color</p>
-							<i className={`fa-solid fa-caret-${colorCaretDirection}`}></i>
+							<p>{selectedGender ? ` ${selectedGender}` : "Gender"}</p>
+							<i className={`fa-solid fa-caret-${genderCaretDirection}`}></i>
 						</div>
-						<ul className={colorClick ? "filterMenu active" : "filterMenu"}>
-							<li onClick={() => handleColorSelect("Orange")}>Orange</li>
-							<li onClick={() => handleColorSelect("White")}>White</li>
-							<li onClick={() => handleColorSelect("Black")}>Black</li>
+						<ul className={genderClick ? "filterMenu active" : "filterMenu"}>
+							<li onClick={() => handleGenderSelect("Male")}>Male</li>
+							<li onClick={() => handleGenderSelect("Female")}>Female</li>
+							{selectedGender && (
+								<li
+									className="clear-option"
+									onClick={() => setSelectedGender("")}
+								>
+									<i class="fa fa-times" aria-hidden="true"></i>
+								</li>
+							)}
 						</ul>
 					</div>
 				</div>

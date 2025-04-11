@@ -21,7 +21,7 @@
 }
 
 .page-container {
-	padding-top: 80px;
+	padding-top: 10vh;
 	display: flex;
 	min-height: 100vh;
 }

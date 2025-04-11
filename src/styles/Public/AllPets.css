@@ -22,7 +22,7 @@
 }
 
 .allPets {
-	padding-top: 80px;
+	padding-top: 10vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -30,44 +30,40 @@
 }
 
 .allPetsHeader {
-	width: 80%;
-	height: 55vh;
+	width: 100%;
 	display: flex;
+	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	margin: 50px 0 60px 0;
-}
-
-@media screen and (max-width: 960px) {
-	.allPetsHeader {
-		flex-direction: column;
-	}
 }
 
 .headerImgContainer {
-	width: 80%;
-	height: 100%;
+	width: 100%;
+	height: 55vh; /* Adjust the height to match your desired banner size */
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .bannerImg {
 	background-image: url("../../assets/allPetsBanner.jpg");
-	min-width: 100%;
-	min-height: 100%;
+	width: 80%;
+	height: 80%;
 	background-position: center;
 	background-size: cover;
 	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .bannerImg p {
 	text-align: center;
-	align-self: center;
-	justify-self: center;
-	padding: 0 50px;
 	color: #fff;
 	font-weight: 800;
-	font-size: 18px;
-	cursor: pointer;
-	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+	font-size: min(2.5vh, 5vw);
+	padding: 0 20px;
+	max-width: 90%;
 }
 
 .headerTitle {
@@ -77,23 +73,18 @@
 	justify-items: center;
 	align-items: center;
 	cursor: default;
+	padding: 20px 0;
 }
 
-.headerTitle:hover,
-.bannerImg p:hover,
-.bannerImg:hover {
-	transform: scale(1.02);
-}
-
-.allPetsHeader h1 {
+.headerTitle h1 {
 	font-size: 60px;
-	margin: 50px 0;
+	margin: 10px 0;
 	text-align: center;
 }
 
 .allPetsHeader hr {
-	margin-top: -30px;
-	margin-bottom: 50px;
+	margin-top: -10px;
+	margin-bottom: 30px;
 	border-radius: 10px;
 	height: 4px;
 	width: 40%;
@@ -118,7 +109,7 @@
 }
 
 .searchBarContainer .searchIcon {
-	position: absolute;
+	position: relative;
 	right: 10px;
 	cursor: pointer;
 }
@@ -167,6 +158,10 @@
 	transition: 0.2s;
 }
 
+.filterMenu p {
+	font-size: min(4vw, 3vh);
+}
+
 .filterMenu.active {
 	opacity: 1;
 	visibility: visible;
@@ -187,7 +182,68 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	align-items: flex-start; /* Align items to the start of the cross axis */
-	gap: 40px; /* Adjust the gap between cards */
+	align-items: flex-start;
+	gap: 40px;
 	margin-bottom: 60px;
+}
+
+.filterMenu .clear-option {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: red;
+	cursor: pointer;
+	padding: 8px 0;
+	border-top: 1px solid #eee; /* optional: separates "Clear" visually */
+}
+
+.filterMenu .clear-option i {
+	font-size: 16px;
+}
+
+@media screen and (max-width: 960px) {
+	.allPetsHeader {
+		width: 100%;
+		flex-direction: column;
+	}
+
+	.headerImgContainer {
+		padding-top: 5vh;
+		height: 40vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.bannerImg {
+		align-self: center;
+		width: 80%;
+		height: 100%;
+	}
+
+	.bannerImg p {
+		font-size: min(2.5vh, 3vw);
+		max-width: 100%;
+	}
+	.headerTitle {
+		display: flex;
+		justify-content: center;
+	}
+
+	.headerTitle h1 {
+		font-size: 30px;
+	}
+
+	.searchBarContainer {
+		width: 55%;
+	}
+
+	.filter-dropdowns {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.petFilter {
+		width: 45%;
+	}
 }

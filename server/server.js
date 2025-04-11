@@ -69,9 +69,10 @@ app.get("/petPreview/:id", user.getpetPreview);
 app.get("/admin", verifyJWT, admin.adminPetList);
 app.get("/admin/petDetails/:id", verifyJWT, admin.getpetDetails);
 app.get("/admin/petImage/:id", verifyJWT, admin.getpetImages);
-app.post("/admin/petInfoUpdate", verifyJWT, admin.updatePetInfo);
+app.get("/admin/adoptReq/:id", verifyJWT, admin.getAdoptReq);
 
 app.get("/adoption/list", verifyJWT, admin.adoptionList);
+app.post("/admin/petInfoUpdate", verifyJWT, admin.updatePetInfo);
 app.post("/admin/evaluation/accDetails", verifyJWT, admin.accDetails);
 
 app.post("/admin/create", async (req, res) => {

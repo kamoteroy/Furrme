@@ -95,7 +95,19 @@ async function accDetails(req, res) {
 	);
 }
 
-//async function adoptionList(req, res) {}
+async function getAdoptReq(req, res) {
+	db.query(
+		"select * from adoptreq where requestID = ?",
+		[req.params.id],
+		(err, reqInfo) => {
+			if (err) {
+				console.log(err);
+			} else {
+				return res.json(reqInfo);
+			}
+		}
+	);
+}
 
 module.exports = {
 	adminPetList,
@@ -104,4 +116,5 @@ module.exports = {
 	updatePetInfo,
 	adoptionList,
 	accDetails,
+	getAdoptReq,
 };
