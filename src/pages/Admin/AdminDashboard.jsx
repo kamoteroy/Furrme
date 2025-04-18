@@ -8,9 +8,9 @@ import AdminDashboardSidebar from "../../components/AdminSidebar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { IoNotificationsOutline } from "react-icons/io5";
 
 function AdminDashboard() {
-	//Dropdown Functions
 	const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
@@ -131,11 +131,10 @@ function AdminDashboard() {
 
 	return (
 		<div className="adminDashboard">
-			<div className="sidebarComp">
-				<AdminDashboardSidebar />
-			</div>
+			<AdminDashboardSidebar />
 			<div className="mainContent">
 				<div className="header">
+					<h2>Listings</h2>
 					<div
 						className={`searchBar ${isSearchBarFocused ? "highlighted" : ""}`}
 					>
@@ -197,8 +196,8 @@ function AdminDashboard() {
 							)}
 						</div>
 					</div>
+					<IoNotificationsOutline className="notificationIcon" />
 				</div>
-				<h1>Pet Listings</h1>
 				<div className="tableContainer">
 					<table>
 						<thead>

@@ -55,6 +55,16 @@ function CreatePetListing() {
 	});
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [link, setLink] = useState("");
+	const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 600);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobileView(window.innerWidth <= 600);
+		};
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	const toggleModal = () => {
 		setIsModalOpen(!isModalOpen);
@@ -322,9 +332,7 @@ function CreatePetListing() {
 					<LoadingOverlay gifSrc={catLoading} label={uploadingText} />
 				)}
 				<div className="createPetListing">
-					<div className="sidebarComp">
-						<AdminDashboardSidebar />
-					</div>
+					<AdminDashboardSidebar />
 					<div className="mainContent">
 						<div className="inputsContainer">
 							<h2>Add New Pet Listing</h2>
@@ -343,6 +351,7 @@ function CreatePetListing() {
 											style={errors.name ? { border: "1px solid red" } : {}}
 											placeholder="Name"
 											onChange={handleInputChange}
+											autoComplete="off"
 										/>
 									</div>
 									<div
@@ -355,13 +364,18 @@ function CreatePetListing() {
 											className={`${errors.gender ? "error-input" : ""} petGenderHeader `}
 											onClick={toggleGenderDropdown}
 										>
-											{selectedPetGender}
+											{selectedPetGender === "Select Gender"
+												? isMobileView
+													? "Select"
+													: "Select Gender"
+												: selectedPetGender}
 											{genderDropdownOpen ? (
 												<MdOutlineKeyboardArrowUp />
 											) : (
 												<MdOutlineKeyboardArrowDown />
 											)}
 										</p>
+
 										{genderDropdownOpen && (
 											<ul
 												className="petGenderDropdown"
@@ -377,9 +391,9 @@ function CreatePetListing() {
 										)}
 									</div>
 								</div>
-								<div className="containers">
+								<div className="nameGenderContainer">
 									<div
-										className={`inputs type ${shaking && errors.type ? "shake" : ""}`}
+										className={`inputs petGender ${shaking && errors.type ? "shake" : ""}`}
 										ref={dropdownRef}
 									>
 										<label htmlFor="petType">Pet Type</label>
@@ -388,13 +402,18 @@ function CreatePetListing() {
 											className={`${errors.type ? "error-input" : ""} petTypeDP-Header `}
 											onClick={toggleDropdown}
 										>
-											{selectedPetType}
+											{selectedPetType === "Select Pet Type"
+												? isMobileView
+													? "Select"
+													: "Select Pet Type"
+												: selectedPetType}
 											{dropdownOpen ? (
 												<MdOutlineKeyboardArrowUp />
 											) : (
 												<MdOutlineKeyboardArrowDown />
 											)}
 										</p>
+
 										{dropdownOpen && (
 											<ul
 												className="petTypeDropdown"
@@ -418,10 +437,11 @@ function CreatePetListing() {
 											className={errors.breed ? "error-input" : ""}
 											style={errors.breed ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
+											autoComplete="off"
 										/>
 									</div>
 								</div>
-								<div className="containers">
+								<div className="nameGenderContainer">
 									<div
 										className={`inputs age ${shaking && errors.age ? "shake" : ""}`}
 									>
@@ -435,6 +455,7 @@ function CreatePetListing() {
 											className={errors.age ? "error-input" : ""}
 											style={errors.age ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
+											autoComplete="off"
 										/>
 									</div>
 									<div
@@ -450,6 +471,7 @@ function CreatePetListing() {
 											className={errors.color ? "error-input" : ""}
 											style={errors.color ? { border: "1px solid red" } : {}}
 											onChange={handleInputChange}
+											autoComplete="off"
 										/>
 									</div>
 								</div>

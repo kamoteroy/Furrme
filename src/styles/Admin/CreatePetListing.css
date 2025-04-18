@@ -219,10 +219,10 @@
 .createPetListing .mainContent .inputsContainer .containers {
 	display: flex;
 	gap: 20px;
+	background-color: red;
 }
 
 .createPetListing .mainContent .inputsContainer .containers label {
-	align-self: center;
 	color: var(--primaryTextColor);
 }
 
@@ -230,6 +230,7 @@
 	display: flex;
 	width: 50%;
 	max-width: 50%;
+	flex-direction: column;
 }
 
 .createPetListing .mainContent .inputsContainer .containers .inputs.type p {
@@ -256,7 +257,6 @@
 	.petTypeDP-Header {
 	position: relative;
 	color: var(--primaryTextColor);
-	margin-left: 10px;
 }
 
 .createPetListing
@@ -420,4 +420,40 @@
 
 .createPetListing .inputsContainer .addButton:hover {
 	background-color: rgb(85, 85, 85);
+}
+.inputs.petGender p,
+.inputs.type p {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+	.createPetListing .inputsContainer .uploadImgContainer {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.createPetListing .inputsContainer .uploadImgContainer .uploadFilesBtn {
+		width: 100%;
+	}
+
+	.createPetListing .inputsContainer .uploadImgContainer .petImgBox {
+		width: 100%;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-auto-rows: 1fr;
+		gap: 10px;
+		height: auto;
+		overflow: visible;
+	}
+
+	.createPetListing
+		.inputsContainer
+		.uploadImgContainer
+		.petImgBox
+		.img-container {
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		position: relative;
+	}
 }

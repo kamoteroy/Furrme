@@ -207,9 +207,7 @@ function PetDetails() {
 					<LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />
 				)}
 				<div className="adminPetPreview">
-					<div className="sidebarComp">
-						<AdminDashboardSidebar />
-					</div>
+					<AdminDashboardSidebar />
 					<div className="mainContent">
 						<div className="divider">
 							<div className="petInfoCont">

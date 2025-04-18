@@ -189,9 +189,7 @@ function PetEvaluation() {
 			</CountDownModal>
 			{loading && <LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />}
 			<div className="adminEvaluation">
-				<div className="sidebarComp">
-					<AdminDashboardSidebar />
-				</div>
+				<AdminDashboardSidebar />
 				<div className="mainContent">
 					<div className="applicantInfoHeader">
 						<h1>Application Evaluation</h1>

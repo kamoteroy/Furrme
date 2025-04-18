@@ -388,7 +388,7 @@ function Register() {
 															<Icon icon={arrows_exclamation} />
 														</span>
 													)}
-													At least one lowercase letter
+													one lowercase letter
 												</div>
 												<div
 													className={
@@ -404,7 +404,7 @@ function Register() {
 															<Icon icon={arrows_exclamation} />
 														</span>
 													)}
-													At least one uppercase letter
+													one uppercase letter
 												</div>
 												<div
 													className={
@@ -420,7 +420,7 @@ function Register() {
 															<Icon icon={arrows_exclamation} />
 														</span>
 													)}
-													At least one number
+													one number
 												</div>
 												<div
 													className={
@@ -436,7 +436,7 @@ function Register() {
 															<Icon icon={arrows_exclamation} />
 														</span>
 													)}
-													At least one special character
+													one special character
 												</div>
 												<div
 													className={
@@ -452,7 +452,7 @@ function Register() {
 															<Icon icon={arrows_exclamation} />
 														</span>
 													)}
-													At least 8 characters
+													8 characters
 												</div>
 											</main>
 										) : null}

@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/Components/AdminSidebar.css";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { IoPawOutline } from "react-icons/io5";
-import { IoPeopleOutline } from "react-icons/io5";
-import { CiCirclePlus } from "react-icons/ci";
-import { CiLogout } from "react-icons/ci";
+import { IoPawOutline, IoPeopleOutline } from "react-icons/io5";
+import {
+	CiCirclePlus,
+	CiLogout,
+	CiCircleChevLeft,
+	CiCircleChevRight,
+} from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/Users";
@@ -12,14 +14,15 @@ import { logout } from "../store/Users";
 function AdminDashboardSidebar() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const [collapsed, setCollapsed] = useState(false);
 
-	const Logout = () => {
+	const handleLogout = () => {
 		dispatch(logout());
 		navigate("/");
 	};
 
 	return (
-		<div className="sidebar">
+		<div className={`sidebar ${collapsed ? "collapsed" : ""}`}>
 			<div className="header">
 				<Link to="/admin/pets" className="logo">
 					<img
@@ -27,37 +30,41 @@ function AdminDashboardSidebar() {
 							"https://res.cloudinary.com/dmquudoki/image/upload/v1716127273/FurrMe_Logo_sba9mx.png"
 						}
 						className="webLogo"
+						alt="FurrMe Logo"
 					/>
-					<h2>FurrMe</h2>
+					{!collapsed && <h2>FurrMe</h2>}
 				</Link>
-				<IoNotificationsOutline className="notificationIcon" />
+			</div>
+			<div className="collapseToggle" onClick={() => setCollapsed(!collapsed)}>
+				{collapsed ? (
+					<CiCircleChevRight size={24} />
+				) : (
+					<CiCircleChevLeft size={24} />
+				)}
 			</div>
 			<div className="sidebarNav">
 				<ul>
 					<Link to="/admin/pets">
 						<li>
 							<IoPawOutline className="navIcon" />
-							Pets
+							<span>Pets</span>
 						</li>
 					</Link>
 					<Link to="/admin/request">
 						<li>
 							<IoPeopleOutline className="navIcon" />
-							Adoption Requests
+							<span>Adoption Requests</span>
 						</li>
 					</Link>
 					<Link to="/admin/create">
 						<li>
 							<CiCirclePlus className="navIcon" />
-							Create Pet Listing
+							<span>Create Pet Listing</span>
 						</li>
 					</Link>
-
-					<li>
+					<li onClick={handleLogout}>
 						<CiLogout className="navIcon" />
-						<button onClick={() => Logout()} className="logout">
-							Logout
-						</button>
+						<span>Logout</span>
 					</li>
 				</ul>
 			</div>

@@ -319,3 +319,13 @@
 input[readonly] {
 	cursor: default;
 }
+@media (max-width: 768px) {
+	.adminPetPreview .mainContent .divider {
+		flex-direction: column;
+	}
+
+	.adminPetPreview .mainContent .petInfoCont,
+	.adminPetPreview .mainContent .petImagesContainer {
+		width: 100%;
+	}
+}

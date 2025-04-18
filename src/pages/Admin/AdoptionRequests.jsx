@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import catLoading2 from "../../assets/catLoading2.gif";
+import { IoNotificationsOutline } from "react-icons/io5";
 
 function AdoptionRequests() {
 	const navigate = useNavigate();
@@ -127,12 +128,10 @@ function AdoptionRequests() {
 		<>
 			{loading && <LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />}
 			<div className="adminAdoptionRequests">
-				<div className="sidebarComp">
-					<AdminDashboardSidebar />
-				</div>
+				<AdminDashboardSidebar />
 				<div className="mainContent">
 					<div className="header">
-						<h2>Adoption Requests</h2>
+						<h2>Requests</h2>
 						<div
 							className={`searchBar ${isSearchBarFocused ? "highlighted" : ""}`}
 						>
@@ -201,6 +200,7 @@ function AdoptionRequests() {
 								)}
 							</div>
 						</div>
+						<IoNotificationsOutline className="notificationIcon" />
 					</div>
 					<div className="tableContainer">
 						<table>
