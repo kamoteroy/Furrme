@@ -103,7 +103,7 @@ async function getAdoptReq(req, res) {
 			if (err) {
 				console.log(err);
 			} else {
-				return res.json(reqInfo);
+				return res.json(reqInfo[0]);
 			}
 		}
 	);

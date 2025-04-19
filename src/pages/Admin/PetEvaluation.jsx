@@ -58,7 +58,6 @@ function PetEvaluation() {
 			}
 		}
 	};
-
 	useEffect(() => {
 		//setAdoptInfo(adoptRequest);
 		axios
@@ -69,6 +68,7 @@ function PetEvaluation() {
 			})
 			.then((res) => {
 				setaccInfo(res.data[0]);
+
 				if (res.data[0] && petInfo) {
 					setLoading(false);
 				}
@@ -178,6 +178,16 @@ function PetEvaluation() {
 		background: `${color}`,
 	};
 
+	useEffect(() => {
+		if (adoptInfo.status === "Approved") {
+			setColor("green");
+		} else if (adoptInfo.status === "Pending") {
+			setColor("#f29339");
+		} else if (adoptInfo.status === "Rejected") {
+			setColor("red");
+		}
+	}, [adoptInfo.status]);
+
 	return (
 		<>
 			<CountDownModal
@@ -230,11 +240,11 @@ function PetEvaluation() {
 						<div className="applicantInfo address-cNumPrev">
 							<div className="lbl-disp addressPrev">
 								<p className="dispLabels">Address</p>
-								<input type="text" readOnly value={accInfo.address} />
+								<input type="text" readOnly value={adoptInfo.address} />
 							</div>
 							<div className="lbl-disp cNumPrev">
 								<p className="dispLabels">Contact Number</p>
-								<input type="text" readOnly value={accInfo.contact} />
+								<input type="text" readOnly value={adoptInfo.contact} />
 							</div>
 						</div>
 						<div className="infoDropdownsContainer">
@@ -254,7 +264,7 @@ function PetEvaluation() {
 											openDropdown === "householdInfo" ? "block" : "none",
 									}}
 								>
-									{accInfo.household}
+									{adoptInfo.household}
 								</div>
 							</div>
 							<div className="dropdown employmentLifestyle">
@@ -273,7 +283,7 @@ function PetEvaluation() {
 											openDropdown === "employmentLifestyle" ? "block" : "none",
 									}}
 								>
-									{accInfo.employment}
+									{adoptInfo.employment}
 								</div>
 							</div>
 							<div className="dropdown petExperiences">
@@ -292,7 +302,7 @@ function PetEvaluation() {
 											openDropdown === "petExperiences" ? "block" : "none",
 									}}
 								>
-									{accInfo.pet_exp}
+									{adoptInfo.pet_exp}
 								</div>
 							</div>
 						</div>
