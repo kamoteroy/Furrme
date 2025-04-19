@@ -103,8 +103,8 @@ db.connect((err) => {
 	console.log("Connected to the database");
 });
 
-app.get("/api/hello", (req, res) => {
-	res.json({ msg: "Hello from server!" });
+app.get("/", (req, res) => {
+	res.json("bobo");
 });
 
 function insertInitialData() {
