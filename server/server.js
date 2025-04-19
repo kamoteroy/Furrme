@@ -97,7 +97,6 @@ db.connect((err) => {
 			console.error("Error creating tables:", err);
 		} else {
 			console.log("All tables ensured on server start.");
-			insertInitialData();
 		}
 	});
 	console.log("Connected to the database");
@@ -107,35 +106,9 @@ app.get("/", (req, res) => {
 	res.json("bobo");
 });
 
-function insertInitialData() {
-	const data = JSON.parse(
-		fs.readFileSync(path.join(__dirname, "furrme.json"), "utf8")
-	);
-	for (const entry of data) {
-		if (entry.type === "table") {
-			const table = entry.name;
-			const rows = entry.data;
-			if (rows && rows.length > 0) {
-				const keys = Object.keys(rows[0]);
-				const placeholders = keys.map(() => "?").join(",");
-				const sql = `INSERT IGNORE INTO ${table} (${keys.join(",")}) VALUES (${placeholders})`;
-
-				rows.forEach((row) => {
-					const values = keys.map((key) => row[key]);
-					db.query(sql, values, (err) => {
-						if (err) {
-							console.error(`Error inserting into ${table}:`, err);
-						}
-					});
-				});
-			}
-		}
-	}
-}
-
-/*app.listen(3001, () => {
+app.listen(3001, () => {
 	console.log("Running on port 3001...");
-});*/
+});
 
 const verifyJWT = (req, res, next) => {
 	var token;
