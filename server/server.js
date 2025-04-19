@@ -276,3 +276,6 @@ app.post("/createAdmin", (req, res) => {
 		}
 	);
 });
+module.exports = (req, res) => {
+	app(req, res); // Vercel will use this to handle requests
+};
