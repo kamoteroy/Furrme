@@ -103,6 +103,10 @@ db.connect((err) => {
 	console.log("Connected to the database");
 });
 
+app.get("/api/hello", (req, res) => {
+	res.json({ msg: "Hello from server!" });
+});
+
 function insertInitialData() {
 	const data = JSON.parse(
 		fs.readFileSync(path.join(__dirname, "furrme.json"), "utf8")
