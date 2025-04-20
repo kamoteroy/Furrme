@@ -28,6 +28,7 @@ function AdoptionRequests() {
 	const dropdownRef = useRef(null);
 	const statusDropdownRef = useRef(null);
 	const [loading, setLoading] = useState(true);
+	const [isMobileView, setIsMobileView] = useState(false);
 
 	useEffect(() => {
 		axios
@@ -92,6 +93,19 @@ function AdoptionRequests() {
 	);
 
 	useEffect(() => {
+		const handleResize = () => {
+			setIsMobileView(window.innerWidth < 450);
+		};
+
+		handleResize(); // Initial check
+		window.addEventListener("resize", handleResize);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 				setIsDropdownOpen(false);
@@ -139,7 +153,7 @@ function AdoptionRequests() {
 							<IoIosSearch className="searchIcon" />
 							<input
 								type="text"
-								placeholder="Search by name"
+								placeholder={isMobileView ? "Search" : "Search pets..."}
 								value={searchInput}
 								onChange={handleSearchInputChange}
 								onFocus={() => setIsSearchBarFocused(true)}
@@ -203,6 +217,7 @@ function AdoptionRequests() {
 						</div>
 						<IoNotificationsOutline className="notificationIcon" />
 					</div>
+					<h2 className="centeredTitle">Adoption Requests</h2>
 					<div className="tableContainer">
 						<table>
 							<thead>

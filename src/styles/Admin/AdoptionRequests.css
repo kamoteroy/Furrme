@@ -229,6 +229,7 @@
 	height: 25px;
 	width: 25px;
 }
+
 @media screen and (max-width: 768px) {
 	.adminAdoptionRequests .mainContent .header h2 {
 		display: none;
@@ -267,5 +268,19 @@
 
 	.adminAdoptionRequests .mainContent .header .tableFilters p {
 		font-size: 1.8vw;
+	}
+	.adminAdoptionRequests .mainContent .tableContainer {
+		margin-top: 1vh;
+	}
+	.adminAdoptionRequests .mainContent .centeredTitle {
+		font-size: 16px;
+		margin: 5% 5%;
+		color: var(--primaryTextColor);
+		text-align: center;
+	}
+}
+@media screen and (min-width: 600px) {
+	.adminAdoptionRequests .mainContent .centeredTitle {
+		display: none;
 	}
 }

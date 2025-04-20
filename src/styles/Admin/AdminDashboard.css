@@ -312,4 +312,19 @@
 	.adminDashboard .mainContent .header .tableFilters p {
 		font-size: 1.8vw;
 	}
+	.adminDashboard .mainContent .centeredTitle {
+		font-size: 16px;
+		margin: 5% 5%;
+		color: var(--primaryTextColor);
+		text-align: center;
+	}
+	.adminDashboard .mainContent .tableContainer {
+		margin-top: 1vh;
+	}
+}
+
+@media screen and (min-width: 600px) {
+	.adminDashboard .mainContent .centeredTitle {
+		display: none;
+	}
 }

@@ -85,3 +85,8 @@
 	object-fit: contain;
 	cursor: pointer;
 }
+@media screen and (max-width: 600px) {
+	.postCard .postInfo .datePosted {
+		font-size: 12px;
+	}
+}

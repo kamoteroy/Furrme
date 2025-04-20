@@ -247,3 +247,9 @@
 		width: 45%;
 	}
 }
+@media screen and (max-width: 400px) {
+	.searchBarContainer .searchIcon {
+		position: absolute;
+		transform: translateX(100%);
+	}
+}

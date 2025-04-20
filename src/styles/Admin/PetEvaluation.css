@@ -264,3 +264,29 @@
 	font-size: 10px;
 	margin-top: -9px;
 }
+
+@media (max-width: 500px) {
+	.adminEvaluation .mainContent .applicantInfoHeader h1 {
+		font-size: 24px;
+		text-align: center;
+	}
+	.adminEvaluation .mainContent {
+		padding: 5% 5%;
+	}
+
+	.adminEvaluation .mainContent .applicantInfoHeader p {
+		font-size: 8px;
+	}
+}
+
+@media (max-width: 768px) {
+	.adminEvaluation .mainContent .applicantInfoHeader p {
+		font-size: 12px;
+		text-align: center;
+	}
+	.adminEvaluation .mainContent .applicantInfoHeader {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}

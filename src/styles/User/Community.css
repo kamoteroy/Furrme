@@ -170,3 +170,18 @@
 	align-items: center;
 	gap: 30px;
 }
+
+@media screen and (max-width: 600px) {
+	.communityPosts .userAvatar img {
+		min-width: 30px;
+		height: 30px;
+		background-color: red;
+	}
+}
+
+@media screen and (max-width: 450px) {
+	.communityPosts .uploadImgBtn {
+		height: auto;
+		width: auto;
+	}
+}

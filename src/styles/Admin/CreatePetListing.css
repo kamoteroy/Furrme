@@ -457,3 +457,10 @@
 		position: relative;
 	}
 }
+@media (max-width: 500px) {
+	.createPetListing .mainContent .inputsContainer {
+		margin: 30px auto 0 auto;
+		padding-bottom: 50px;
+		width: 90%;
+	}
+}

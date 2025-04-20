@@ -80,81 +80,80 @@ function Navbar() {
 	return (
 		<div className="navbar" ref={navbarRef}>
 			<div className="logo">
-				<img
-					src={
-						"https://res.cloudinary.com/dmquudoki/image/upload/v1716127273/FurrMe_Logo_sba9mx.png"
-					}
-					alt="FurrMe Logo"
-				/>
 				<a onClick={() => Home()}>
+					<img
+						src={
+							"https://res.cloudinary.com/dmquudoki/image/upload/v1716127273/FurrMe_Logo_sba9mx.png"
+						}
+						alt="FurrMe Logo"
+					/>
 					<h2>FurrMe</h2>
 				</a>
 			</div>
-			<div className="burger">
-				<div className={`navList ${menuOpen ? "open" : ""}`}>
-					<div className="navItem pets">
-						<p onClick={() => navPets()}>Pets </p>
-					</div>
+			<div className={`navList ${menuOpen ? "open" : ""}`}>
+				<div className="navItem pets">
+					<p onClick={() => navPets()}>Pets </p>
+				</div>
 
-					<div className="navItem community">
-						<p onClick={() => navCommunity()}>Community</p>
-					</div>
+				<div className="navItem community">
+					<p onClick={() => navCommunity()}>Community</p>
+				</div>
 
-					<div className="navItem resources">
-						<p onClick={() => toggleDropdown("resources")}>
-							Resources{" "}
-							{openDropdown === "resources" ? (
-								<MdOutlineKeyboardArrowUp />
-							) : (
-								<MdOutlineKeyboardArrowDown />
-							)}
-						</p>
-						{openDropdown === "resources" && (
-							<ul className="dropdown resources" onClick={closeDropdown}>
-								<Link to="/FAQS">
-									<FaQuestion />
-									FAQs <FaAngleRight className="rightIcon" />
-								</Link>
-								<Link to="/terms">
-									<MdOutlineDocumentScanner />
-									Terms <FaAngleRight className="rightIcon" />
-								</Link>
-								<Link to="/resources">
-									<FiBook />
-									Education <FaAngleRight className="rightIcon" />
-								</Link>
-							</ul>
+				<div className="navItem resources">
+					<p onClick={() => toggleDropdown("resources")}>
+						Resources{" "}
+						{openDropdown === "resources" ? (
+							<MdOutlineKeyboardArrowUp />
+						) : (
+							<MdOutlineKeyboardArrowDown />
 						)}
-					</div>
+					</p>
+					{openDropdown === "resources" && (
+						<ul className="dropdown resources" onClick={closeDropdown}>
+							<Link to="/FAQS">
+								<FaQuestion />
+								FAQs <FaAngleRight className="rightIcon" />
+							</Link>
+							<Link to="/terms">
+								<MdOutlineDocumentScanner />
+								Terms <FaAngleRight className="rightIcon" />
+							</Link>
+							<Link to="/resources">
+								<FiBook />
+								Education <FaAngleRight className="rightIcon" />
+							</Link>
+						</ul>
+					)}
+				</div>
 
-					<div className="navItem socials">
-						<p onClick={() => toggleDropdown("socials")}>
-							Socials{" "}
-							{openDropdown === "socials" ? (
-								<MdOutlineKeyboardArrowUp />
-							) : (
-								<MdOutlineKeyboardArrowDown />
-							)}
-						</p>
-						{openDropdown === "socials" && (
-							<ul className="dropdown socials" onClick={closeDropdown}>
-								<Link to="/">
-									<i className="fa-brands fa-instagram"></i>
-									Instagram <FaAngleRight className="rightIcon" />
-								</Link>
-								<Link to="/">
-									<i className="fa-brands fa-facebook"></i>
-									Facebook <FaAngleRight className="rightIcon" />
-								</Link>
-								<Link to="/">
-									<FaTiktok />
-									Tiktok <FaAngleRight className="rightIcon" />
-								</Link>
-							</ul>
+				<div className="navItem socials">
+					<p onClick={() => toggleDropdown("socials")}>
+						Socials{" "}
+						{openDropdown === "socials" ? (
+							<MdOutlineKeyboardArrowUp />
+						) : (
+							<MdOutlineKeyboardArrowDown />
 						)}
-					</div>
+					</p>
+					{openDropdown === "socials" && (
+						<ul className="dropdown socials" onClick={closeDropdown}>
+							<Link to="/">
+								<i className="fa-brands fa-instagram"></i>
+								Instagram <FaAngleRight className="rightIcon" />
+							</Link>
+							<Link to="/">
+								<i className="fa-brands fa-facebook"></i>
+								Facebook <FaAngleRight className="rightIcon" />
+							</Link>
+							<Link to="/">
+								<FaTiktok />
+								Tiktok <FaAngleRight className="rightIcon" />
+							</Link>
+						</ul>
+					)}
 				</div>
 			</div>
+
 			<div className="loginBtn-accountIcon">
 				{isLoggedIn ? (
 					<div className="DP-Icon" onClick={() => toggleDropdown("user")}>
@@ -166,12 +165,12 @@ function Navbar() {
 				{openDropdown === "user" && (
 					<ul className="userDropdown" onClick={closeDropdown}>
 						<Link to="/profile" className="colorDrop">
-							<CgProfile />
+							<CgProfile className="logo" />
 							Profile
 							<FaAngleRight className="rightIcon-UDP" />
 						</Link>
 						<Link to="/help" className="colorDrop">
-							<MdContactSupport />
+							<MdContactSupport className="logo" />
 							Help
 							<FaAngleRight className="rightIcon-UDP" />
 						</Link>

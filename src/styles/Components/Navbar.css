@@ -32,6 +32,12 @@
 	color: var(--primaryTextColor);
 }
 
+.navbar .logo a {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
 .navbar .logo h2 {
 	color: var(--primaryTextColor);
 	font-size: min(3.5vw, 10vh);
@@ -214,4 +220,35 @@
 .burger {
 	display: flex;
 	width: 65%;
+}
+@media screen and (max-width: 600px) {
+	.navbar .logo h2 {
+		display: none;
+	}
+	.navbar {
+		padding: 0 5vw;
+		gap: 10px;
+		justify-content: space-around;
+	}
+
+	.navbar .navList {
+		gap: 1vw;
+		margin-left: -20px;
+	}
+
+	.navbar .navList .navItem .dropdown a {
+		font-size: 9px;
+	}
+	.navbar .navList .navItem .dropdown.resources a {
+		font-size: 9px;
+	}
+
+	.navbar .loginBtn-accountIcon .userDropdown a {
+		font-size: 9px;
+	}
+}
+@media screen and (max-width: 450px) {
+	.navbar .loginBtn-accountIcon .userDropdown .colorDrop .logo {
+		display: none;
+	}
 }

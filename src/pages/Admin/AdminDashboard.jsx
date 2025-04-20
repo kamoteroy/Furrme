@@ -25,6 +25,20 @@ function AdminDashboard() {
 	const dropdownRef = useRef(null);
 	const statusDropdownRef = useRef(null);
 	const user = useSelector((state) => state.value);
+	const [isMobileView, setIsMobileView] = useState(false);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobileView(window.innerWidth < 450);
+		};
+
+		handleResize();
+		window.addEventListener("resize", handleResize);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
 
 	useEffect(() => {
 		axios
@@ -142,7 +156,7 @@ function AdminDashboard() {
 						<IoIosSearch className="searchIcon" />
 						<input
 							type="text"
-							placeholder="Search pets..."
+							placeholder={isMobileView ? "Search" : "Search pets..."}
 							onFocus={() => setIsSearchBarFocused(true)}
 							onBlur={() => setIsSearchBarFocused(false)}
 							value={searchInput}
@@ -199,6 +213,7 @@ function AdminDashboard() {
 					</div>
 					<IoNotificationsOutline className="notificationIcon" />
 				</div>
+				<h2 className="centeredTitle">Listings</h2>
 				<div className="tableContainer">
 					<table>
 						<thead>
