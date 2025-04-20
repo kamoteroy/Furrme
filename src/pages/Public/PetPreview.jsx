@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import circleLoading from "../../assets/circleLoading.gif";
 import axios from "axios";
+import CONFIG from "../../data/config";
 
 function PetPreview() {
 	const containerRef = useRef(null);
@@ -24,7 +25,7 @@ function PetPreview() {
 
 	useEffect(() => {
 		axios
-			.get(`http://localhost:3001/petPreview/${id}`)
+			.get(`${CONFIG.BASE_URL}/petPreview/${id}`)
 			.then((res) => {
 				setpetData(res.data);
 				setLoading(false);

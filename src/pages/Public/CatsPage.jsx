@@ -4,6 +4,7 @@ import "../../styles/Public/CatsPage.css";
 import PetCard from "../../components/PetCard";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
+import CONFIG from "../../data/config";
 
 function CatsPage() {
 	const [ageClick, setAgeClick] = useState(false);
@@ -18,7 +19,7 @@ function CatsPage() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3001/pets/cats")
+			.get(`${CONFIG.BASE_URL}/pets/cats`)
 			.then((res) => setList(res.data))
 			.catch((err) => console.log(err));
 

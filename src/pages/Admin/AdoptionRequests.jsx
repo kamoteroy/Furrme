@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import catLoading2 from "../../assets/catLoading2.gif";
 import { IoNotificationsOutline } from "react-icons/io5";
+import CONFIG from "../../data/config";
 
 function AdoptionRequests() {
 	const navigate = useNavigate();
@@ -30,7 +31,7 @@ function AdoptionRequests() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3001/adoption/list", {
+			.get(`${CONFIG.BASE_URL}/adoption/list`, {
 				headers: {
 					token: token,
 				},

@@ -6,6 +6,7 @@ import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CONFIG from "../../data/config";
 
 function AllPets() {
 	const [typeClick, setTypeClick] = useState(false);
@@ -48,10 +49,11 @@ function AllPets() {
 		}
 
 		axios
-			.get("http://localhost:3001/pets")
+			.get(`${CONFIG.BASE_URL}/pets`)
 			.then((res) => {
 				setPetList(res.data); // Store the fetched pet data in state
 				setFilteredPets(res.data); // Initially, show all pets
+				console.log(res);
 			})
 			.catch((err) => console.log(err));
 

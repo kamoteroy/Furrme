@@ -7,6 +7,7 @@ import CommunityPostCard from "../../components/CommunityPostCard";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import CountDownModal from "../../components/CountdownModal";
+import CONFIG from "../../data/config";
 
 function Community() {
 	const [postContent, setPostContent] = useState("");
@@ -56,7 +57,7 @@ function Community() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3001/community", {
+			.get(`${CONFIG.BASE_URL}/community`, {
 				headers: {
 					token: token,
 				},
@@ -101,12 +102,12 @@ function Community() {
 			setShowCreatePostBtn(postContent.trim().length > 0);
 		}
 		try {
-			const res = await axios.post("http://localhost:3001/upload", {
+			const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 				image_url: uploadedImg,
 			});
 			await axios
 				.post(
-					"http://localhost:3001/addpost",
+					`${CONFIG.BASE_URL}/addpost`,
 					{
 						id: highestID + 1,
 						image: res.data,

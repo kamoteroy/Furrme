@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { logout } from "../../store/Users";
 import { useEffect } from "react";
 import axios from "axios";
+import CONFIG from "../../data/config";
 
 function Homepage() {
 	const dispatch = useDispatch();
@@ -11,7 +12,7 @@ function Homepage() {
 
 	useEffect(() => {
 		axios
-			.post("http://localhost:3001/createAdmin")
+			.post(`${CONFIG.BASE_URL}/createAdmin`)
 			.then((res) => {
 				console.log(res);
 			})

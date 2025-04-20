@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { IoNotificationsOutline } from "react-icons/io5";
+import CONFIG from "../../data/config";
 
 function AdminDashboard() {
 	const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
@@ -27,7 +28,7 @@ function AdminDashboard() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3001/admin", {
+			.get(`${CONFIG.BASE_URL}/admin`, {
 				headers: {
 					token: user.token,
 				},

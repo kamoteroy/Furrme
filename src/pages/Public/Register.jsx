@@ -12,6 +12,7 @@ import { arrows_exclamation } from "react-icons-kit/linea/arrows_exclamation";
 import { arrows_circle_check } from "react-icons-kit/linea/arrows_circle_check";
 import { androidAlert } from "react-icons-kit/ionicons/androidAlert";
 import { checkmarkCircled } from "react-icons-kit/ionicons/checkmarkCircled";
+import CONFIG from "../../data/config";
 
 function Register() {
 	const [formData, setformData] = useState({
@@ -36,7 +37,7 @@ function Register() {
 
 	useEffect(() => {
 		axios
-			.post("http://localhost:3001/emailValidate", formData.email)
+			.post(`${CONFIG.BASE_URL}/emailValidate`, formData.email)
 			.then((res) => {
 				setEmailList(res.data);
 			})
@@ -118,7 +119,7 @@ function Register() {
 		e.preventDefault();
 		if (validateForm()) {
 			axios
-				.post("http://localhost:3001/signup", { formData, password })
+				.post(`${CONFIG.BASE_URL}/signup`, { formData, password })
 				.then((res) => {
 					if (res.data.message !== "Success") {
 						setmodalContents({

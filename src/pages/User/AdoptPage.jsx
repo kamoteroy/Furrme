@@ -8,6 +8,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import CountDownModal from "../../components/CountdownModal";
+import CONFIG from "../../data/config";
 
 function AdoptPage() {
 	const [showTerms, setShowTerms] = useState(false);
@@ -130,12 +131,12 @@ function AdoptPage() {
 				setFileName(null);
 			}
 			try {
-				const res = await axios.post("http://localhost:3001/upload", {
+				const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 					image_url: uploadedImg,
 				});
 				await axios
 					.post(
-						"http://localhost:3001/adoptReq",
+						`${CONFIG.BASE_URL}/adoptReq`,
 						{
 							id: petData.pet_id,
 							name: petData.name,

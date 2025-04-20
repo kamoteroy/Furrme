@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../store/Users";
 import ShowModal from "../../components/ShowModal";
 import RedirectModal from "../../components/RedirectModal";
+import CONFIG from "../../data/config";
 
 function Login() {
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -54,7 +55,7 @@ function Login() {
 		if (validate()) {
 			console.log(password);
 			axios
-				.post("http://localhost:3001/login", { email, password })
+				.post(`${CONFIG.BASE_URL}/login`, { email, password })
 				.then((res) => {
 					if (res.data.message) {
 						setmodalContents({

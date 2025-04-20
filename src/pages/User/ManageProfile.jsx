@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { login } from "../../store/Users";
 import CountDownModal from "../../components/CountdownModal";
 import uploadingImg from "../../assets/uploadingImg.gif";
+import CONFIG from "../../data/config";
 
 function ManageProfile() {
 	const dispatch = useDispatch();
@@ -108,7 +109,7 @@ function ManageProfile() {
 					setIsUploading(true);
 					setUploadMessage("Uploading...");
 
-					const res = await axios.post("http://localhost:3001/upload", {
+					const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 						image_url: uploadedImg,
 					});
 
@@ -119,7 +120,7 @@ function ManageProfile() {
 				}
 
 				await axios
-					.post("http://localhost:3001/manage", {
+					.post(`${CONFIG.BASE_URL}/manage`, {
 						fname: formData.fname,
 						lname: formData.lname,
 						newEmail: formData.email,

@@ -13,6 +13,7 @@ import LoadingOverlay from "../../components/LoadingOverlay";
 import catLoading2 from "../../assets/catLoading2.gif";
 import catLoading1 from "../../assets/catLoading.gif";
 import CountDownModal from "../../components/CountdownModal";
+import CONFIG from "../../data/config";
 
 function PetDetails() {
 	const navigate = useNavigate();
@@ -46,7 +47,7 @@ function PetDetails() {
 
 	useEffect(() => {
 		axios
-			.get(`http://localhost:3001/admin/petDetails/${id}`, {
+			.get(`${CONFIG.BASE_URL}/admin/petDetails/${id}`, {
 				headers: {
 					token: token,
 				},
@@ -55,7 +56,7 @@ function PetDetails() {
 			.catch((err) => console.log(err));
 
 		axios
-			.get(`http://localhost:3001/admin/petImage/${id}`, {
+			.get(`${CONFIG.BASE_URL}/admin/petImage/${id}`, {
 				headers: {
 					token: token,
 				},
@@ -131,7 +132,7 @@ function PetDetails() {
 			setUploading(true);
 			base64s.forEach(async function (item, index) {
 				try {
-					const res = await axios.post("http://localhost:3001/upload", {
+					const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 						image_url: item,
 					});
 					images.push(res.data);
@@ -157,7 +158,7 @@ function PetDetails() {
 
 	const update = (info, imagess) => {
 		axios
-			.post("http://localhost:3001/admin/petInfoUpdate", {
+			.post(`${CONFIG.BASE_URL}/admin/petInfoUpdate`, {
 				info: info,
 				images: imagess,
 				token: token,

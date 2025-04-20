@@ -4,6 +4,7 @@ import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
 import "../../styles/Public/DogsPage.css";
 import PetCard from "../../components/PetCard";
+import CONFIG from "../../data/config";
 
 function DogsPage() {
 	const [ageClick, setAgeClick] = useState(false);
@@ -18,7 +19,7 @@ function DogsPage() {
 
 	useEffect(() => {
 		axios
-			.get("http://localhost:3001/pets/dogs")
+			.get(`${CONFIG.BASE_URL}/pets/dogs`)
 			.then((res) => setList(res.data))
 			.catch((err) => console.log(err));
 

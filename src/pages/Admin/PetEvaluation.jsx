@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import catLoading2 from "../../assets/catLoading2.gif";
 import CountDownModal from "../../components/CountdownModal";
+import CONFIG from "../../data/config";
 
 function PetEvaluation() {
 	const [charCount, setCharCount] = useState(0);
@@ -61,7 +62,7 @@ function PetEvaluation() {
 	useEffect(() => {
 		//setAdoptInfo(adoptRequest);
 		axios
-			.post("http://localhost:3001/admin/evaluation/accDetails", {
+			.post(`${CONFIG.BASE_URL}/admin/evaluation/accDetails`, {
 				email: adoptRequest.email,
 				pet_Id: adoptRequest.pet_id,
 				token: token,
@@ -76,7 +77,7 @@ function PetEvaluation() {
 			.catch((err) => console.log(err));
 
 		axios
-			.get(`http://localhost:3001/admin/petDetails/${adoptRequest.pet_id}`, {
+			.get(`${CONFIG.BASE_URL}/admin/petDetails/${adoptRequest.pet_id}`, {
 				headers: {
 					token: token,
 				},
@@ -89,7 +90,7 @@ function PetEvaluation() {
 			})
 			.catch((err) => console.log(err));
 		axios
-			.get(`http://localhost:3001/admin/adoptReq/${adoptRequest.requestID}`, {
+			.get(`${CONFIG.BASE_URL}/admin/adoptReq/${adoptRequest.requestID}`, {
 				headers: {
 					token: token,
 				},
@@ -160,7 +161,7 @@ function PetEvaluation() {
 
 	const Submit = () => {
 		axios
-			.post("http://localhost:3001/admin/setStatus", {
+			.post(`${CONFIG.BASE_URL}/admin/setStatus`, {
 				status: selectedButton,
 				email: adoptRequest.email,
 				id: adoptRequest.pet_id,

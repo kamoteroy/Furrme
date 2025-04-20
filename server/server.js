@@ -133,9 +133,9 @@ app.get("/", (req, res) => {
 	return res.json("Server running");
 });
 
-/*app.listen(3001, () => {
+app.listen(3001, () => {
 	console.log("Running on port 3001...");
-});*/
+});
 
 const verifyJWT = (req, res, next) => {
 	var token;

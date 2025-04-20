@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import CountDownModal from "../../components/CountdownModal";
+import CONFIG from "../../data/config";
 
 function CreatePetListing() {
 	const getData = useSelector((state) => state.value);
@@ -188,9 +189,8 @@ function CreatePetListing() {
     };*/
 
 	const create = (pictures) => {
-		console.log("bobo1");
 		axios
-			.post("http://localhost:3001/admin/create", {
+			.post(`${CONFIG.BASE_URL}/admin/create`, {
 				data: formData,
 				gender: selectedPetGender,
 				type: selectedPetType,
@@ -242,7 +242,7 @@ function CreatePetListing() {
 			setUploadingText(`Uploading Images 1/${size}...`);
 			base64s.forEach(async function (item, index) {
 				try {
-					const res = await axios.post("http://localhost:3001/upload", {
+					const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 						image_url: item,
 					});
 					images.push(res.data);
