@@ -204,10 +204,8 @@ function PetEvaluation() {
 				<div className="mainContent">
 					<div className="applicantInfoHeader">
 						<h1>Application Evaluation</h1>
-
 						<p>
-							Application Date:{" "}
-							{new Date(adoptInfo.dates).toISOString().split("T")[0]}
+							Application Date: {new Date(adoptInfo.dates).toLocaleDateString()}
 						</p>
 						<div className="appStatus">
 							<p>Application Status: </p>
