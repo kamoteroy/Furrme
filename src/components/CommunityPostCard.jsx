@@ -33,7 +33,7 @@ function CommunityPostCard(props) {
 				<div className="postInfo">
 					<h2 className="userAccntName">{props.accountName}</h2>
 					<p className="datePosted">
-						{props.datePosted}
+						{props.datePosted?.split("T")[0]}
 						<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						{timePosted}
 					</p>
