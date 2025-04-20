@@ -1,5 +1,5 @@
 const db = require("../mysql");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cloud = require("cloudinary").v2;
 
