@@ -182,7 +182,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	align-items: flex-start;
+	align-items: center;
 	gap: 40px;
 	margin-bottom: 60px;
 }
@@ -251,5 +251,11 @@
 	.searchBarContainer .searchIcon {
 		position: absolute;
 		transform: translateX(100%);
+	}
+}
+@media screen and (max-width: 768px) {
+	.petsContainer h1 {
+		font-size: 24px;
+		text-align: center;
 	}
 }
