@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import { LuUpload } from "react-icons/lu";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import CommunityPostCard from "../../components/CommunityPostCard";
+import CommunityPostCardSkeleton from "../../components/CommunityPostCardSkeleton"; // Import the skeleton loader
 import axios from "axios";
 import { useSelector } from "react-redux";
 import CountDownModal from "../../components/CountdownModal";
@@ -203,19 +204,23 @@ function Community() {
 						)}
 					</div>
 					<div className="postsContainer">
-						{postList.map((post, i) => {
-							return (
-								<CommunityPostCard
-									key={i}
-									userAvatar={post.user_img}
-									accountName={post.user_name}
-									datePosted={post.dates}
-									postImage={post.image}
-									postContent={post.description}
-									timePosted={post.timePosted}
-								/>
-							);
-						})}
+						{postList.length === 0
+							? [...Array(5)].map((_, i) => (
+									<CommunityPostCardSkeleton key={i} />
+								))
+							: postList.map((post, i) => {
+									return (
+										<CommunityPostCard
+											key={i}
+											userAvatar={post.user_img}
+											accountName={post.user_name}
+											datePosted={post.dates}
+											postImage={post.image}
+											postContent={post.description}
+											timePosted={post.timePosted}
+										/>
+									);
+								})}
 					</div>
 				</div>
 			</div>

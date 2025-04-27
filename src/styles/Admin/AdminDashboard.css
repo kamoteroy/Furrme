@@ -328,3 +328,34 @@
 		display: none;
 	}
 }
+.adminDashboard .skeleton-row td {
+	padding: 10px;
+}
+
+.adminDashboard .skeleton {
+	background-color: #e0e0e0;
+	border-radius: 4px;
+	animation: pulse 1.5s infinite;
+}
+
+.adminDashboard .skeleton-icon {
+	width: 30px;
+	height: 30px;
+}
+
+.adminDashboard .skeleton-text {
+	height: 14px;
+	width: 70%;
+}
+
+@keyframes pulse {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.4;
+	}
+	100% {
+		opacity: 1;
+	}
+}

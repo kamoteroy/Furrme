@@ -26,6 +26,7 @@ function AdminDashboard() {
 	const statusDropdownRef = useRef(null);
 	const user = useSelector((state) => state.value);
 	const [isMobileView, setIsMobileView] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -47,8 +48,14 @@ function AdminDashboard() {
 					token: user.token,
 				},
 			})
-			.then((res) => (res.data.message ? setList([]) : setList(res.data)))
-			.catch((err) => console.log(err));
+			.then((res) => {
+				setLoading(false);
+				setList(res.data.message ? [] : res.data);
+			})
+			.catch((err) => {
+				setLoading(false);
+				console.log(err);
+			});
 	}, []);
 
 	const toggleDropdown = () => {
@@ -224,7 +231,21 @@ function AdminDashboard() {
 							</tr>
 						</thead>
 						<tbody>
-							{currentPets.length === 0 ? (
+							{loading ? (
+								[...Array(rowsPerPage)].map((_, index) => (
+									<tr key={index} className="skeleton-row">
+										<td>
+											<div className="skeleton skeleton-icon" />
+										</td>
+										<td>
+											<div className="skeleton skeleton-text" />
+										</td>
+										<td>
+											<div className="skeleton skeleton-text" />
+										</td>
+									</tr>
+								))
+							) : currentPets.length === 0 ? (
 								<tr>
 									<td colSpan="3">No Pet Listing Found</td>
 								</tr>

@@ -7,8 +7,8 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import LoadingOverlay from "../../components/LoadingOverlay";
-import catLoading2 from "../../assets/catLoading2.gif";
+//import LoadingOverlay from "../../components/LoadingOverlay";
+//import catLoading2 from "../../assets/catLoading2.gif";
 import { IoNotificationsOutline } from "react-icons/io5";
 import CONFIG from "../../data/config";
 
@@ -37,8 +37,14 @@ function AdoptionRequests() {
 					token: token,
 				},
 			})
-			.then((res) => setAdminPetRequests(res.data), setLoading(false))
-			.catch((err) => console.log(err));
+			.then((res) => {
+				setAdminPetRequests(res.data);
+				setLoading(false);
+			})
+			.catch((err) => {
+				console.log(err);
+				setLoading(false);
+			});
 	}, []);
 
 	const handlePreviousPage = () => {
@@ -141,7 +147,6 @@ function AdoptionRequests() {
 
 	return (
 		<>
-			{loading && <LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />}
 			<div className="adminAdoptionRequests">
 				<AdminDashboardSidebar />
 				<div className="mainContent">
@@ -222,22 +227,44 @@ function AdoptionRequests() {
 						<table>
 							<thead>
 								<tr>
-									<th>Date</th>
-									<th>Name</th>
-									<th>Email</th>
-									<th>Pet</th>
-									<th>Status</th>
+									<th className="col-date">Date</th>
+									<th className="col-name">Name</th>
+									<th className="col-email">Email</th>
+									<th className="col-pet">Pet</th>
+									<th className="col-status">Status</th>
 								</tr>
 							</thead>
 							<tbody>
-								{currentRequests.length === 0 ? (
+								{loading ? (
+									[...Array(10)].map((_, index) => (
+										<tr key={index} className="skeletonRow">
+											<td>
+												<div className="skeleton skeleton-text"></div>
+											</td>
+											<td>
+												<div className="skeleton skeleton-text"></div>
+											</td>
+											<td>
+												<div className="skeleton skeleton-text"></div>
+											</td>
+											<td>
+												<div className="skeleton skeleton-text"></div>
+											</td>
+											<td>
+												<div className="skeleton skeleton-text"></div>
+											</td>
+										</tr>
+									))
+								) : currentRequests.length === 0 ? (
 									<tr>
-										<td colSpan="3">No Pet Requests Found</td>
+										<td colSpan="5">No Pet Requests Found</td>
 									</tr>
 								) : (
-									currentRequests.map((request) => (
-										<tr onClick={() => petPreview(request)}>
-											<td>{request.dates}</td>
+									currentRequests.map((request, i) => (
+										<tr key={i} onClick={() => petPreview(request)}>
+											<td>
+												{new Date(request.dates).toISOString().split("T")[0]}
+											</td>
 											<td>{request.pet_name}</td>
 											<td>{request.email}</td>
 											<td>{request.category}</td>

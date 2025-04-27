@@ -284,3 +284,51 @@
 		display: none;
 	}
 }
+.adminAdoptionRequests .skeletonRow td {
+	padding: 10px;
+}
+
+.adminAdoptionRequests .skeleton {
+	background-color: #e0e0e0;
+	border-radius: 4px;
+	width: 100%;
+	height: 14px;
+	animation: pulse 1.5s infinite ease-in-out;
+}
+
+.adminAdoptionRequests .skeleton-text {
+	height: 16px;
+	width: 80%;
+	margin: auto;
+}
+
+@keyframes pulse {
+	0% {
+		background-color: #e0e0e0;
+	}
+	50% {
+		background-color: #f0f0f0;
+	}
+	100% {
+		background-color: #e0e0e0;
+	}
+}
+.adminAdoptionRequests .col-date {
+	width: 15%;
+}
+
+.adminAdoptionRequests .col-name {
+	width: 20%;
+}
+
+.adminAdoptionRequests .col-email {
+	width: 30%;
+}
+
+.adminAdoptionRequests .col-pet {
+	width: 15%;
+}
+
+.adminAdoptionRequests .col-status {
+	width: 15%;
+}

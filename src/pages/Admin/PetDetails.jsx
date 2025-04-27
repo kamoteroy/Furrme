@@ -46,6 +46,8 @@ function PetDetails() {
 	}, [petImage]);
 
 	useEffect(() => {
+		setLoading(true);
+
 		axios
 			.get(`${CONFIG.BASE_URL}/admin/petDetails/${id}`, {
 				headers: {
@@ -61,9 +63,12 @@ function PetDetails() {
 					token: token,
 				},
 			})
-			.then((result) => setpetImage(result.data), setLoading(!loading))
+			.then((result) => {
+				setpetImage(result.data);
+				setLoading(false);
+			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [id, token]);
 
 	const handleInputChange = (e) => {
 		e.preventDefault();

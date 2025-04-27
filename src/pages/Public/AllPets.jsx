@@ -7,6 +7,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CONFIG from "../../data/config";
+import PetCardSkeleton from "../../components/PetCardSkeleton";
 
 function AllPets() {
 	const [typeClick, setTypeClick] = useState(false);
@@ -22,6 +23,7 @@ function AllPets() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedType, setSelectedType] = useState("");
 	const [selectedGender, setSelectedGender] = useState("");
+	const [loading, setLoading] = useState(true);
 	const [placeholderText, setPlaceholderText] = useState(
 		"Search name, breed, or location"
 	);
@@ -51,9 +53,9 @@ function AllPets() {
 		axios
 			.get(`${CONFIG.BASE_URL}/pets`)
 			.then((res) => {
-				setPetList(res.data); // Store the fetched pet data in state
-				setFilteredPets(res.data); // Initially, show all pets
-				console.log(res);
+				setPetList(res.data);
+				setFilteredPets(res.data);
+				setLoading(false);
 			})
 			.catch((err) => console.log(err));
 
@@ -221,14 +223,16 @@ function AllPets() {
 					</div>
 				</div>
 				<div className="petsContainer">
-					{filteredPets.length === 0 ? (
+					{loading ? (
+						Array(6)
+							.fill()
+							.map((_, i) => <PetCardSkeleton key={i} />)
+					) : filteredPets.length === 0 ? (
 						<h1 className="noPetsMessage">
 							No pets available for adoption at the moment.
 						</h1>
 					) : (
-						filteredPets.map((pet, i) => {
-							return <PetCard key={i} data={pet} />;
-						})
+						filteredPets.map((pet, i) => <PetCard key={i} data={pet} />)
 					)}
 				</div>
 			</div>
