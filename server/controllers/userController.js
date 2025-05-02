@@ -15,7 +15,7 @@ async function logIn(req, res) {
 
 	db.query(email_check, [req.body.email], (err, isThereAcc) => {
 		if (!isThereAcc[0])
-			return res.json({ auth: false, message: "No Email Found!" });
+			return res.json({ auth: false, message: "Invalid Email or Password" });
 		db.query(password_check, [req.body.email], async (err, result_pass) => {
 			const result = await bcrypt.compare(
 				req.body.password,
@@ -29,7 +29,7 @@ async function logIn(req, res) {
 					.header("Authorization", token)
 					.json({ token: token, userData: isThereAcc[0] });
 			} else {
-				return res.json({ message: "Incorrect Password!" });
+				return res.json({ message: "Invalid Email or Password" });
 			}
 		});
 	});

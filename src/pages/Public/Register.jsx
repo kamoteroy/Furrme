@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import "../../styles/Public/Signup.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import RedirectModal from "../../components/RedirectModal";
 
@@ -27,24 +27,26 @@ function Register() {
 	const [errors, setErrors] = useState({});
 	const [password, setPassword] = useState("");
 	const [emailList, setEmailList] = useState([]);
-	const navigate = useNavigate();
 	const [link, setLink] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContents, setmodalContents] = useState({
 		title: "",
 		contents: "",
 	});
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		axios
-			.post(`${CONFIG.BASE_URL}/emailValidate`, formData.email)
-			.then((res) => {
-				setEmailList(res.data);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	}, []);
+		if (formData.email) {
+			axios
+				.post(`${CONFIG.BASE_URL}/emailValidate`, formData.email)
+				.then((res) => {
+					setEmailList(res.data);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, [formData.email]);
 
 	const handleInputChange = (e) => {
 		e.preventDefault();
@@ -57,7 +59,6 @@ function Register() {
 	};
 
 	function password_validate(password) {
-		//check pass of at least 1 upper and lowercase, symbol and number
 		var re = {
 			upper: /(?=.*[A-Z])/,
 			lower: /(?=.*[a-z])/,
@@ -118,6 +119,8 @@ function Register() {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (validateForm()) {
+			setLoading(true); // Set loading to true when the registration starts
+
 			axios
 				.post(`${CONFIG.BASE_URL}/signup`, { formData, password })
 				.then((res) => {
@@ -138,6 +141,9 @@ function Register() {
 				})
 				.catch((error) => {
 					console.error(error);
+				})
+				.finally(() => {
+					setLoading(false);
 				});
 		}
 	};
@@ -499,8 +505,12 @@ function Register() {
 
 					<div className="signupBtn-container">
 						<Link>
-							<button onClick={handleSubmit} className="btn-createAccnt">
-								Create Account
+							<button
+								onClick={handleSubmit}
+								className="btn-createAccnt"
+								disabled={loading}
+							>
+								{loading ? "Creating Account..." : "Create Account"}
 							</button>
 						</Link>
 					</div>
