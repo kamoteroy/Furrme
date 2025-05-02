@@ -83,29 +83,25 @@ function ManageProfile() {
 		e.preventDefault();
 		const validationErrors = {};
 
-		// Validate the form fields
-		if (!formData.fname.trim()) {
-			validationErrors.fname = "First Name is required";
-		}
-		if (!formData.lname.trim()) {
-			validationErrors.lname = "Last Name is required";
-		}
-		if (!formData.email.trim()) {
-			validationErrors.email = "Email is required";
-		}
 		if (!formData.pass.trim()) {
 			validationErrors.pass = "Password is required";
 		}
-
 		setErrors(validationErrors);
 		if (Object.keys(validationErrors).length === 0) {
 			try {
-				let imageUrl = uploadedImg;
+				const changedFields = {
+					prevEmail: user.email,
+					token: token,
+					pass: formData.pass,
+				};
 
-				if (!uploadedImg || uploadedImg === user.image) {
-					imageUrl = user.image;
-					setUploadMessage("Updating...");
-				} else {
+				// Detect changes
+				if (formData.fname !== user.fname) changedFields.fname = formData.fname;
+				if (formData.lname !== user.lname) changedFields.lname = formData.lname;
+				if (formData.email !== user.email)
+					changedFields.newEmail = formData.email;
+
+				if (uploadedImg && uploadedImg !== user.image) {
 					setIsUploading(true);
 					setUploadMessage("Uploading...");
 
@@ -113,32 +109,20 @@ function ManageProfile() {
 						image_url: uploadedImg,
 					});
 
-					imageUrl = res.data;
-					setUploadMessage("Upload complete!");
+					changedFields.image = res.data;
 					setUploadedImg("");
 					setIsUploading(false);
 				}
 
 				await axios
-					.post(`${CONFIG.BASE_URL}/manage`, {
-						fname: formData.fname,
-						lname: formData.lname,
-						newEmail: formData.email,
-						pass: formData.pass,
-						image: imageUrl,
-						prevEmail: user.email,
-						token: token,
-					})
+					.patch(`${CONFIG.BASE_URL}/manage`, changedFields)
 					.then((result) => {
 						setAccess(result.data.access);
 						setmodalContents({
 							title: result.data.message,
 						});
 						setIsModalOpen(true);
-						setformData({
-							...formData,
-							pass: "",
-						});
+						setformData({ ...formData, pass: "" });
 
 						result.data.access === 1
 							? dispatch(

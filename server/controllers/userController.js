@@ -1,4 +1,4 @@
-const db = require("../mysql");
+const db = require("../sql/mysql");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cloud = require("cloudinary").v2;
@@ -24,7 +24,7 @@ async function logIn(req, res) {
 			if (err) throw err;
 			if (result) {
 				const email = isThereAcc[0].email;
-				const token = jwt.sign(email, "jwtRoy");
+				const token = jwt.sign(email, process.env.JWT_SECRET);
 				return res
 					.header("Authorization", token)
 					.json({ token: token, userData: isThereAcc[0] });
@@ -68,60 +68,76 @@ async function signUp(req, res) {
 }
 
 async function manageProfile(req, res) {
-	var taken = 0; // 0 if same 1
-	const email = jwt.verify(req.body.token, "jwtRoy");
-	const updateInfo =
-		"UPDATE accounts set fname = ?, lname = ?, email = ?, pass = ?, image = ? where email = ?";
-	const accInfo = `select * from accounts where email = ?`;
-	const hashedPassword = await bcrypt.hash(req.body.pass, 10);
+	const email = jwt.verify(req.body.token, process.env.JWT_SECRET);
+	const accInfo = `SELECT * FROM accounts WHERE email = ?`;
+	let taken = 0;
+	const updates = [];
+	const values = [];
 
-	if (email != req.body.newEmail) {
-		await new Promise((res, rej) => {
-			db.query(accInfo, req.body.newEmail, (err, info) => {
-				if (err) rej();
-				if (info[0]) taken = 1;
-				res();
+	if (req.body.newEmail && req.body.newEmail !== req.body.prevEmail) {
+		await new Promise((resolve, reject) => {
+			db.query(accInfo, [req.body.newEmail], (err, result) => {
+				if (err) return reject(err);
+				if (result.length > 0) taken = 1;
+				resolve();
 			});
 		});
+		if (taken === 1) return res.json({ message: "Email Taken", access: 0 });
+		updates.push("email = ?");
+		values.push(req.body.newEmail);
 	}
 
-	if (taken === 1) return res.json({ message: "Email Taken", access: 0 });
-	else if (taken === 0) {
-		db.query(
-			updateInfo,
-			[
-				req.body.fname,
-				req.body.lname,
-				req.body.newEmail,
-				hashedPassword,
-				req.body.image,
-				req.body.prevEmail,
-			],
-			(err, result) => {
-				if (err) console.log(err);
-				else {
-					db.query(accInfo, req.body.newEmail, (err, info) => {
-						const newToken = jwt.sign(req.body.newEmail, "jwtRoy");
-						if (err) console.log(err);
-						else
-							return res.json({
-								userData: info[0],
-								token: newToken,
-								message: "Info Updated Successfully",
-								access: 1,
-							});
-					});
-				}
-			}
-		);
+	if (req.body.fname) {
+		updates.push("fname = ?");
+		values.push(req.body.fname);
 	}
+
+	if (req.body.lname) {
+		updates.push("lname = ?");
+		values.push(req.body.lname);
+	}
+
+	if (req.body.image) {
+		updates.push("image = ?");
+		values.push(req.body.image);
+	}
+
+	if (req.body.pass) {
+		const hashedPassword = await bcrypt.hash(req.body.pass, 10);
+		updates.push("pass = ?");
+		values.push(hashedPassword);
+	}
+
+	if (updates.length === 0) {
+		return res.json({ message: "No changes made", access: 0 });
+	}
+
+	const sql = `UPDATE accounts SET ${updates.join(", ")} WHERE email = ?`;
+	values.push(req.body.prevEmail);
+
+	db.query(sql, values, (err, result) => {
+		if (err) return console.log(err);
+
+		const finalEmail = req.body.newEmail || req.body.prevEmail;
+		db.query(accInfo, [finalEmail], (err, info) => {
+			if (err) return console.log(err);
+			const newToken = jwt.sign(email, process.env.JWT_SECRET);
+
+			return res.json({
+				userData: info[0],
+				token: newToken,
+				message: "Info Updated Successfully",
+				access: 1,
+			});
+		});
+	});
 }
 
 async function addPost(req, res) {
 	const addpost =
 		"INSERT into community(postNumber, user_name, user_img, description, dates, image, timePosted) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	const sql = "SELECT * from community";
-	const token = jwt.verify(req.headers.token, "jwtRoy");
+	const token = jwt.verify(req.headers.token, process.env.JWT_SECRET);
 	if (token) {
 		db.query(
 			addpost,

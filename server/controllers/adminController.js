@@ -1,4 +1,4 @@
-const db = require("../mysql");
+const db = require("../sql/mysql");
 
 async function adminPetList(req, res) {
 	db.query(
