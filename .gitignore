@@ -33,3 +33,4 @@ yarn-error.log*
 /server/package-lock.json
 /client/yarn.lock
 /server/yarn.lock
+/server/.env
