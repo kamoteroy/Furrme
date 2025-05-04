@@ -22,7 +22,10 @@ function ManageProfile() {
 		lname: user.lname,
 		email: user.email,
 		pass: "",
+		npass: "",
+		cpass: "",
 	};
+
 	const [formData, setformData] = useState(defaultValues);
 	const token = getData.token;
 	const [access, setAccess] = useState("");
@@ -31,9 +34,26 @@ function ManageProfile() {
 		title: "",
 		contents: "",
 	});
-
 	const [isUploading, setIsUploading] = useState(false);
 	const [uploadMessage, setUploadMessage] = useState("Uploading...");
+	const [showPasswordSection, setShowPasswordSection] = useState(false);
+
+	const togglePasswordSection = () => {
+		setShowPasswordSection((prev) => !prev);
+		setErrors({});
+
+		setformData((prev) => ({
+			fname: user.fname,
+			lname: user.lname,
+			email: user.email,
+			pass: "",
+			npass: "",
+			cpass: "",
+		}));
+
+		setUploadedImg(user.image); // Reset uploaded image back to original
+		setSaveBtn(false); // Hide save button
+	};
 
 	const handleInputChange = (e) => {
 		e.preventDefault();
@@ -48,6 +68,26 @@ function ManageProfile() {
 			setformData(defaultValues);
 		}
 	}, [access]);
+
+	useEffect(() => {
+		if (showPasswordSection) {
+			// Show save button only when all password fields are filled
+			const allPasswordFieldsFilled =
+				formData.pass.trim() && formData.npass.trim() && formData.cpass.trim();
+			setSaveBtn(allPasswordFieldsFilled);
+		} else {
+			const hasChanges =
+				formData.fname.trim() &&
+				formData.lname.trim() &&
+				formData.email.trim() &&
+				(formData.fname.trim() !== user.fname.trim() ||
+					formData.lname.trim() !== user.lname.trim() ||
+					formData.email.trim() !== user.email.trim() ||
+					(uploadedImg && uploadedImg !== user.image));
+
+			setSaveBtn(!!hasChanges);
+		}
+	}, [formData, uploadedImg, showPasswordSection, user]);
 
 	const toggleModal = () => {
 		setIsModalOpen(!isModalOpen);
@@ -82,62 +122,97 @@ function ManageProfile() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const validationErrors = {};
+		let isValid = true;
 
-		if (!formData.pass.trim()) {
-			validationErrors.pass = "Password is required";
+		if (showPasswordSection) {
+			const { pass, npass, cpass } = formData;
+
+			if (pass && pass === npass) {
+				validationErrors.npass =
+					"New password cannot be the same as old password";
+				isValid = false;
+			}
+
+			if (npass !== cpass) {
+				validationErrors.cpass = "New passwords do not match";
+				isValid = false;
+			}
+		} else {
+			const { fname, lname, email } = formData;
+
+			if (!fname.trim() || !lname.trim() || !email.trim()) {
+				isValid = false;
+			}
 		}
+
 		setErrors(validationErrors);
-		if (Object.keys(validationErrors).length === 0) {
-			try {
-				const changedFields = {
-					prevEmail: user.email,
-					token: token,
-					pass: formData.pass,
-				};
+		if (!isValid) return;
 
-				// Detect changes
-				if (formData.fname !== user.fname) changedFields.fname = formData.fname;
-				if (formData.lname !== user.lname) changedFields.lname = formData.lname;
-				if (formData.email !== user.email)
-					changedFields.newEmail = formData.email;
+		try {
+			const changedFields = {
+				prevEmail: user.email,
+				token: token,
+				pass: formData.pass,
+			};
 
-				if (uploadedImg && uploadedImg !== user.image) {
-					setIsUploading(true);
-					setUploadMessage("Uploading...");
+			// Detect changes
+			if (formData.fname !== user.fname) changedFields.fname = formData.fname;
+			if (formData.lname !== user.lname) changedFields.lname = formData.lname;
+			if (formData.email !== user.email)
+				changedFields.newEmail = formData.email;
 
-					const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
-						image_url: uploadedImg,
-					});
+			if (uploadedImg && uploadedImg !== user.image) {
+				setIsUploading(true);
+				setUploadMessage("Uploading...");
 
-					changedFields.image = res.data;
-					setUploadedImg("");
-					setIsUploading(false);
-				}
+				const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
+					image_url: uploadedImg,
+				});
 
-				await axios
-					.patch(`${CONFIG.BASE_URL}/manage`, changedFields)
-					.then((result) => {
-						setAccess(result.data.access);
-						setmodalContents({
-							title: result.data.message,
-						});
-						setIsModalOpen(true);
-						setformData({ ...formData, pass: "" });
-
-						result.data.access === 1
-							? dispatch(
-									login({
-										token: result.data.token,
-										user: result.data.userData,
-									})
-								)
-							: dispatch(login({ token: token, user: user }));
-					})
-					.catch((err) => console.log(err));
-			} catch (err) {
-				console.log(err);
+				changedFields.image = res.data;
+				setUploadedImg("");
 				setIsUploading(false);
 			}
+
+			if (showPasswordSection) {
+				const isSameAsOld = formData.pass && formData.pass === formData.npass;
+				const passwordsMatch =
+					formData.npass && formData.npass === formData.cpass;
+
+				if (!isSameAsOld && passwordsMatch && formData.npass) {
+					changedFields.npass = formData.npass;
+				}
+			}
+
+			await axios
+				.patch(`${CONFIG.BASE_URL}/manage`, changedFields)
+				.then((result) => {
+					setAccess(result.data.access);
+					setmodalContents({
+						title: result.data.access === 1 ? "Success" : "Error",
+						contents: result.data.message,
+					});
+					setIsModalOpen(true);
+					setformData((prev) => ({
+						...prev,
+						pass: "",
+						npass: "",
+						cpass: "",
+					}));
+
+					result.data.access === 1
+						? dispatch(
+								login({
+									token: result.data.token,
+									user: result.data.userData,
+								})
+							)
+						: dispatch(login({ token: token, user: user }));
+				})
+				.catch((err) => console.log(err));
+		} catch (err) {
+			console.log(err);
+			setIsUploading(false);
 		}
 	};
 
@@ -152,17 +227,6 @@ function ManageProfile() {
 		}
 	};
 
-	useEffect(() => {
-		const isValidPassword = formData.pass.trim() !== "";
-		const isValidForm =
-			formData.fname.trim() &&
-			formData.lname.trim() &&
-			formData.email.trim() &&
-			isValidPassword;
-
-		setSaveBtn(isValidForm);
-	}, [formData]);
-
 	return (
 		<div>
 			<CountDownModal
@@ -175,95 +239,128 @@ function ManageProfile() {
 			<Navbar />
 			<div className="manageProfile">
 				<div className="container">
-					<h2>Profile</h2>
-					<p>
-						This information will be displayed publicly so be careful what you
-						share.
-					</p>
-					<hr />
-					<div className="profilePicture">
-						<label>Photo</label>
-						<div className="profilePictureContainer">
-							{uploadedImg ? (
-								<img src={uploadedImg} alt={user.fname} />
-							) : (
-								<img src={user.image} alt={user.fname} />
-							)}
-						</div>
-						<label htmlFor="uploadImg" className="btnChangeDP">
-							Change
-						</label>
-						<input
-							type="file"
-							id="uploadImg"
-							accept=".jpg,.jpeg,.png"
-							style={{ display: "none" }}
-							onChange={handleImageUpload}
-						/>
-					</div>
-					<hr />
-					<div className="firstName">
-						<label htmlFor="firstName">First Name</label>
-						<input
-							type="text"
-							id="firstName"
-							value={formData.fname}
-							name="fname"
-							onChange={handleInputChange}
-						/>
-					</div>
-
-					<hr />
-					<div className="lastName">
-						<label htmlFor="lastName">Last Name</label>
-						<input
-							type="text"
-							id="lastName"
-							value={formData.lname}
-							name="lname"
-							onChange={handleInputChange}
-						/>
-					</div>
-					<hr />
-					<div className="email">
-						<label htmlFor="email">Email</label>
-						<input
-							type="email"
-							id="email"
-							value={formData.email}
-							name="email"
-							onChange={handleInputChange}
-						/>
-					</div>
-					<hr />
-					<div className="password">
-						<label htmlFor="password">Password</label>
-						<input
-							type="password"
-							id="password"
-							value={formData.pass}
-							name="pass"
-							onChange={handleInputChange}
-						/>
-					</div>
-					<hr />
-					{showSaveBtn && (
-						<button onClick={handleSubmit} className="btnSaveChanges">
-							Save Changes
-						</button>
+					{!showPasswordSection && (
+						<>
+							<h2>Profile</h2>
+							<p>
+								This information will be displayed publicly so be careful what
+								you share.
+							</p>
+							<hr />
+							<div className="profilePicture">
+								<label>Photo</label>
+								<div className="profilePictureContainer">
+									{uploadedImg ? (
+										<img src={uploadedImg} alt={user.fname} />
+									) : (
+										<img src={user.image} alt={user.fname} />
+									)}
+								</div>
+								<label htmlFor="uploadImg" className="btnChangeDP">
+									Change
+								</label>
+								<input
+									type="file"
+									id="uploadImg"
+									accept=".jpg,.jpeg,.png"
+									style={{ display: "none" }}
+									onChange={handleImageUpload}
+								/>
+							</div>
+							<hr />
+							<div className="firstName">
+								<label htmlFor="firstName">First Name</label>
+								<input
+									type="text"
+									id="firstName"
+									value={formData.fname}
+									name="fname"
+									onChange={handleInputChange}
+								/>
+							</div>
+							<hr />
+							<div className="lastName">
+								<label htmlFor="lastName">Last Name</label>
+								<input
+									type="text"
+									id="lastName"
+									value={formData.lname}
+									name="lname"
+									onChange={handleInputChange}
+								/>
+							</div>
+							<hr />
+							<div className="email">
+								<label htmlFor="email">Email</label>
+								<input
+									type="email"
+									id="email"
+									value={formData.email}
+									name="email"
+									onChange={handleInputChange}
+								/>
+							</div>
+							<hr />
+						</>
 					)}
-				</div>
-				<div className="fnameWarning">
-					{errors.fname && <span>{errors.fname}</span>}
-				</div>
-				<div className="lnameWarning">
-					{errors.lname && <span>{errors.lname}</span>}
-				</div>
-				<div className="emailWarning">
-					{errors.email && <span>{errors.email}</span>}
-				</div>
-				<div className="passWarning">
-					{errors.pass && <span>{errors.pass}</span>}
+					{showPasswordSection && (
+						<>
+							<h2>Change Password</h2>
+							<hr />
+							<div className="password">
+								<label htmlFor="password">Password</label>
+								<input
+									type="password"
+									id="password"
+									value={formData.pass}
+									name="pass"
+									onChange={handleInputChange}
+								/>
+							</div>
+							<hr />
+							<div className="password">
+								<label htmlFor="npassword">New Password</label>
+								<input
+									type="password"
+									id="npassword"
+									value={formData.npass}
+									name="npass"
+									onChange={handleInputChange}
+								/>
+							</div>
+							<hr />
+							<div className="password">
+								<label htmlFor="cpassword">Confirm Password</label>
+								<input
+									type="password"
+									id="cpassword"
+									value={formData.cpass}
+									name="cpass"
+									onChange={handleInputChange}
+								/>
+							</div>
+							<hr />
+						</>
+					)}
+
+					<div className="buttonGroup">
+						<button className="changepassBtn" onClick={togglePasswordSection}>
+							{showPasswordSection ? "Change Info" : "Change Password"}
+						</button>
+
+						{showSaveBtn && (
+							<button onClick={handleSubmit} className="btnSaveChanges">
+								Save
+							</button>
+						)}
+					</div>
+					{Object.keys(errors).length > 0 && (
+						<div className="mergedWarnings">
+							{errors.pass && <p>{errors.pass}</p>}
+							{errors.npass && <p>{errors.npass}</p>}
+							{errors.cpass && <p>{errors.cpass}</p>}
+						</div>
+					)}
 				</div>
 
 				{isUploading && (

@@ -2,6 +2,7 @@ const db = require("../sql/mysql");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cloud = require("cloudinary").v2;
+const saltRounds = 10;
 
 cloud.config({
 	api_key: process.env.api_key,
@@ -44,7 +45,7 @@ async function signUp(req, res) {
 
 	db.query(emailQuery, [user.email], async (err, result_email) => {
 		if (!result_email[0]) {
-			const hashedPassword = await bcrypt.hash(pass, 10);
+			const hashedPassword = await bcrypt.hash(pass, saltRounds);
 			db.query(
 				sql,
 				[
@@ -68,21 +69,40 @@ async function signUp(req, res) {
 }
 
 async function manageProfile(req, res) {
-	const email = jwt.verify(req.body.token, process.env.JWT_SECRET);
+	const emailPayload = jwt.verify(req.body.token, process.env.JWT_SECRET);
 	const accInfo = `SELECT * FROM accounts WHERE email = ?`;
 	let taken = 0;
 	const updates = [];
 	const values = [];
 
+	const [currentUser] = await new Promise((resolve, reject) => {
+		db.query(accInfo, [req.body.prevEmail], (err, result) => {
+			if (err) return reject(err);
+			if (result.length === 0) return reject(new Error("User not found"));
+			resolve(result);
+		});
+	});
+
+	const isPasswordCorrect = await bcrypt.compare(
+		req.body.pass,
+		currentUser.pass
+	);
+	if (!isPasswordCorrect && req.body.pass != "") {
+		return res.json({ message: "Incorrect Password", access: 0 });
+	}
+
 	if (req.body.newEmail && req.body.newEmail !== req.body.prevEmail) {
-		await new Promise((resolve, reject) => {
+		const [existingEmail] = await new Promise((resolve, reject) => {
 			db.query(accInfo, [req.body.newEmail], (err, result) => {
 				if (err) return reject(err);
-				if (result.length > 0) taken = 1;
-				resolve();
+				resolve(result);
 			});
 		});
-		if (taken === 1) return res.json({ message: "Email Taken", access: 0 });
+
+		if (existingEmail) {
+			return res.json({ message: "Email Taken", access: 0 });
+		}
+
 		updates.push("email = ?");
 		values.push(req.body.newEmail);
 	}
@@ -102,10 +122,10 @@ async function manageProfile(req, res) {
 		values.push(req.body.image);
 	}
 
-	if (req.body.pass) {
-		const hashedPassword = await bcrypt.hash(req.body.pass, 10);
+	if (req.body.npass) {
+		const newHashedPassword = await bcrypt.hash(req.body.npass, saltRounds);
 		updates.push("pass = ?");
-		values.push(hashedPassword);
+		values.push(newHashedPassword);
 	}
 
 	if (updates.length === 0) {
@@ -121,7 +141,7 @@ async function manageProfile(req, res) {
 		const finalEmail = req.body.newEmail || req.body.prevEmail;
 		db.query(accInfo, [finalEmail], (err, info) => {
 			if (err) return console.log(err);
-			const newToken = jwt.sign(email, process.env.JWT_SECRET);
+			const newToken = jwt.sign(emailPayload, process.env.JWT_SECRET);
 
 			return res.json({
 				userData: info[0],

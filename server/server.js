@@ -6,7 +6,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
-const saltRounds = 10;
 const page = require("./controllers/pageController");
 const user = require("./controllers/userController");
 const admin = require("./controllers/adminController");
