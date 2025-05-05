@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const cloud = require("cloudinary").v2;
 const saltRounds = 10;
 
+const utcNow = new Date().toISOString().slice(0, 19).replace("T", " ");
+
 cloud.config({
 	api_key: process.env.api_key,
 	cloud_name: process.env.cloud_name,
@@ -155,7 +157,7 @@ async function manageProfile(req, res) {
 
 async function addPost(req, res) {
 	const addpost =
-		"INSERT into community(postNumber, user_name, user_img, description, dates, image, timePosted) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		"INSERT into community(post_id, email, description, posted_at, post_image) VALUES (?, ?, ?, ?, ?)";
 	const sql = "SELECT * from community";
 	const token = jwt.verify(req.headers.token, process.env.JWT_SECRET);
 	if (token) {
@@ -163,12 +165,10 @@ async function addPost(req, res) {
 			addpost,
 			[
 				req.body.id,
-				req.body.user_name,
-				req.body.user_img,
+				req.body.email,
 				req.body.description,
-				req.body.date,
+				utcNow,
 				req.body.image,
-				req.body.timePosted,
 			],
 			(err, result) => {
 				if (err) console.log(err);
@@ -185,7 +185,10 @@ async function addPost(req, res) {
 
 async function communityList(req, res) {
 	db.query(
-		"select * from community ORDER BY postNumber desc",
+		`SELECT c.*, a.fname, a.lname, a.image 
+		 FROM community c
+		 JOIN accounts a ON c.email = a.email
+		 ORDER BY c.post_id DESC`,
 		(err, postList) => {
 			if (err) {
 				console.log(err);
@@ -198,25 +201,22 @@ async function communityList(req, res) {
 
 async function adoptionRequest(req, res) {
 	const addpost =
-		"INSERT into adoptreq(pet_id, pet_name, category, email, image, address, contact, household, employment, pet_exp, dates, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT into adoptreq(pet_id, email, valid_id, address, contact, household, employment, pet_exp, requested_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	db.query(
 		addpost,
 		[
 			req.body.id,
-			req.body.name,
-			req.body.category,
 			req.body.email,
-			req.body.image,
+			req.body.valid_id,
 			req.body.address,
 			req.body.contact,
 			req.body.household,
 			req.body.employment,
 			req.body.pet_exp,
-			req.body.date,
-			req.body.status,
+			utcNow,
 		],
 		(err, result) => {
-			if (err) res.json({ message: "Error Applying" }), console.log(err);
+			if (err) return res.json({ message: "Error Applying" }), console.log(err);
 			return res.json({ message: "Adoption Application Successful!" });
 		}
 	);

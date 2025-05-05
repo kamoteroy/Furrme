@@ -7,11 +7,12 @@ const mysql = require("mysql2");
 	multipleStatements: true,
 });*/
 const db = mysql.createConnection({
-	host: "ballast.proxy.rlwy.net",
+	host: "turntable.proxy.rlwy.net",
 	user: "root",
-	password: "hsuzivmqpBMfktlDPJeCKToCSKUSwyrK",
+	password: "HuBEgymCcyoLwfiqgcdFILWYYAFrqBlM",
 	database: "railway",
-	port: 33194,
+	port: 17370,
 	multipleStatements: true,
 });
+
 module.exports = db;

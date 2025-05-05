@@ -90,3 +90,41 @@
 		font-size: 12px;
 	}
 }
+.postOptionsContainer {
+	position: relative;
+	margin-left: 80%;
+}
+
+.optionsArrow {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 18px;
+}
+
+.optionsDropdown {
+	position: absolute;
+	top: 24px;
+	left: 0;
+	background-color: white;
+	border: 1px solid #ccc;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+}
+
+.editBtn,
+.deleteBtn {
+	padding: 8px 12px;
+	cursor: pointer;
+	border: none;
+	background: none;
+	text-align: left;
+	width: 100%;
+}
+
+.editBtn:hover,
+.deleteBtn:hover {
+	background-color: #f0f0f0;
+}

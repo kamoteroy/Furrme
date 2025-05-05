@@ -14,15 +14,11 @@ function Community() {
 	const [postContent, setPostContent] = useState("");
 	const [uploadedImg, setUploadedImg] = useState("");
 	const [showCreatePostBtn, setShowCreatePostBtn] = useState(false);
-	let d = new Date();
-	const todaysDate = d.toISOString().split("T")[0];
 	const [postList, setList] = useState([]);
 	const getData = useSelector((state) => state.value);
 	const user = getData.user;
 	const token = getData.token;
 	const [refreshKey, setRefreshKey] = useState(0);
-	const hours = String(d.getHours()).padStart(2, "0");
-	const minutes = String(d.getMinutes()).padStart(2, "0");
 	const highestID = Math.max(...postList.map((item) => item.postNumber));
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContents, setmodalContents] = useState({
@@ -66,6 +62,8 @@ function Community() {
 			.then((res) => (res.data[0] ? setList(res.data) : setList([])))
 			.catch((err) => console.log(err));
 	}, [refreshKey]);
+
+	console.log(postList);
 
 	const handleChange = (event) => {
 		const textareaLineHeight = 24;
@@ -113,10 +111,7 @@ function Community() {
 						id: highestID + 1,
 						image: res.data,
 						description: postContent,
-						date: todaysDate,
-						user_name: user.fname + " " + user.lname,
-						user_img: user.image,
-						timePosted: hours + ":" + minutes,
+						email: user.email,
 					},
 					{
 						headers: {
@@ -212,12 +207,12 @@ function Community() {
 									return (
 										<CommunityPostCard
 											key={i}
-											userAvatar={post.user_img}
-											accountName={post.user_name}
+											userAvatar={post.image}
+											accountName={post.fname + " " + post.lname}
 											datePosted={post.dates}
-											postImage={post.image}
+											postImage={post.post_image}
 											postContent={post.description}
-											timePosted={post.timePosted}
+											timePosted={post.posted_at}
 										/>
 									);
 								})}

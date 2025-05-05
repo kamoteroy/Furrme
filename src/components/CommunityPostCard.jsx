@@ -4,9 +4,14 @@ import "../styles/Components/CommunityPostCard.css";
 
 function CommunityPostCard(props) {
 	const [showFullText, setShowFullText] = useState(false);
+	const [showOptions, setShowOptions] = useState(false);
 
 	const toggleText = () => {
 		setShowFullText(!showFullText);
+	};
+
+	const toggleOptions = () => {
+		setShowOptions(!showOptions);
 	};
 
 	const shouldRenderPostContent =
@@ -14,15 +19,6 @@ function CommunityPostCard(props) {
 
 	const shouldShowEllipsis =
 		props.postContent && props.postContent.length > 150;
-
-	function convertTo12HourFormat(time) {
-		let [hours, minutes] = time.split(":").map(Number);
-		const ampm = hours >= 12 ? "PM" : "AM";
-		hours = hours % 12 || 12;
-		return `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
-	}
-
-	const timePosted = convertTo12HourFormat(props.timePosted);
 
 	return (
 		<div className="postCard">
@@ -33,12 +29,33 @@ function CommunityPostCard(props) {
 				<div className="postInfo">
 					<h2 className="userAccntName">{props.accountName}</h2>
 					<p className="datePosted">
-						{props.datePosted?.split("T")[0]}
-						<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						{timePosted}
+						{new Date(props.timePosted).toLocaleString(undefined, {
+							year: "numeric",
+							month: "short",
+							day: "numeric",
+							hour: "numeric",
+							minute: "2-digit",
+							hour12: true,
+						})}
 					</p>
 				</div>
+				<div className="postOptionsContainer">
+					<button className="optionsArrow" onClick={toggleOptions}>
+						&#9662; {/* Down arrow symbol */}
+					</button>
+					{showOptions && (
+						<div className="optionsDropdown">
+							<button className="editBtn" onClick={props.onEdit}>
+								Edit
+							</button>
+							<button className="deleteBtn" onClick={props.onDelete}>
+								Delete
+							</button>
+						</div>
+					)}
+				</div>
 			</div>
+
 			{shouldRenderPostContent && (
 				<p className="postTextDesc">
 					{showFullText
@@ -46,13 +63,11 @@ function CommunityPostCard(props) {
 						: `${props.postContent?.split(" ").slice(0, 50).join(" ")}${
 								shouldShowEllipsis ? "... " : ""
 							}`}
-
 					{shouldShowEllipsis && !showFullText && (
 						<span className="readMore" onClick={toggleText}>
 							Read More
 						</span>
 					)}
-
 					{showFullText && (
 						<span className="showLess" onClick={toggleText}>
 							Show Less
@@ -60,6 +75,7 @@ function CommunityPostCard(props) {
 					)}
 				</p>
 			)}
+
 			<Link to={props.postImage} target="_blank">
 				<div className="comPostImg">
 					<img src={props.postImage} alt="Post" />

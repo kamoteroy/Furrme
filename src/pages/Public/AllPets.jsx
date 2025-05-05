@@ -59,6 +59,8 @@ function AllPets() {
 			})
 			.catch((err) => console.log(err));
 
+		console.log(petList);
+
 		const handleClickOutside = (event) => {
 			if (
 				typeRef.current &&

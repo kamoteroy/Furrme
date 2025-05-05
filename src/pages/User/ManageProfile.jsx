@@ -35,24 +35,26 @@ function ManageProfile() {
 		contents: "",
 	});
 	const [isUploading, setIsUploading] = useState(false);
-	const [uploadMessage, setUploadMessage] = useState("Uploading...");
+	const [uploadMessage, setUploadMessage] = useState("Updating . . .");
 	const [showPasswordSection, setShowPasswordSection] = useState(false);
 
-	const togglePasswordSection = () => {
-		setShowPasswordSection((prev) => !prev);
-		setErrors({});
-
-		setformData((prev) => ({
-			fname: user.fname,
-			lname: user.lname,
-			email: user.email,
+	const resetFormWithUser = (u = user) => {
+		setformData({
+			fname: u.fname,
+			lname: u.lname,
+			email: u.email,
 			pass: "",
 			npass: "",
 			cpass: "",
-		}));
+		});
+		setUploadedImg(u.image);
+		setSaveBtn(false);
+		setErrors({});
+	};
 
-		setUploadedImg(user.image); // Reset uploaded image back to original
-		setSaveBtn(false); // Hide save button
+	const togglePasswordSection = () => {
+		setShowPasswordSection((prev) => !prev);
+		resetFormWithUser();
 	};
 
 	const handleInputChange = (e) => {
@@ -71,21 +73,16 @@ function ManageProfile() {
 
 	useEffect(() => {
 		if (showPasswordSection) {
-			// Show save button only when all password fields are filled
-			const allPasswordFieldsFilled =
-				formData.pass.trim() && formData.npass.trim() && formData.cpass.trim();
-			setSaveBtn(allPasswordFieldsFilled);
+			const allPasswordsFilled =
+				formData.pass && formData.npass && formData.cpass;
+			setSaveBtn(!!allPasswordsFilled);
 		} else {
 			const hasChanges =
-				formData.fname.trim() &&
-				formData.lname.trim() &&
-				formData.email.trim() &&
-				(formData.fname.trim() !== user.fname.trim() ||
-					formData.lname.trim() !== user.lname.trim() ||
-					formData.email.trim() !== user.email.trim() ||
-					(uploadedImg && uploadedImg !== user.image));
-
-			setSaveBtn(!!hasChanges);
+				formData.fname !== user.fname ||
+				formData.lname !== user.lname ||
+				formData.email !== user.email ||
+				(uploadedImg && uploadedImg !== user.image);
+			setSaveBtn(hasChanges);
 		}
 	}, [formData, uploadedImg, showPasswordSection, user]);
 
@@ -119,99 +116,81 @@ function ManageProfile() {
 		};
 	}, [isModalOpen]);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const validationErrors = {};
-		let isValid = true;
+	const getChangedFields = () => {
+		const changes = {
+			prevEmail: user.email,
+			token,
+			pass: formData.pass,
+		};
+
+		if (formData.fname !== user.fname) changes.fname = formData.fname;
+		if (formData.lname !== user.lname) changes.lname = formData.lname;
+		if (formData.email !== user.email) changes.newEmail = formData.email;
 
 		if (showPasswordSection) {
-			const { pass, npass, cpass } = formData;
-
-			if (pass && pass === npass) {
-				validationErrors.npass =
-					"New password cannot be the same as old password";
-				isValid = false;
-			}
-
-			if (npass !== cpass) {
-				validationErrors.cpass = "New passwords do not match";
-				isValid = false;
-			}
-		} else {
-			const { fname, lname, email } = formData;
-
-			if (!fname.trim() || !lname.trim() || !email.trim()) {
-				isValid = false;
+			if (
+				formData.pass !== formData.npass &&
+				formData.npass === formData.cpass
+			) {
+				changes.npass = formData.npass;
 			}
 		}
 
-		setErrors(validationErrors);
-		if (!isValid) return;
+		return changes;
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const validationErrors = {};
+
+		if (showPasswordSection) {
+			if (formData.pass === formData.npass) {
+				validationErrors.npass =
+					"New password cannot be the same as old password";
+			}
+			if (formData.npass !== formData.cpass) {
+				validationErrors.cpass = "New passwords do not match";
+			}
+		}
+
+		if (Object.keys(validationErrors).length > 0) {
+			setErrors(validationErrors);
+			return;
+		}
+
+		let changedFields = getChangedFields();
 
 		try {
-			const changedFields = {
-				prevEmail: user.email,
-				token: token,
-				pass: formData.pass,
-			};
-
-			// Detect changes
-			if (formData.fname !== user.fname) changedFields.fname = formData.fname;
-			if (formData.lname !== user.lname) changedFields.lname = formData.lname;
-			if (formData.email !== user.email)
-				changedFields.newEmail = formData.email;
-
 			if (uploadedImg && uploadedImg !== user.image) {
 				setIsUploading(true);
-				setUploadMessage("Uploading...");
-
+				setUploadMessage("Uploading . . .");
 				const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 					image_url: uploadedImg,
 				});
-
 				changedFields.image = res.data;
-				setUploadedImg("");
-				setIsUploading(false);
 			}
 
-			if (showPasswordSection) {
-				const isSameAsOld = formData.pass && formData.pass === formData.npass;
-				const passwordsMatch =
-					formData.npass && formData.npass === formData.cpass;
+			setUploadMessage("Updating . . .");
+			setIsUploading(true);
 
-				if (!isSameAsOld && passwordsMatch && formData.npass) {
-					changedFields.npass = formData.npass;
-				}
+			const res = await axios.patch(`${CONFIG.BASE_URL}/manage`, changedFields);
+			setAccess(res.data.access);
+			setmodalContents({
+				title: res.data.access === 1 ? "Success" : "Error",
+				contents: res.data.message,
+			});
+			setIsModalOpen(true);
+
+			if (res.data.access === 1) {
+				const updatedUser = res.data.userData;
+				dispatch(login({ token: res.data.token, user: updatedUser }));
+				resetFormWithUser(updatedUser);
+			} else {
+				dispatch(login({ token, user }));
 			}
-
-			await axios
-				.patch(`${CONFIG.BASE_URL}/manage`, changedFields)
-				.then((result) => {
-					setAccess(result.data.access);
-					setmodalContents({
-						title: result.data.access === 1 ? "Success" : "Error",
-						contents: result.data.message,
-					});
-					setIsModalOpen(true);
-					setformData((prev) => ({
-						...prev,
-						pass: "",
-						npass: "",
-						cpass: "",
-					}));
-
-					result.data.access === 1
-						? dispatch(
-								login({
-									token: result.data.token,
-									user: result.data.userData,
-								})
-							)
-						: dispatch(login({ token: token, user: user }));
-				})
-				.catch((err) => console.log(err));
 		} catch (err) {
-			console.log(err);
+			console.error("Update failed", err);
+		} finally {
 			setIsUploading(false);
 		}
 	};
