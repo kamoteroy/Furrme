@@ -59,7 +59,10 @@
 
 .postTextDesc {
 	display: flex;
-	margin-bottom: 15px;
+	white-space: pre-wrap;
+	word-break: break-word;
+	width: 100%;
+	margin-top: 10px;
 }
 
 .postCard .postInfo {
@@ -69,13 +72,15 @@
 }
 
 .postTextDesc .readMore,
-.postTextDesc .showLess {
-	color: rgb(103, 103, 214);
+.showLess {
 	cursor: pointer;
+	margin-bottom: 15px;
+	color: black;
+	font-weight: bold;
 }
 
 .postTextDesc .readMore:hover,
-.postTextDesc .showLess:hover {
+.showLess:hover {
 	text-decoration: underline;
 }
 
@@ -85,19 +90,15 @@
 	overflow: hidden;
 	display: flex;
 	align-self: center;
+	margin-top: 15px;
 }
 
 .comPostImg img {
 	width: 100%;
 	height: auto;
 	object-fit: contain;
-	cursor: pointer;
 }
-@media screen and (max-width: 600px) {
-	.postCard .postInfo .datePosted {
-		font-size: 12px;
-	}
-}
+
 .postOptionsContainer {
 	position: relative;
 	margin-top: -20px;
@@ -133,13 +134,14 @@
 	background: none;
 	text-align: left;
 	width: 100%;
-	font-size: 16px; /* larger text */
+	font-size: 16px;
 }
 
 .editBtn:hover,
 .deleteBtn:hover {
 	background-color: #f0f0f0;
 }
+
 .modalOverlay {
 	position: fixed;
 	top: 0;
@@ -159,12 +161,14 @@
 	border-radius: 8px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 	text-align: center;
+	width: 250px;
+	height: 120px;
 }
 
 .modalButtons {
 	display: flex;
 	justify-content: space-around;
-	margin-top: 15px;
+	margin-top: 10%;
 }
 
 .yesBtn,
@@ -181,6 +185,76 @@
 }
 
 .noBtn {
-	background-color: #ccc;
+	background-color: var(--primaryTextColor);
+	color: white;
+}
+.editTextArea {
+	background: rgba(194, 194, 194, 0.3);
+	border: none;
+	border-radius: 7px;
+	padding: 10px;
+	font-size: 16px;
+	width: 100%;
+	min-height: 80px;
+	max-height: 150px;
+	resize: none;
+	overflow-y: auto;
+	font-family: "Poppins", sans-serif;
+}
+
+.editTextArea:focus {
+	outline: 1px solid var(--primaryTextColor);
+}
+
+.editButtons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.saveBtn,
+.cancelBtn {
+	padding: 8px 16px;
+	border: none;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.saveBtn {
+	background-color: var(--hoverColor);
 	color: black;
+}
+
+.cancelBtn {
+	background-color: var(--primaryTextColor);
+	color: white;
+}
+
+@media screen and (max-width: 600px) {
+	.postCard .postInfo .datePosted {
+		font-size: 12px;
+	}
+	.editTextArea {
+		font-size: 12px;
+	}
+}
+@media screen and (max-width: 450px) {
+	.userAccntName {
+		font-size: 18px;
+	}
+	.postCard .postInfo .datePosted {
+		font-size: 10px;
+	}
+	.postTextDesc {
+		font-size: 10px;
+	}
+	.editBtn,
+	.deleteBtn {
+		font-size: 12px;
+		padding: 10px 14px;
+	}
+	.optionsDropdown {
+		min-width: 70px;
+	}
 }

@@ -60,7 +60,6 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
-	justify-content: center;
 }
 
 .communityPosts .userAvatar img {
@@ -173,16 +172,16 @@
 	margin-bottom: 25px;
 }
 
-@media screen and (max-width: 600px) {
-	.communityPosts .userAvatar img {
-		min-width: 30px;
-		height: 30px;
-	}
-}
-
 @media screen and (max-width: 450px) {
 	.communityPosts .uploadImgBtn {
 		height: auto;
 		width: auto;
+	}
+	.communityPosts .userAvatar {
+		min-width: 40px;
+		height: 40px;
+	}
+	.createPostInputs textarea::placeholder {
+		font-size: 12px;
 	}
 }

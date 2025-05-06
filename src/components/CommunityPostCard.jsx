@@ -8,6 +8,9 @@ import CONFIG from "../data/config";
 function CommunityPostCard(props) {
 	const [showFullText, setShowFullText] = useState(false);
 	const [showOptions, setShowOptions] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
+	const [editedText, setEditedText] = useState(props.postContent || "");
+	const [currentContent, setCurrentContent] = useState(props.postContent || "");
 
 	const toggleText = () => {
 		setShowFullText(!showFullText);
@@ -35,11 +38,41 @@ function CommunityPostCard(props) {
 		};
 	}, []);
 
+	const handleSaveEdit = async () => {
+		const trimmedText = editedText.trim();
+		try {
+			const response = await axios.patch(
+				`${CONFIG.BASE_URL}/updatepost/${props.post_id}`,
+				{ description: trimmedText },
+				{
+					headers: {
+						token: token,
+					},
+				}
+			);
+			console.log("Post updated:", response.data);
+			setCurrentContent(trimmedText);
+			setIsEditing(false);
+			if (props.onUpdateSuccess) props.onUpdateSuccess(editedText);
+		} catch (error) {
+			console.error(
+				"Error updating post:",
+				error.response?.data?.message || error.message
+			);
+		}
+	};
+
+	const handleCancelEdit = () => {
+		setIsEditing(false);
+		setEditedText(props.postContent || "");
+	};
+
 	const shouldRenderPostContent =
 		props.postContent && props.postContent.trim() !== "";
 
-	const shouldShowEllipsis =
-		props.postContent && props.postContent.length > 150;
+	const shouldShowEllipsis = props.postContent && props.postContent.length > 50;
+
+	console.log("Post content length:", props.postContent?.length);
 
 	const handleDeleteConfirm = async () => {
 		try {
@@ -73,7 +106,9 @@ function CommunityPostCard(props) {
 					<div className="postInfo">
 						<h2 className="userAccntName">{props.accountName}</h2>
 						<p className="datePosted">
-							{new Date(props.timePosted).toLocaleString(undefined, {
+							{new Date(
+								new Date(props.timePosted).getTime() + 8 * 60 * 60 * 1000
+							).toLocaleString(undefined, {
 								year: "numeric",
 								month: "short",
 								day: "numeric",
@@ -92,12 +127,23 @@ function CommunityPostCard(props) {
 						<div className="optionsDropdown">
 							{user.email === props.email ? (
 								<>
-									<button className="editBtn" onClick={props.onEdit}>
+									<button
+										className="editBtn"
+										onClick={() => {
+											setIsEditing(true);
+											setEditedText(currentContent || "");
+											setShowOptions(false);
+										}}
+									>
 										Edit
 									</button>
+
 									<button
 										className="deleteBtn"
-										onClick={() => setShowDeleteModal(true)}
+										onClick={() => {
+											setShowDeleteModal(true);
+											setShowOptions(false);
+										}}
 									>
 										Delete
 									</button>
@@ -112,24 +158,32 @@ function CommunityPostCard(props) {
 				</div>
 			</div>
 
-			{shouldRenderPostContent && (
-				<p className="postTextDesc">
-					{showFullText
-						? props.postContent
-						: `${props.postContent?.split(" ").slice(0, 50).join(" ")}${
-								shouldShowEllipsis ? "... " : ""
-							}`}
-					{shouldShowEllipsis && !showFullText && (
-						<span className="readMore" onClick={toggleText}>
-							Read More
-						</span>
-					)}
+			{shouldRenderPostContent && !isEditing ? (
+				<>
+					<p className="postTextDesc">
+						{showFullText
+							? currentContent
+							: `${currentContent?.slice(0, 50)}${currentContent.length > 100 ? "... " : ""}`}
+						{currentContent.length > 100 && !showFullText && (
+							<span className="readMore" onClick={toggleText}>
+								Read More
+							</span>
+						)}
+					</p>
 					{showFullText && (
 						<span className="showLess" onClick={toggleText}>
 							Show Less
 						</span>
 					)}
-				</p>
+				</>
+			) : (
+				isEditing && (
+					<textarea
+						className="editTextArea"
+						value={editedText}
+						onChange={(e) => setEditedText(e.target.value)}
+					/>
+				)
 			)}
 
 			<Link to={props.postImage} target="_blank">
@@ -137,6 +191,17 @@ function CommunityPostCard(props) {
 					<img src={props.postImage} alt="Post" />
 				</div>
 			</Link>
+			{isEditing && (
+				<div className="editButtons">
+					<button className="saveBtn" onClick={handleSaveEdit}>
+						Save
+					</button>
+					<button className="cancelBtn" onClick={handleCancelEdit}>
+						Cancel
+					</button>
+				</div>
+			)}
+
 			{showDeleteModal && (
 				<div className="modalOverlay">
 					<div className="deleteModal">

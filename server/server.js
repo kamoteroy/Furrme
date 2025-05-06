@@ -51,6 +51,7 @@ app.get("/community", verifyJWT, user.communityList);
 app.post("/adoptReq", verifyJWT, user.adoptionRequest);
 app.get("/petPreview/:id", user.getpetPreview);
 app.delete("/deletepost/:post_id", verifyJWT, user.deletePost);
+app.patch("/updatepost/:post_id", verifyJWT, user.updatePost);
 
 app.get("/admin", verifyJWT, admin.adminPetList);
 app.get("/admin/petDetails/:id", verifyJWT, admin.getpetDetails);

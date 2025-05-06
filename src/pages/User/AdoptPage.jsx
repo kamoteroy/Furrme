@@ -21,15 +21,12 @@ function AdoptPage() {
 	const [errors, setErrors] = useState({});
 	const validationErrors = {};
 	const navigate = useNavigate();
-	let d = new Date();
-	const todaysDate = d.toISOString().split("T")[0];
 	const { category, id } = useParams();
 	const [formData, setformData] = useState({
 		email: "",
 		address: "",
 		contact: "",
 		household: "",
-		date: "",
 		employment: "",
 		pet_exp: "",
 	});
@@ -148,7 +145,6 @@ function AdoptPage() {
 							email: userData.email,
 							address: formData.address,
 							contact: formData.contact,
-							date: todaysDate,
 							household: formData.household,
 							employment: formData.employment,
 							pet_exp: formData.pet_exp,

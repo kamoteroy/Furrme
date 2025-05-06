@@ -90,7 +90,7 @@ function PetEvaluation() {
 			})
 			.catch((err) => console.log(err));
 		axios
-			.get(`${CONFIG.BASE_URL}/admin/adoptReq/${adoptRequest.requestID}`, {
+			.get(`${CONFIG.BASE_URL}/admin/adoptReq/${adoptRequest.request_id}`, {
 				headers: {
 					token: token,
 				},
@@ -205,7 +205,8 @@ function PetEvaluation() {
 					<div className="applicantInfoHeader">
 						<h1>Application Evaluation</h1>
 						<p>
-							Application Date: {new Date(adoptInfo.dates).toLocaleDateString()}
+							Application Date:{" "}
+							{new Date(adoptInfo.requested_at).toLocaleDateString()}
 						</p>
 						<div className="appStatus">
 							<p>Application Status: </p>

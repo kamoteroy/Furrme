@@ -1,3 +1,9 @@
+/**DROP TABLE IF EXISTS pet_img;
+DROP TABLE IF EXISTS adoptreq;
+DROP TABLE IF EXISTS community;
+DROP TABLE IF EXISTS pets;
+DROP TABLE IF EXISTS accounts;*/
+
 CREATE TABLE IF NOT EXISTS accounts (
     fname VARCHAR(255) NOT NULL,
     lname VARCHAR(255),
@@ -92,7 +98,7 @@ INSERT INTO pet_img (pet_id, img1, img2, img3, img4, img5) VALUES
 (74, 'https://res.cloudinary.com/dmquudoki/image/upload/v1715491389/Dogs/Brodie/Brodie6_bilao4.jpg', 'https://res.cloudinary.com/dmquudoki/image/upload/v1715491386/Dogs/Brodie/Brodie5_s6bbyx.jpg', 'https://res.cloudinary.com/dmquudoki/image/upload/v1715491385/Dogs/Brodie/Brodie3_x25plo.jpg', 'https://res.cloudinary.com/dmquudoki/image/upload/v1715491384/Dogs/Brodie/Brodie4_l2hdp7.jpg', 'https://res.cloudinary.com/dmquudoki/image/upload/v1715491383/Dogs/Brodie/Brodie2_irskcc.jpg');
 
 
-DROP TABLE IF EXISTS pet_img;
+/**DROP TABLE IF EXISTS pet_img;
 DROP TABLE IF EXISTS adoptreq;
 DROP TABLE IF EXISTS community;
 DROP TABLE IF EXISTS pets;

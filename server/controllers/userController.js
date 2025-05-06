@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken");
 const cloud = require("cloudinary").v2;
 const saltRounds = 10;
 
-const utcNow = new Date().toISOString().slice(0, 19).replace("T", " ");
-
 cloud.config({
 	api_key: process.env.api_key,
 	cloud_name: process.env.cloud_name,
@@ -158,14 +156,16 @@ async function manageProfile(req, res) {
 }
 
 async function addPost(req, res) {
+	const utcNow = new Date().toISOString().slice(0, 19).replace("T", " ");
+	console.log(utcNow);
 	const addpost =
-		"INSERT into community(email, description, posted_at, post_image) VALUES (?, ?, ?, ?)";
+		"INSERT into community(email, description, post_image) VALUES (?, ?, ?)";
 	const sql = "SELECT * from community";
 	const token = jwt.verify(req.headers.token, process.env.JWT_SECRET);
 	if (token) {
 		db.query(
 			addpost,
-			[req.body.email, req.body.description, utcNow, req.body.image],
+			[req.body.email, req.body.description, req.body.image],
 			(err, result) => {
 				if (err) console.log(err);
 				db.query(sql, (err, postList) => {
@@ -217,7 +217,69 @@ async function deletePost(req, res) {
 	);
 }
 
+const updatePost = async (req, res) => {
+	try {
+		const postId = req.params.post_id;
+		const token = req.headers.token || req.body.token;
+
+		if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		const email = decoded.email;
+
+		const [existingPost] = await new Promise((resolve, reject) => {
+			db.query(
+				"SELECT * FROM community WHERE post_id = ?",
+				[postId],
+				(err, results) => {
+					if (err) return reject(err);
+					resolve(results);
+				}
+			);
+		});
+
+		if (!existingPost) {
+			return res.status(404).json({ message: "Post not found" });
+		}
+
+		if (existingPost.email !== email) {
+			return res
+				.status(403)
+				.json({ message: "Forbidden: Cannot edit others' posts" });
+		}
+
+		const updates = [];
+		const values = [];
+
+		if (req.body.description !== undefined) {
+			updates.push("description = ?");
+			values.push(req.body.description);
+		}
+
+		if (updates.length === 0) {
+			return res.json({ message: "No changes made", access: 0 });
+		}
+
+		const sql = `UPDATE community SET ${updates.join(", ")} WHERE post_id = ?`;
+		values.push(postId);
+
+		db.query(sql, values, (err, result) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ message: "Database error" });
+			}
+
+			return res.json({ message: "Post updated successfully", access: 1 });
+		});
+	} catch (error) {
+		console.error("Update post error:", error);
+		return res.status(500).json({ message: "Server error" });
+	}
+};
+
 async function adoptionRequest(req, res) {
+	const utcNow = new Date().toISOString().slice(0, 19).replace("T", " ");
+	console.log(utcNow);
 	const addpost =
 		"INSERT into adoptreq(pet_id, email, valid_id, address, contact, household, employment, pet_exp, requested_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	db.query(
@@ -263,4 +325,5 @@ module.exports = {
 	adoptionRequest,
 	getpetPreview,
 	deletePost,
+	updatePost,
 };

@@ -73,13 +73,21 @@ async function updatePetInfo(req, res) {
 }
 
 async function adoptionList(req, res) {
-	db.query("select * from adoptreq", (err, petList) => {
-		if (err) {
-			console.log(err);
-		} else {
-			return res.json(petList);
+	db.query(
+		`SELECT adoptreq.*, pets.name AS pet_name, pets.category 
+		 FROM adoptreq 
+		 JOIN pets ON adoptreq.pet_id = pets.pet_id`,
+		(err, petList) => {
+			if (err) {
+				console.log(err);
+				return res
+					.status(500)
+					.json({ error: "Failed to fetch adoption requests." });
+			} else {
+				return res.json(petList);
+			}
 		}
-	});
+	);
 }
 
 async function accDetails(req, res) {
@@ -97,7 +105,7 @@ async function accDetails(req, res) {
 
 async function getAdoptReq(req, res) {
 	db.query(
-		"select * from adoptreq where requestID = ?",
+		"select * from adoptreq where request_id = ?",
 		[req.params.id],
 		(err, reqInfo) => {
 			if (err) {

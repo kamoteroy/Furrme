@@ -4,26 +4,29 @@ import Navbar from "../../components/Navbar";
 import { LuUpload } from "react-icons/lu";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import CommunityPostCard from "../../components/CommunityPostCard";
-import CommunityPostCardSkeleton from "../../components/CommunityPostCardSkeleton"; // Import the skeleton loader
+import CommunityPostCardSkeleton from "../../components/CommunityPostCardSkeleton";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import CountDownModal from "../../components/CountdownModal";
 import CONFIG from "../../data/config";
+import shibaLoading from "../../assets/shibaloading.gif";
 
 function Community() {
 	const [postContent, setPostContent] = useState("");
 	const [uploadedImg, setUploadedImg] = useState("");
 	const [showCreatePostBtn, setShowCreatePostBtn] = useState(false);
-	const [postList, setList] = useState([]);
+	const [postList, setPostList] = useState([]);
 	const getData = useSelector((state) => state.value);
 	const user = getData.user;
 	const token = getData.token;
 	const [refreshKey, setRefreshKey] = useState(0);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [modalContents, setmodalContents] = useState({
+	const [uploading, setUploading] = useState(false);
+	const [modalContents, setModalContents] = useState({
 		title: "",
 		contents: "",
 	});
+
 	const toggleModal = () => {
 		setIsModalOpen(!isModalOpen);
 	};
@@ -47,22 +50,18 @@ function Community() {
 		};
 	}, [isModalOpen]);
 
-	const refreshComponent = () => {
-		setRefreshKey((prevKey) => prevKey + 1);
-	};
-
-	console.log(postList);
-
 	useEffect(() => {
 		axios
 			.get(`${CONFIG.BASE_URL}/community`, {
-				headers: {
-					token: token,
-				},
+				headers: { token },
 			})
-			.then((res) => (res.data[0] ? setList(res.data) : setList([])))
+			.then((res) => (res.data[0] ? setPostList(res.data) : setPostList([])))
 			.catch((err) => console.log(err));
 	}, [refreshKey]);
+
+	const refreshComponent = () => {
+		setRefreshKey((prevKey) => prevKey + 1);
+	};
 
 	const handleRemoveImage = () => {
 		setUploadedImg(null);
@@ -101,6 +100,8 @@ function Community() {
 			setUploadedImg(null);
 			setShowCreatePostBtn(postContent.trim().length > 0);
 		}
+
+		setUploading(true);
 		try {
 			const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 				image_url: uploadedImg,
@@ -113,39 +114,34 @@ function Community() {
 						description: postContent,
 						email: user.email,
 					},
-					{
-						headers: {
-							token: token,
-						},
-					}
+					{ headers: { token } }
 				)
 				.then((res) => {
-					res.data[0] ? setList(res.data) : setList([]);
+					res.data[0] ? setPostList(res.data) : setPostList([]);
 					refreshComponent();
+
 					if (res.data.message) {
-						setmodalContents({
-							title: res.data.message,
-						});
-						setIsModalOpen(true);
+						setModalContents({ title: res.data.message });
 					} else {
-						setmodalContents({
-							title: "Upload Successful",
-						});
-						setIsModalOpen(true);
-						setShowCreatePostBtn(false);
+						setModalContents({ title: "Upload Successful" });
 					}
+					setIsModalOpen(true);
+					setShowCreatePostBtn(false);
 				})
 				.catch((err) => console.log(err));
 		} catch (err) {
 			console.log(err);
 		}
+		setUploading(false);
 		setUploadedImg(null);
 		setShowCreatePostBtn(postContent.trim().length > 0);
 		setPostContent("");
 	};
 
 	const handleDeleteFromList = (postId) => {
-		setList((prevList) => prevList.filter((post) => post.post_id !== postId));
+		setPostList((prevList) =>
+			prevList.filter((post) => post.post_id !== postId)
+		);
 	};
 
 	return (
@@ -157,6 +153,7 @@ function Community() {
 			>
 				<p>{modalContents.contents}</p>
 			</CountDownModal>
+
 			<div>
 				<Navbar />
 				<div className="communityPosts">
@@ -171,8 +168,7 @@ function Community() {
 								value={postContent}
 								onChange={handleChange}
 								placeholder={`Share us your Furry journey!`}
-								className="responsive-textarea"
-							></textarea>
+							/>
 							<label htmlFor="uploadImg" className="uploadImgBtn">
 								<LuUpload />
 								<span className="uploadText">Upload</span>
@@ -185,6 +181,7 @@ function Community() {
 								onChange={handleImageUpload}
 							/>
 						</div>
+
 						<div className="uploadedImgContainer">
 							{uploadedImg && (
 								<>
@@ -196,36 +193,43 @@ function Community() {
 								</>
 							)}
 						</div>
+
 						{showCreatePostBtn && (
 							<button className="createPostBtn" onClick={handleCreatePost}>
 								Create Post
 							</button>
 						)}
 					</div>
+
 					<div className="postsContainer">
 						{postList.length === 0
 							? [...Array(5)].map((_, i) => (
 									<CommunityPostCardSkeleton key={i} />
 								))
-							: postList.map((post, i) => {
-									return (
-										<CommunityPostCard
-											key={i}
-											userAvatar={post.image}
-											post_id={post.post_id}
-											accountName={post.fname + " " + post.lname}
-											email={post.email}
-											datePosted={post.dates}
-											postImage={post.post_image}
-											postContent={post.description}
-											timePosted={post.posted_at}
-											onDeleteSuccess={() => handleDeleteFromList(post.post_id)}
-										/>
-									);
-								})}
+							: postList.map((post, i) => (
+									<CommunityPostCard
+										key={i}
+										userAvatar={post.image}
+										post_id={post.post_id}
+										accountName={`${post.fname} ${post.lname}`}
+										email={post.email}
+										datePosted={post.dates}
+										postImage={post.post_image}
+										postContent={post.description}
+										timePosted={post.posted_at}
+										onDeleteSuccess={() => handleDeleteFromList(post.post_id)}
+									/>
+								))}
 					</div>
 				</div>
 			</div>
+
+			{uploading && (
+				<div className="loadingOverlay">
+					<img src={shibaLoading} alt="loading" className="loadingImage" />
+					<p>Posting . . . </p>
+				</div>
+			)}
 		</>
 	);
 }

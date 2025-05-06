@@ -263,7 +263,14 @@ function AdoptionRequests() {
 									currentRequests.map((request, i) => (
 										<tr key={i} onClick={() => petPreview(request)}>
 											<td>
-												{new Date(request.dates).toISOString().split("T")[0]}
+												{new Date(request.requested_at).toLocaleDateString(
+													"en-US",
+													{
+														year: "numeric",
+														month: "short",
+														day: "numeric",
+													}
+												)}
 											</td>
 											<td>{request.pet_name}</td>
 											<td>{request.email}</td>
