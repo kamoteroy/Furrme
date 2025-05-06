@@ -27,7 +27,9 @@ async function logIn(req, res) {
 			if (err) throw err;
 			if (result) {
 				const email = isThereAcc[0].email;
-				const token = jwt.sign(email, process.env.JWT_SECRET);
+				const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+					expiresIn: "1d",
+				});
 				return res
 					.header("Authorization", token)
 					.json({ token: token, userData: isThereAcc[0] });
@@ -157,19 +159,13 @@ async function manageProfile(req, res) {
 
 async function addPost(req, res) {
 	const addpost =
-		"INSERT into community(post_id, email, description, posted_at, post_image) VALUES (?, ?, ?, ?, ?)";
+		"INSERT into community(email, description, posted_at, post_image) VALUES (?, ?, ?, ?)";
 	const sql = "SELECT * from community";
 	const token = jwt.verify(req.headers.token, process.env.JWT_SECRET);
 	if (token) {
 		db.query(
 			addpost,
-			[
-				req.body.id,
-				req.body.email,
-				req.body.description,
-				utcNow,
-				req.body.image,
-			],
+			[req.body.email, req.body.description, utcNow, req.body.image],
 			(err, result) => {
 				if (err) console.log(err);
 				db.query(sql, (err, postList) => {
@@ -179,7 +175,7 @@ async function addPost(req, res) {
 			}
 		);
 	} else {
-		res.json({ message: "No fcking Access" });
+		res.json({ message: "No Access" });
 	}
 }
 
@@ -195,6 +191,28 @@ async function communityList(req, res) {
 			} else {
 				return res.json(postList);
 			}
+		}
+	);
+}
+
+async function deletePost(req, res) {
+	const postId = req.params.post_id;
+	const userEmail = req.user.email;
+
+	db.query(
+		`DELETE FROM community WHERE post_id = ? AND email = ?`,
+		[postId, userEmail],
+		(err, result) => {
+			if (err) {
+				console.error(err);
+				return res.status(500).json({ error: "Database error" });
+			}
+			if (result.affectedRows === 0) {
+				return res
+					.status(403)
+					.json({ message: "Unauthorized or post not found" });
+			}
+			return res.status(200).json({ message: "Post deleted successfully" });
 		}
 	);
 }
@@ -244,4 +262,5 @@ module.exports = {
 	communityList,
 	adoptionRequest,
 	getpetPreview,
+	deletePost,
 };

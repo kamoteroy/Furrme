@@ -62,7 +62,11 @@ CREATE TABLE IF NOT EXISTS community (
     FOREIGN KEY (email) REFERENCES accounts(email) ON DELETE CASCADE
 );
 
-/**INSERT INTO pets (pet_id, name, category, address, description, color, gender, image, breed, age, behavior, health, status, createdBy, adoptedBy) 
+/**INSERT INTO accounts (fname, lname, email, pass, role, image) VALUES
+('pop', 'pop', 'liezlqt@gmail.com', '$2b$10$IsAlaJtWp62YcFYnVjr30.VY3swRd9waA9VTIh73ntBqgyTh5ed7K', 'User', 'https://res.cloudinary.com/dmquudoki/image/upload/v1746499718/i7iji9xbvp9bqpwbzy3e.jpg'),
+('Papa', 'Roy', 'paparoygwapo@gmail.com', '$2b$10$CmwPj9uqVSka3SlHy0GLUOmbiCql.jGhFA2ADJUtaSjwa5LD6bmxC', 'User', 'https://res.cloudinary.com/dmquudoki/image/upload/v1746458876/fvqsla62ybyo5ntcbump.jpg');
+
+INSERT INTO pets (pet_id, name, category, address, description, color, gender, image, breed, age, behavior, health, status, createdBy, adoptedBy) 
 VALUES 
 (65, 'Myggssss', 'Cats', 'Maria, Siquijor', 'Likes to sleep beside owner, poops everywhere', 'Orange', 'Male', 'https://res.cloudinary.com/dmquudoki/image/upload/v1715491167/CATS/65/651_sh5ku3.jpg', 'Domestic Short Hair', '2 years old', 'Energetic', 'has frequent diarrhea', 'Available', NULL, NULL),
 (66, 'Mikmik', 'Cats', 'Maria, Siquijor', 'Likes to roam around, playful and likes to climb on your bodys', 'White Grey', 'Female', 'https://res.cloudinary.com/dmquudoki/image/upload/v1715491211/CATS/66/663_lmo4ua.jpg', 'Mixed-breed', '2 years old', 'Playful', 'does not have any vaccinations', 'Available', NULL, NULL),

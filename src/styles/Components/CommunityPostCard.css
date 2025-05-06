@@ -33,7 +33,14 @@
 
 .postCardHeaders {
 	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	margin-bottom: 15px;
+}
+
+.postLeft {
+	display: flex;
+	align-items: center;
 }
 
 .postAvatar {
@@ -51,6 +58,7 @@
 }
 
 .postTextDesc {
+	display: flex;
 	margin-bottom: 15px;
 }
 
@@ -92,7 +100,7 @@
 }
 .postOptionsContainer {
 	position: relative;
-	margin-left: 80%;
+	margin-top: -20px;
 }
 
 .optionsArrow {
@@ -108,23 +116,71 @@
 	left: 0;
 	background-color: white;
 	border: 1px solid #ccc;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 	z-index: 10;
 	display: flex;
 	flex-direction: column;
+	min-width: 100px;
+	transform: translate(-90%, 10%);
 }
 
 .editBtn,
 .deleteBtn {
-	padding: 8px 12px;
+	padding: 12px 16px;
 	cursor: pointer;
 	border: none;
 	background: none;
 	text-align: left;
 	width: 100%;
+	font-size: 16px; /* larger text */
 }
 
 .editBtn:hover,
 .deleteBtn:hover {
 	background-color: #f0f0f0;
+}
+.modalOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+}
+
+.deleteModal {
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	text-align: center;
+}
+
+.modalButtons {
+	display: flex;
+	justify-content: space-around;
+	margin-top: 15px;
+}
+
+.yesBtn,
+.noBtn {
+	padding: 8px 16px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.yesBtn {
+	background-color: red;
+	color: white;
+}
+
+.noBtn {
+	background-color: #ccc;
+	color: black;
 }

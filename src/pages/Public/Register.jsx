@@ -49,7 +49,6 @@ function Register() {
 	}, [formData.email]);
 
 	const handleInputChange = (e) => {
-		e.preventDefault();
 		const { name, value } = e.target;
 		setformData((prevState) => ({ ...prevState, [name]: value }));
 	};
@@ -218,7 +217,7 @@ function Register() {
 						</p>
 					</div>
 					<div className="signup-inputs-container">
-						<div className="signup-inputs-form">
+						<form className="signup-inputs-form" onSubmit={handleSubmit}>
 							<input
 								id="firstname"
 								type="text"
@@ -267,7 +266,14 @@ function Register() {
 								placeholder="Confirm Password"
 								onChange={handleInputChange}
 							/>
-						</div>
+							<button
+								type="submit"
+								disabled={loading}
+								className="btn-createAccnt"
+							>
+								{loading ? "Creating Account..." : "Create Account"}
+							</button>
+						</form>
 						<div className="signup-inputs-warning">
 							<div class="button-item">
 								{errors.fname ? (
@@ -503,17 +509,6 @@ function Register() {
 						</div>
 					</div>
 
-					<div className="signupBtn-container">
-						<Link>
-							<button
-								onClick={handleSubmit}
-								className="btn-createAccnt"
-								disabled={loading}
-							>
-								{loading ? "Creating Account..." : "Create Account"}
-							</button>
-						</Link>
-					</div>
 					<p className="terms">
 						By creating an account, you agree to FurrMe's{" "}
 						<Link to="/terms">Terms of Service</Link> and{" "}

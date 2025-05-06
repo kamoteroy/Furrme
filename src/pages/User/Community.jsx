@@ -19,7 +19,6 @@ function Community() {
 	const user = getData.user;
 	const token = getData.token;
 	const [refreshKey, setRefreshKey] = useState(0);
-	const highestID = Math.max(...postList.map((item) => item.postNumber));
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContents, setmodalContents] = useState({
 		title: "",
@@ -52,6 +51,8 @@ function Community() {
 		setRefreshKey((prevKey) => prevKey + 1);
 	};
 
+	console.log(postList);
+
 	useEffect(() => {
 		axios
 			.get(`${CONFIG.BASE_URL}/community`, {
@@ -63,7 +64,10 @@ function Community() {
 			.catch((err) => console.log(err));
 	}, [refreshKey]);
 
-	console.log(postList);
+	const handleRemoveImage = () => {
+		setUploadedImg(null);
+		setShowCreatePostBtn(false);
+	};
 
 	const handleChange = (event) => {
 		const textareaLineHeight = 24;
@@ -73,13 +77,10 @@ function Community() {
 			event.target.scrollHeight / textareaLineHeight
 		);
 		event.target.rows = currentRows;
-		setPostContent(event.target.value);
-		setShowCreatePostBtn(event.target.value.trim().length > 0 && uploadedImg);
-	};
 
-	const handleRemoveImage = () => {
-		setUploadedImg(null);
-		setShowCreatePostBtn(false);
+		const newText = event.target.value;
+		setPostContent(newText);
+		setShowCreatePostBtn(!!uploadedImg);
 	};
 
 	const handleImageUpload = (event) => {
@@ -88,7 +89,7 @@ function Community() {
 			const reader = new FileReader();
 			reader.onloadend = () => {
 				setUploadedImg(reader.result);
-				setShowCreatePostBtn(true);
+				setShowCreatePostBtn(!!reader.result);
 			};
 			reader.readAsDataURL(file);
 		}
@@ -108,7 +109,6 @@ function Community() {
 				.post(
 					`${CONFIG.BASE_URL}/addpost`,
 					{
-						id: highestID + 1,
 						image: res.data,
 						description: postContent,
 						email: user.email,
@@ -142,6 +142,10 @@ function Community() {
 		setUploadedImg(null);
 		setShowCreatePostBtn(postContent.trim().length > 0);
 		setPostContent("");
+	};
+
+	const handleDeleteFromList = (postId) => {
+		setList((prevList) => prevList.filter((post) => post.post_id !== postId));
 	};
 
 	return (
@@ -208,11 +212,14 @@ function Community() {
 										<CommunityPostCard
 											key={i}
 											userAvatar={post.image}
+											post_id={post.post_id}
 											accountName={post.fname + " " + post.lname}
+											email={post.email}
 											datePosted={post.dates}
 											postImage={post.post_image}
 											postContent={post.description}
 											timePosted={post.posted_at}
+											onDeleteSuccess={() => handleDeleteFromList(post.post_id)}
 										/>
 									);
 								})}

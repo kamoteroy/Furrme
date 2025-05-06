@@ -170,13 +170,13 @@
 	align-items: center;
 	gap: 30px;
 	width: 100%;
+	margin-bottom: 25px;
 }
 
 @media screen and (max-width: 600px) {
 	.communityPosts .userAvatar img {
 		min-width: 30px;
 		height: 30px;
-		background-color: red;
 	}
 }
 
