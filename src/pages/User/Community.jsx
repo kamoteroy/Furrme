@@ -134,8 +134,8 @@ function Community() {
 		}
 		setUploading(false);
 		setUploadedImg(null);
-		setShowCreatePostBtn(postContent.trim().length > 0);
 		setPostContent("");
+		setShowCreatePostBtn(false);
 	};
 
 	const handleDeleteFromList = (postId) => {
