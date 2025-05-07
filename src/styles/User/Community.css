@@ -184,4 +184,8 @@
 	.createPostInputs textarea::placeholder {
 		font-size: 12px;
 	}
+
+	.communityPosts #postContent {
+		font-size: 12px;
+	}
 }

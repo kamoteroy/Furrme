@@ -148,6 +148,9 @@ textarea {
 
 .btnValidID {
 	height: 100%;
+	white-space: nowrap; /* Prevent text from wrapping */
+	overflow: hidden; /* Hide overflowed text */
+	text-overflow: ellipsis; /* Add ellipsis (...) when text is too long */
 }
 
 .adoptionVerification .btnValidID {

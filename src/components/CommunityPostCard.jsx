@@ -50,7 +50,6 @@ function CommunityPostCard(props) {
 					},
 				}
 			);
-			console.log("Post updated:", response.data);
 			setCurrentContent(trimmedText);
 			setIsEditing(false);
 			if (props.onUpdateSuccess) props.onUpdateSuccess(editedText);
@@ -72,8 +71,6 @@ function CommunityPostCard(props) {
 
 	const shouldShowEllipsis = props.postContent && props.postContent.length > 50;
 
-	console.log("Post content length:", props.postContent?.length);
-
 	const handleDeleteConfirm = async () => {
 		try {
 			const response = await axios.delete(
@@ -84,8 +81,6 @@ function CommunityPostCard(props) {
 					},
 				}
 			);
-
-			console.log(response);
 			setShowDeleteModal(false);
 			props.onDeleteSuccess?.();
 		} catch (error) {

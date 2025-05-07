@@ -156,8 +156,6 @@ async function manageProfile(req, res) {
 }
 
 async function addPost(req, res) {
-	const utcNow = new Date().toISOString().slice(0, 19).replace("T", " ");
-	console.log(utcNow);
 	const addpost =
 		"INSERT into community(email, description, post_image) VALUES (?, ?, ?)";
 	const sql = "SELECT * from community";
@@ -279,7 +277,6 @@ const updatePost = async (req, res) => {
 
 async function adoptionRequest(req, res) {
 	const utcNow = new Date().toISOString().slice(0, 19).replace("T", " ");
-	console.log(utcNow);
 	const addpost =
 		"INSERT into adoptreq(pet_id, email, valid_id, address, contact, household, employment, pet_exp, requested_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	db.query(

@@ -44,7 +44,6 @@ function AllPets() {
 			window.removeEventListener("resize", handleResize);
 		};
 	}, []);
-	console.log(user.user.role);
 	useEffect(() => {
 		if (user) {
 			user.user.role === "Admin" ? navigate("/admin/pets") : navigate("/pets");
@@ -58,8 +57,6 @@ function AllPets() {
 				setLoading(false);
 			})
 			.catch((err) => console.log(err));
-
-		console.log(petList);
 
 		const handleClickOutside = (event) => {
 			if (

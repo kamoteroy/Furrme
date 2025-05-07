@@ -38,7 +38,7 @@ function AdoptPage() {
 				[id]: petData.name,
 			}
 		: {};
-	const [isModalOpen, setIsModalOpen] = useState(true);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContents, setmodalContents] = useState({
 		title: "",
 		contents: "",
@@ -168,6 +168,18 @@ function AdoptPage() {
 									"An email will be sent to the address you provided within 48 hours regarding the approval status. Please check your inbox (and spam/junk folder) for our message. If you have any questions in the meantime, feel free to contact us at furrme@gmail.com.",
 							});
 							setIsModalOpen(true);
+							setformData((prevState) => ({
+								...prevState,
+								address: "",
+								contact: "",
+								household: "",
+								employment: "",
+								pet_exp: "",
+							}));
+							setFileName("No file chosen");
+							setImageAttached(false);
+							setUploadedImg("");
+							document.getElementById("validID").value = "";
 						}
 						setWaiting(false);
 					})
@@ -314,6 +326,7 @@ function AdoptPage() {
 												id="address"
 												name="address"
 												placeholder="Enter your address"
+												value={formData.address}
 												onChange={handleInputChange}
 											></textarea>
 											{errors.address && (
@@ -327,6 +340,7 @@ function AdoptPage() {
 												id="contactNum"
 												placeholder="Enter your phone number"
 												name="contact"
+												value={formData.contact}
 												onChange={handleInputChange}
 											/>
 											{errors.contact && (
