@@ -149,14 +149,16 @@ function AllPets() {
 						<h1>All Pets for Adoption</h1>
 						<hr />
 						<div className="searchBarContainer">
-							<input
-								type="text"
-								className="searchBar"
-								placeholder={placeholderText}
-								value={searchTerm}
-								onChange={handleSearchChange}
-							/>
-							<IoIosSearch className="searchIcon" />
+							<span className="searchWrapper">
+								<input
+									type="text"
+									className="searchBar"
+									placeholder={placeholderText}
+									value={searchTerm}
+									onChange={handleSearchChange}
+								/>
+								<IoIosSearch className="searchIcon" />
+							</span>
 						</div>
 					</div>
 				</div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import "../../styles/Public/Signup.css";
+import "../../styles/Public/Register.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import RedirectModal from "../../components/RedirectModal";
@@ -121,7 +121,7 @@ function Register() {
 			setLoading(true); // Set loading to true when the registration starts
 
 			axios
-				.post(`${CONFIG.BASE_URL}/signup`, { formData, password })
+				.post(`${CONFIG.BASE_URL}/register`, { formData, password })
 				.then((res) => {
 					if (res.data.message !== "Success") {
 						setmodalContents({

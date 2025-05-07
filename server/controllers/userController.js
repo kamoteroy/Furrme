@@ -10,7 +10,7 @@ cloud.config({
 	api_secret: process.env.api_secret,
 });
 
-async function logIn(req, res) {
+async function login(req, res) {
 	const email_check = "select * from accounts where email = ?";
 	const password_check = "select pass from accounts where email = ?";
 
@@ -38,7 +38,7 @@ async function logIn(req, res) {
 	});
 }
 
-async function signUp(req, res) {
+async function register(req, res) {
 	const user = req.body.formData;
 	const pass = req.body.password;
 	const sql =
@@ -314,8 +314,8 @@ async function getpetPreview(req, res) {
 }
 
 module.exports = {
-	logIn,
-	signUp,
+	login,
+	register,
 	manageProfile,
 	addPost,
 	communityList,

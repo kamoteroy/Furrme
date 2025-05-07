@@ -43,8 +43,8 @@ app.get("/pets", page.getPets);
 app.get("/pets/cats", page.getCats);
 app.get("/pets/dogs", page.getDogs);
 
-app.post("/login", user.logIn);
-app.post("/signup", user.signUp);
+app.post("/login", user.login);
+app.post("/register", user.register);
 app.patch("/manage", verifyJWT, user.manageProfile);
 app.post("/addpost", verifyJWT, user.addPost);
 app.get("/community", verifyJWT, user.communityList);

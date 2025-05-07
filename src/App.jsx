@@ -20,10 +20,18 @@ function App() {
 					element={user ? <Navigate to="/pets" /> : <Homepage />}
 				/>
 
-				{!user &&
-					PublicRoutes.map((route, index) => (
-						<Route key={index} path={route.path} element={route.element} />
-					))}
+				{PublicRoutes.map((route, index) => {
+					const redirectPaths = ["/", "/login", "/register"];
+					const shouldRedirect = user && redirectPaths.includes(route.path);
+
+					return (
+						<Route
+							key={index}
+							path={route.path}
+							element={shouldRedirect ? <Navigate to="/pets" /> : route.element}
+						/>
+					);
+				})}
 
 				{RoutesData.map((route, index) => (
 					<Route
