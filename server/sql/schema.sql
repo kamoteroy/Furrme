@@ -55,7 +55,8 @@ CREATE TABLE IF NOT EXISTS adoptreq (
 	employment TEXT,
 	pet_exp TEXT,
 	requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	status ENUM('Approved', 'Rejected', 'Pending') DEFAULT 'Pending',
+	status ENUM('Approved', 'Rejected', 'Pending') DEFAULT 'Pending', 
+	reason VARCHAR(500),
 	FOREIGN KEY (pet_id) REFERENCES pets(pet_id) ON DELETE CASCADE
 );
 

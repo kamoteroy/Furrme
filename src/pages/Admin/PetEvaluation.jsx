@@ -27,6 +27,7 @@ function PetEvaluation() {
 	const maxChar = 500;
 	const [loading, setLoading] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [rejectionReason, setRejectionReason] = useState("");
 	const [modalContents, setmodalContents] = useState({
 		title: "",
 		contents: "",
@@ -39,6 +40,7 @@ function PetEvaluation() {
 		const input = event.target.value;
 		if (input.length <= maxChar) {
 			setCharCount(input.length);
+			setRejectionReason(input);
 		}
 	};
 
@@ -99,7 +101,7 @@ function PetEvaluation() {
 	};
 
 	const openImageInNewTab = () => {
-		window.open(adoptInfo.image);
+		window.open(accInfo.image);
 	};
 
 	useEffect(() => {
@@ -131,7 +133,9 @@ function PetEvaluation() {
 			.post(`${CONFIG.BASE_URL}/admin/setStatus`, {
 				status: selectedButton,
 				email: adoptRequest.email,
-				id: adoptRequest.pet_id,
+				pet_id: adoptRequest.pet_id,
+				request_id: adoptRequest.request_id,
+				reason: rejectionReason,
 			})
 			.then((res) => {
 				setmodalContents({
@@ -403,6 +407,12 @@ function PetEvaluation() {
 										id="rejectionReason"
 										placeholder="Please state the reason for rejection"
 										onChange={handleTextChange}
+										onKeyDown={(e) => {
+											if (e.key === "Enter" && !e.shiftKey) {
+												e.preventDefault();
+												Submit();
+											}
+										}}
 										maxLength={maxChar}
 									></textarea>
 									<p className="charCount">

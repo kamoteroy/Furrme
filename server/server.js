@@ -121,16 +121,54 @@ app.post("/admin/evaluation/pet", (req, res) => {
 });
 
 app.post("/admin/setStatus", (req, res) => {
-	db.query(
-		"UPDATE adoptreq SET status = ? WHERE pet_id = ? and email = ?",
-		[req.body.status, req.body.id, req.body.email],
-		(err, accInfo) => {
-			if (err) {
-				console.log(err);
-			}
-			return res.json({ Status: `${req.body.status} Successfully!` });
-		}
-	);
+	const { status, pet_id, email, request_id, reason } = req.body;
+
+	if (status === "Approved") {
+		const approveQuery = `
+			UPDATE adoptreq SET status = 'Approved', reason = NULL
+			WHERE request_id = ?
+		`;
+		const rejectOthersQuery = `
+			UPDATE adoptreq 
+			SET status = 'Rejected', 
+				reason = CASE 
+							WHEN reason IS NULL OR reason = '' THEN 'Another applicant was approved' 
+							ELSE reason 
+						END
+			WHERE pet_id = ? AND request_id != ?
+		`;
+		const updatePetQuery = `
+			UPDATE pets SET adoptedBy = ?, status = 'Adopted'
+			WHERE pet_id = ?
+		`;
+
+		db.query(approveQuery, [request_id], (err) => {
+			if (err) return res.status(500).json({ error: err });
+
+			db.query(rejectOthersQuery, [pet_id, request_id], (err) => {
+				if (err) return res.status(500).json({ error: err });
+
+				db.query(updatePetQuery, [email, pet_id], (err) => {
+					if (err) return res.status(500).json({ error: err });
+
+					return res.json({ Status: "Approved Successfully!" });
+				});
+			});
+		});
+	} else if (status === "Rejected") {
+		const rejectQuery = `
+			UPDATE adoptreq SET status = 'Rejected', reason = ?
+			WHERE request_id = ?
+		`;
+
+		db.query(rejectQuery, [reason || null, request_id], (err) => {
+			if (err) return res.status(500).json({ error: err });
+
+			return res.json({ Status: "Rejected Successfully!" });
+		});
+	} else {
+		return res.status(400).json({ error: "Invalid status." });
+	}
 });
 
 app.post("/emailValidate", (req, res) => {

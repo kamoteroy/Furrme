@@ -419,8 +419,15 @@ function CreatePetListing() {
 												className="petTypeDropdown"
 												onClick={(e) => e.stopPropagation()}
 											>
-												<li onClick={() => handleSelectPetType("Cats")}>Cat</li>
-												<li onClick={() => handleSelectPetType("Dogs")}>Dog</li>
+												<li onClick={() => handleSelectPetType("Cats")}>
+													Cats
+												</li>
+												<li onClick={() => handleSelectPetType("Dogs")}>
+													Dogs
+												</li>
+												<li onClick={() => handleSelectPetType("Rodents")}>
+													Rodents
+												</li>
 											</ul>
 										)}
 									</div>
