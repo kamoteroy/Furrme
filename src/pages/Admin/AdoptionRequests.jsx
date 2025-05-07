@@ -142,7 +142,7 @@ function AdoptionRequests() {
 		setIsDropdownOpen(false);
 	};
 	const petPreview = (pet) => {
-		navigate("/admin/evaluate/" + pet.pet_name, { state: pet });
+		navigate("/admin/pets/evaluate/" + pet.pet_name, { state: pet });
 	};
 
 	return (

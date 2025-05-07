@@ -45,10 +45,6 @@ function AllPets() {
 		};
 	}, []);
 	useEffect(() => {
-		if (user) {
-			user.user.role === "Admin" ? navigate("/admin/pets") : navigate("/pets");
-		}
-
 		axios
 			.get(`${CONFIG.BASE_URL}/pets`)
 			.then((res) => {

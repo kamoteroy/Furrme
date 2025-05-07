@@ -66,8 +66,6 @@ function AdminDashboard() {
 		setIsStatusDropdownOpen(!isStatusDropdownOpen);
 	};
 
-	//Page Reset on Dropdown Filter and Search Input Reset
-
 	const handleOptionClick = (option) => {
 		setSelectedOption(option);
 		setIsDropdownOpen(false);

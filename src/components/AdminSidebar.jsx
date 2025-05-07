@@ -50,7 +50,7 @@ function AdminDashboardSidebar() {
 							<span>Pets</span>
 						</li>
 					</Link>
-					<Link to="/admin/request">
+					<Link to="/admin/requests">
 						<li>
 							<IoPeopleOutline className="navIcon" />
 							<span>Adoption Requests</span>

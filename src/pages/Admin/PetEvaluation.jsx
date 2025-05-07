@@ -60,71 +60,38 @@ function PetEvaluation() {
 		}
 	};
 	useEffect(() => {
-		//setAdoptInfo(adoptRequest);
-		axios
-			.post(`${CONFIG.BASE_URL}/admin/evaluation/accDetails`, {
-				email: adoptRequest.email,
-				pet_Id: adoptRequest.pet_id,
-				token: token,
-			})
-			.then((res) => {
-				setaccInfo(res.data[0]);
+		const fetchData = async () => {
+			try {
+				const [accRes, petRes, adoptRes] = await Promise.all([
+					axios.post(`${CONFIG.BASE_URL}/admin/evaluation/accDetails`, {
+						email: adoptRequest.email,
+						pet_Id: adoptRequest.pet_id,
+						token: token,
+					}),
+					axios.get(
+						`${CONFIG.BASE_URL}/admin/petDetails/${adoptRequest.pet_id}`,
+						{
+							headers: { token },
+						}
+					),
+					axios.get(
+						`${CONFIG.BASE_URL}/admin/adoptReq/${adoptRequest.request_id}`,
+						{
+							headers: { token },
+						}
+					),
+				]);
 
-				if (res.data[0] && petInfo) {
-					setLoading(false);
-				}
-			})
-			.catch((err) => console.log(err));
-
-		axios
-			.get(`${CONFIG.BASE_URL}/admin/petDetails/${adoptRequest.pet_id}`, {
-				headers: {
-					token: token,
-				},
-			})
-			.then((res) => {
-				setpetInfo(res.data);
-				if (res.data && accInfo) {
-					setLoading(false);
-				}
-			})
-			.catch((err) => console.log(err));
-		axios
-			.get(`${CONFIG.BASE_URL}/admin/adoptReq/${adoptRequest.request_id}`, {
-				headers: {
-					token: token,
-				},
-			})
-			.then((res) => {
-				setAdoptInfo(res.data);
-				if (res.data && accInfo) {
-					setLoading(false);
-				}
-			})
-			.catch((err) => console.log(err));
-		if (adoptInfo.status === "Approved") {
-			setColor("green");
-		} else if (adoptInfo.status === "Pending") {
-			setColor("#f29339");
-		} else {
-			setColor("red");
-		}
-		const textarea = document.getElementById("rejectionReason");
-		if (textarea) {
-			textarea.addEventListener("input", handleTextChange);
-			return () => textarea.removeEventListener("input", handleTextChange);
-		}
-		const handleClickOutside = (event) => {
-			if (event.target.closest(".dropdown") === null) {
-				setOpenDropdown(null);
+				setaccInfo(accRes.data[0]);
+				setpetInfo(petRes.data);
+				setAdoptInfo(adoptRes.data);
+				setLoading(false);
+			} catch (err) {
+				console.log(err);
 			}
 		};
 
-		document.addEventListener("click", handleClickOutside);
-
-		return () => {
-			document.removeEventListener("click", handleClickOutside);
-		};
+		fetchData();
 	}, []);
 
 	const toggleDropdown = (dropdownName) => {
