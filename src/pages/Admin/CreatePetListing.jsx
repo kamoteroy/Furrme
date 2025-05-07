@@ -27,6 +27,7 @@ function CreatePetListing() {
 	const [base64s, setbase64s] = useState([]);
 	const dropdownRef = useRef(null);
 	const genderDropdownRef = useRef(null);
+	const petTypes = ["Cats", "Dogs", "Rodents"];
 	const [formData, setformData] = useState({
 		name: "",
 		breed: "",
@@ -419,15 +420,14 @@ function CreatePetListing() {
 												className="petTypeDropdown"
 												onClick={(e) => e.stopPropagation()}
 											>
-												<li onClick={() => handleSelectPetType("Cats")}>
-													Cats
-												</li>
-												<li onClick={() => handleSelectPetType("Dogs")}>
-													Dogs
-												</li>
-												<li onClick={() => handleSelectPetType("Rodents")}>
-													Rodents
-												</li>
+												{petTypes.map((type) => (
+													<li
+														key={type}
+														onClick={() => handleSelectPetType(type)}
+													>
+														{type}
+													</li>
+												))}
 											</ul>
 										)}
 									</div>
