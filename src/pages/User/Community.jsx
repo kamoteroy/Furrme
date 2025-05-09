@@ -213,7 +213,6 @@ function Community() {
 										post_id={post.post_id}
 										accountName={`${post.fname} ${post.lname}`}
 										email={post.email}
-										datePosted={post.dates}
 										postImage={post.post_image}
 										postContent={post.description}
 										timePosted={post.posted_at}

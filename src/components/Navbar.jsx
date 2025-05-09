@@ -59,11 +59,7 @@ function Navbar() {
 	};
 
 	const navCommunity = () => {
-		if (user === null) {
-			navigate("/login");
-		} else {
-			navigate("/community");
-		}
+		navigate("/community");
 	};
 
 	const Home = () => {

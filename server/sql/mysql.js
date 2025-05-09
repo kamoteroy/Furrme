@@ -1,4 +1,6 @@
+require("dotenv").config();
 const mysql = require("mysql2");
+
 /*const db = mysql.createConnection({
 	host: "localhost",
 	user: "root",
@@ -6,12 +8,13 @@ const mysql = require("mysql2");
 	database: "furrme",
 	multipleStatements: true,
 });*/
+
 const db = mysql.createConnection({
-	host: "turntable.proxy.rlwy.net",
-	user: "root",
-	password: "HuBEgymCcyoLwfiqgcdFILWYYAFrqBlM",
-	database: "railway",
-	port: 17370,
+	host: process.env.DB_HOST,
+	user: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
+	database: process.env.DB_NAME,
+	port: process.env.DB_PORT,
 	multipleStatements: true,
 });
 

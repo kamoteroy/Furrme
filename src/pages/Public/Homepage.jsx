@@ -3,24 +3,8 @@ import "../../styles/Public/Homepage.css";
 import { Link } from "react-router-dom";
 import { logout } from "../../store/Users";
 import { useEffect } from "react";
-import axios from "axios";
-import CONFIG from "../../data/config";
 
 function Homepage() {
-	const dispatch = useDispatch();
-	dispatch(logout());
-
-	useEffect(() => {
-		axios
-			.post(`${CONFIG.BASE_URL}/createAdmin`)
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	}, []);
-
 	return (
 		<div className="homepage-container">
 			<div className="homepage-bg">

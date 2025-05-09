@@ -11,6 +11,7 @@ const user = require("./controllers/userController");
 const admin = require("./controllers/adminController");
 const { upload } = require("./controllers/upload");
 const { verifyJWT } = require("./config/middleware");
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(cookieParser());
@@ -32,7 +33,6 @@ db.connect((err) => {
 
 app.get("/", (req, res) => res.send("Server is running"));
 
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 	console.log(`Server listening on port ${PORT}`);
 });
@@ -179,17 +179,6 @@ app.post("/emailValidate", (req, res) => {
 			return res.json(list);
 		}
 	});
-});
-
-app.post("/createAdmin", (req, res) => {
-	db.query(
-		"CREATE TABLE IF NOT EXISTS accounts(fname varchar(200),image varchar(2000),lname varchar(200),email varchar(200) unique,pass varchar(200),role varchar(200),primary key(email));",
-		(err, result) => {
-			if (err) {
-				console.log(err);
-			}
-		}
-	);
 });
 
 app.use((err, req, res, next) => {
