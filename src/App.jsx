@@ -21,14 +21,28 @@ function App() {
 				/>
 
 				{PublicRoutes.map((route, index) => {
-					const redirectPaths = ["/", "/login", "/register"];
-					const shouldRedirect = user && redirectPaths.includes(route.path);
+					const isRestricted = ["/", "/login", "/register"].includes(
+						route.path
+					);
+
+					const shouldRedirect =
+						user &&
+						(isRestricted ||
+							(user.user.role === "Admin" && !route.path.startsWith("/admin")));
 
 					return (
 						<Route
 							key={index}
 							path={route.path}
-							element={shouldRedirect ? <Navigate to="/pets" /> : route.element}
+							element={
+								shouldRedirect ? (
+									<Navigate
+										to={user.user.role === "Admin" ? "/admin/pets" : "/pets"}
+									/>
+								) : (
+									route.element
+								)
+							}
 						/>
 					);
 				})}

@@ -156,7 +156,7 @@ function Navbar() {
 			<div className="loginBtn-accountIcon">
 				{isLoggedIn ? (
 					<div className="DP-Icon" onClick={() => toggleDropdown("user")}>
-						<img src={user.user.image || ""} alt={user.user.name} />
+						<img src={user.user.image} alt={user.user.name} />
 					</div>
 				) : (
 					<button onClick={handleLogin}>Login</button>
