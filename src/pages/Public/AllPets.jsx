@@ -24,6 +24,7 @@ function AllPets() {
 	const [selectedType, setSelectedType] = useState("");
 	const [selectedGender, setSelectedGender] = useState("");
 	const [loading, setLoading] = useState(true);
+	const [loadError, setLoadError] = useState(false);
 	const [placeholderText, setPlaceholderText] = useState(
 		"Search name, breed, or location"
 	);
@@ -45,14 +46,27 @@ function AllPets() {
 		};
 	}, []);
 	useEffect(() => {
+		const timeout = setTimeout(() => {
+			if (petList.length === 0) {
+				setLoadError(true);
+				setLoading(false);
+			}
+		}, 10000);
+
 		axios
 			.get(`${CONFIG.BASE_URL}/pets`)
 			.then((res) => {
 				setPetList(res.data);
 				setFilteredPets(res.data);
 				setLoading(false);
+				setLoadError(false);
+				clearTimeout(timeout);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+				setLoadError(true);
+				setLoading(false);
+			});
 
 		const handleClickOutside = (event) => {
 			if (
@@ -71,6 +85,7 @@ function AllPets() {
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
+			clearTimeout(timeout);
 		};
 	}, [user, navigate]);
 
@@ -224,6 +239,10 @@ function AllPets() {
 						Array(6)
 							.fill()
 							.map((_, i) => <PetCardSkeleton key={i} />)
+					) : loadError ? (
+						<h1 className="noPetsMessage">
+							Pets can't be loaded at this time. Please try again later.
+						</h1>
 					) : filteredPets.length === 0 ? (
 						<h1 className="noPetsMessage">
 							No pets available for adoption at the moment.

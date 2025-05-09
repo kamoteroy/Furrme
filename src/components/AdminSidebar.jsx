@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Components/AdminSidebar.css";
 import { IoPawOutline, IoPeopleOutline } from "react-icons/io5";
+import { TbMessageReport } from "react-icons/tb";
 import {
 	CiCirclePlus,
 	CiLogout,
@@ -14,7 +15,14 @@ import { logout } from "../store/Users";
 function AdminDashboardSidebar() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [collapsed, setCollapsed] = useState(false);
+
+	const [collapsed, setCollapsed] = useState(
+		() => JSON.parse(localStorage.getItem("sidebarCollapsed")) || false
+	);
+
+	useEffect(() => {
+		localStorage.setItem("sidebarCollapsed", JSON.stringify(collapsed));
+	}, [collapsed]);
 
 	const handleLogout = () => {
 		dispatch(logout());
@@ -60,6 +68,12 @@ function AdminDashboardSidebar() {
 						<li>
 							<CiCirclePlus className="navIcon" />
 							<span>Create Pet Listing</span>
+						</li>
+					</Link>
+					<Link to="/admin/reports">
+						<li>
+							<TbMessageReport className="navIcon" />
+							<span>Reports</span>
 						</li>
 					</Link>
 					<li onClick={handleLogout}>

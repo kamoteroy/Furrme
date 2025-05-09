@@ -22,6 +22,7 @@ function Community() {
 	const [refreshKey, setRefreshKey] = useState(0);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [uploading, setUploading] = useState(false);
+	const [loadError, setLoadError] = useState(false);
 	const [modalContents, setModalContents] = useState({
 		title: "",
 		contents: "",
@@ -51,12 +52,33 @@ function Community() {
 	}, [isModalOpen]);
 
 	useEffect(() => {
+		let timeout = setTimeout(() => {
+			if (postList.length === 0) {
+				setLoadError(true);
+			}
+		}, 10000);
+
 		axios
 			.get(`${CONFIG.BASE_URL}/community`, {
 				headers: { token },
 			})
-			.then((res) => (res.data[0] ? setPostList(res.data) : setPostList([])))
-			.catch((err) => console.log(err));
+			.then((res) => {
+				if (res.data[0]) {
+					setPostList(res.data);
+					setLoadError(false); // reset if posts are fetched
+				} else {
+					setPostList([]);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				setLoadError(true);
+			})
+			.finally(() => {
+				clearTimeout(timeout); // clear timeout if fetch finishes
+			});
+
+		return () => clearTimeout(timeout);
 	}, [refreshKey]);
 
 	const refreshComponent = () => {
@@ -214,25 +236,26 @@ function Community() {
 							</button>
 						)}
 					</div>
-
 					<div className="postsContainer">
-						{postList.length === 0
-							? [...Array(5)].map((_, i) => (
-									<CommunityPostCardSkeleton key={i} />
-								))
-							: postList.map((post, i) => (
-									<CommunityPostCard
-										key={i}
-										userAvatar={post.image}
-										post_id={post.post_id}
-										accountName={`${post.fname} ${post.lname}`}
-										email={post.email}
-										postImage={post.post_image}
-										postContent={post.description}
-										timePosted={post.posted_at}
-										onDeleteSuccess={() => handleDeleteFromList(post.post_id)}
-									/>
-								))}
+						{loadError ? (
+							<h1 className="errorMessage">Posts can't be loaded this time.</h1>
+						) : postList.length === 0 ? (
+							[...Array(5)].map((_, i) => <CommunityPostCardSkeleton key={i} />)
+						) : (
+							postList.map((post, i) => (
+								<CommunityPostCard
+									key={i}
+									userAvatar={post.image}
+									post_id={post.post_id}
+									accountName={`${post.fname} ${post.lname}`}
+									email={post.email}
+									postImage={post.post_image}
+									postContent={post.description}
+									timePosted={post.posted_at}
+									onDeleteSuccess={() => handleDeleteFromList(post.post_id)}
+								/>
+							))
+						)}
 					</div>
 				</div>
 			</div>

@@ -1,5 +1,4 @@
-import React from "react";
-import "./CommunityPostCardSkeleton.css";
+import "../styles/Components/CommunityPostCardSkeleton.css";
 
 function CommunityPostCardSkeleton() {
 	return (
