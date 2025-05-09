@@ -38,9 +38,10 @@ function Navbar() {
 	};
 
 	useEffect(() => {
-		if (user === null) {
+		if (user?.user) {
+			setIsLoggedIn(true);
 		} else {
-			setIsLoggedIn(!isLoggedIn);
+			setIsLoggedIn(false);
 		}
 
 		const handleClickOutside = (event) => {
