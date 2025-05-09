@@ -23,8 +23,6 @@ function Navbar() {
 	const user = useSelector((state) => state.value);
 	const dispatch = useDispatch();
 
-	console.log(user);
-
 	const toggleDropdown = (dropdown) => {
 		setOpenDropdown(openDropdown === dropdown ? null : dropdown);
 	};

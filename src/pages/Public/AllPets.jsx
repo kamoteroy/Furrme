@@ -28,8 +28,6 @@ function AllPets() {
 		"Search name, breed, or location"
 	);
 
-	console.log(user);
-
 	useEffect(() => {
 		const handleResize = () => {
 			if (window.innerWidth <= 768) {

@@ -106,6 +106,7 @@ function Community() {
 			const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 				image_url: uploadedImg,
 			});
+
 			await axios
 				.post(
 					`${CONFIG.BASE_URL}/addpost`,
@@ -128,9 +129,22 @@ function Community() {
 					setIsModalOpen(true);
 					setShowCreatePostBtn(false);
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.error(err);
+					setModalContents({
+						title: "Post Creation Failed",
+						contents:
+							"There was a problem creating your post. Please try again.",
+					});
+					setIsModalOpen(true);
+				});
 		} catch (err) {
-			console.log(err);
+			console.error(err);
+			setModalContents({
+				title: "Image Upload Failed",
+				contents: "There was a problem uploading the image. Please try again.",
+			});
+			setIsModalOpen(true);
 		}
 		setUploading(false);
 		setUploadedImg(null);

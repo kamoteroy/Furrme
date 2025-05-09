@@ -164,6 +164,7 @@ function ManageProfile() {
 			if (uploadedImg && uploadedImg !== user.image) {
 				setIsUploading(true);
 				setUploadMessage("Uploading . . .");
+
 				const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
 					image_url: uploadedImg,
 				});
@@ -174,10 +175,11 @@ function ManageProfile() {
 			setIsUploading(true);
 
 			const res = await axios.patch(`${CONFIG.BASE_URL}/manage`, changedFields);
+
 			setAccess(res.data.access);
 			setmodalContents({
 				title: res.data.access === 1 ? "Success" : "Error",
-				contents: res.data.message,
+				contents: res.data.message || "Something went wrong. Please try again.",
 			});
 			setIsModalOpen(true);
 
@@ -190,6 +192,12 @@ function ManageProfile() {
 			}
 		} catch (err) {
 			console.error("Update failed", err);
+			setmodalContents({
+				title: "Update Failed",
+				contents:
+					"An error occurred during the update. Please try again later.",
+			});
+			setIsModalOpen(true);
 		} finally {
 			setIsUploading(false);
 		}
