@@ -63,48 +63,75 @@ app.post("/admin/petInfoUpdate", verifyJWT, admin.updatePetInfo);
 app.post("/admin/evaluation/accDetails", verifyJWT, admin.accDetails);
 
 app.post("/admin/create", async (req, res) => {
-	const creator = jwt.verify(req.body.token, process.env.JWT_SECRET);
-	const petInfo = req.body.data;
-	const images = req.body.images;
-	const getMax = "SELECT MAX(pet_id) AS maxID FROM pets;";
-	const updateQuery =
-		"INSERT INTO pets (`pet_id`, `name`, `category`, `address`, `description`, `color`, `gender`, `image`, `breed`, `age`, `behavior`, `health`, `status`, createdBy, adoptedBy) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	const imgQuery =
-		"INSERT INTO pet_img (`pet_id`, `img1`, `img2`, `img3`, `img4`, `img5`) VALUES (?,?,?,?,?,?)";
-	db.query(getMax, (err, resultMax) => {
-		const maxID = resultMax[0].maxID + 1;
+	try {
+		const creator = jwt.verify(req.body.token, process.env.JWT_SECRET);
+		const petInfo = req.body.data;
+		const images = req.body.images;
+
+		const insertPetQuery = `
+			INSERT INTO pets (name, category, address, description, color, gender, image, breed, age, behavior, health, status, createdBy, adoptedBy)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		`;
+
 		db.query(
-			updateQuery,
+			insertPetQuery,
 			[
-				maxID,
 				petInfo.name,
 				req.body.type,
 				petInfo.address,
 				petInfo.description,
 				petInfo.color,
 				req.body.gender,
-				req.body.images[0],
+				images[0],
 				petInfo.breed,
 				petInfo.age,
 				petInfo.behavior,
 				petInfo.health,
 				"Available",
-				creator,
+				creator.email,
 				null,
 			],
 			(err, result) => {
-				if (err) return err;
+				if (err) {
+					console.error("Error inserting pet:", err);
+					return res
+						.status(500)
+						.json({ success: false, message: "Database error on insert" });
+				}
+
+				const newPetId = result.insertId;
+
+				const imgQuery = `
+					INSERT INTO pet_img (pet_id, img1, img2, img3, img4, img5)
+					VALUES (?, ?, ?, ?, ?, ?)
+				`;
+
 				db.query(
 					imgQuery,
-					[maxID, images[0], images[1], images[2], images[3], images[4]],
+					[newPetId, images[0], images[1], images[2], images[3], images[4]],
 					(err, resImg) => {
-						if (err) return err;
-						return res.json({ resImg: resImg, maxID: maxID });
+						if (err) {
+							console.error("Error inserting images:", err);
+							return res
+								.status(500)
+								.json({ success: false, message: "Database error on images" });
+						}
+
+						return res.json({
+							success: true,
+							message: "Pet listing created successfully",
+							newpet_id: newPetId,
+						});
 					}
 				);
 			}
 		);
-	});
+	} catch (error) {
+		console.error("JWT error or other failure:", error);
+		res
+			.status(401)
+			.json({ success: false, message: "Unauthorized or invalid request" });
+	}
 });
 
 app.post("/admin/evaluation/pet", (req, res) => {

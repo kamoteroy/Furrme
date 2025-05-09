@@ -189,79 +189,76 @@ function CreatePetListing() {
         setter(event.target.value);
     };*/
 
-	const create = (pictures) => {
+	const create = (uploadedImages) => {
 		axios
 			.post(`${CONFIG.BASE_URL}/admin/create`, {
 				data: formData,
 				gender: selectedPetGender,
 				type: selectedPetType,
-				images: pictures,
+				images: uploadedImages,
 				token: token,
 			})
-			.then((res) =>
-				res.data.resImg.warningCount === 0
-					? (setIsModalOpen(!isModalOpen),
-						setmodalContents({
-							title: "Listing Successful!",
-							contents: `See Listing`,
-							link: `http://localhost:3000/admin/pets/${selectedPetType}/${res.data.maxID}`,
-						}),
-						setUploadingText("Successful"),
-						setUploading(false),
-						setLink("/admin/pets"),
-						clearInputs())
-					: (setIsModalOpen(!isModalOpen),
-						setmodalContents({
-							title: "Listing Failed!",
-							contents: "",
-						}),
-						setUploading(false),
-						setLink(0),
-						console.log(res))
-			)
-			.catch((err) => console.log(err));
+			.then((res) => {
+				if (res.data.success) {
+					setmodalContents({
+						title: "Listing Successful!",
+						contents: `See Listing`,
+						link: `http://localhost:3000/admin/pets/${selectedPetType}/${res.data.newpet_id}`,
+					});
+					setUploadingText("Successful");
+					setLink("/admin/pets");
+					clearInputs();
+				} else {
+					setmodalContents({
+						title: "Listing Failed!",
+						contents: res.data.message || "",
+					});
+					setLink(0);
+				}
+				setIsModalOpen(true);
+				setUploading(false);
+			})
+			.catch((err) => {
+				console.error("Create Listing Error:", err);
+				setmodalContents({
+					title: "Listing Failed!",
+					contents: "An unexpected error occurred.",
+				});
+				setIsModalOpen(true);
+				setUploading(false);
+			});
 	};
 
 	const handleSumbit = async () => {
-		var size = images.length;
-		if (!validateForm()) {
-			return;
-		}
-		if (!images[0]) {
-			// Remove the uploaded image
-			setImages([]);
+		if (!validateForm()) return;
+
+		if (!images.length) {
 			setmodalContents({
 				title: "No image uploaded!",
 				contents: "Upload at least one image",
 			});
-			setIsModalOpen(!isModalOpen);
+			setIsModalOpen(true);
 			return;
 		}
-		if (base64s[0]) {
-			setUploading(true);
-			var ctr = 1;
-			setUploadingText(`Uploading Images 1/${size}...`);
-			base64s.forEach(async function (item, index) {
-				try {
-					const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
-						image_url: item,
-					});
-					images.push(res.data);
-				} catch (err) {
-					console.log(err);
-				}
 
-				if (images.some((item) => item.includes("blob"))) {
-					removeBlob(); // remove blob links from the images list
-				}
-				base64s.splice(0, 1);
-				if (!base64s[0]) {
-					setUploadingText("Adding Pet Listing");
-					create(images);
-				}
-				if (ctr <= size) ctr = ctr + 1;
-				setUploadingText(`Uploading Images ${ctr}/${size}...`);
-			});
+		setUploading(true);
+		setUploadingText(`Uploading Images...`);
+
+		try {
+			const uploadedImages = [];
+			for (let i = 0; i < base64s.length; i++) {
+				setUploadingText(`Uploading Images ${i + 1}/${base64s.length}...`);
+				const res = await axios.post(`${CONFIG.BASE_URL}/upload`, {
+					image_url: base64s[i],
+				});
+				uploadedImages.push(res.data);
+			}
+
+			setUploadingText("Adding Pet Listing...");
+			create(uploadedImages); // Call with complete list
+		} catch (error) {
+			console.error("Upload Error:", error);
+			setUploading(false);
 		}
 	};
 
