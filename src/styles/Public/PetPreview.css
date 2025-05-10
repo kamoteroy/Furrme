@@ -235,3 +235,34 @@
 		width: 80%;
 	}
 }
+.errorBtnGroup {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.goBackBtn,
+.retryBtn {
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 1rem;
+	transition: background-color 0.3s;
+}
+
+.goBackBtn:hover,
+.retryBtn:hover {
+	background-color: #0056b3;
+}
+@media screen and (max-width: 500px) {
+	.goBackBtn,
+	.retryBtn {
+		padding: 8px 12px;
+		font-size: 0.7rem;
+	}
+}

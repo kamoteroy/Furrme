@@ -5,8 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import circleLoading from "../../assets/circleLoading.gif";
+import sorry from "../../assets/sorry.gif";
 import axios from "axios";
 import CONFIG from "../../data/config";
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 function PetPreview() {
 	const containerRef = useRef(null);
@@ -15,13 +17,13 @@ function PetPreview() {
 	const user = useSelector((state) => state.value);
 	const [petData, setpetData] = useState(null);
 	const [loading, setLoading] = useState(true);
-
-	const handleWheel = (e) => {
-		const container = containerRef.current;
-		if (container) {
-			container.scrollLeft += e.deltaY;
-		}
-	};
+	const [error, setError] = useState(false);
+	const customNames = petData
+		? {
+				[id]: petData.name,
+			}
+		: {};
+	const [selectedImg, setSelectedImg] = useState(null);
 
 	useEffect(() => {
 		axios
@@ -32,18 +34,35 @@ function PetPreview() {
 			})
 			.catch((err) => {
 				console.log(err);
+				setError(true);
 				setLoading(false);
 			});
 	}, [id]);
-	const customNames = petData
-		? {
-				[id]: petData.name,
-			}
-		: {};
-	const [selectedImg, setSelectedImg] = useState(null);
+
+	const retryFetch = () => {
+		setLoading(true);
+		setError(false);
+		axios
+			.get(`${CONFIG.BASE_URL}/petPreview/${id}`)
+			.then((res) => {
+				setpetData(res.data);
+				setLoading(false);
+			})
+			.catch((err) => {
+				console.log(err);
+				setError(true);
+				setLoading(false);
+			});
+	};
 
 	const handleImageClick = (imgSrc) => {
 		setSelectedImg(imgSrc);
+	};
+	const handleWheel = (e) => {
+		const container = containerRef.current;
+		if (container) {
+			container.scrollLeft += e.deltaY;
+		}
 	};
 
 	const confirmAdoption = () => {
@@ -59,10 +78,21 @@ function PetPreview() {
 	return (
 		<>
 			{loading ? (
-				<div className="loadingOverlay">
-					<img src={circleLoading} alt="loading" className="loadingImage" />
-					<p>Loading</p>
-				</div>
+				<LoadingOverlay gifSrc={circleLoading} label="Loading..." />
+			) : error ? (
+				<LoadingOverlay
+					gifSrc={sorry}
+					label="Can't get details of the pet. Please check your internet connection."
+				>
+					<div className="errorBtnGroup">
+						<button className="goBackBtn" onClick={() => navigate(-1)}>
+							Go Back
+						</button>
+						<button className="retryBtn" onClick={retryFetch}>
+							Try Again
+						</button>
+					</div>
+				</LoadingOverlay>
 			) : (
 				<div>
 					<Navbar />

@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import catLoading2 from "../../assets/catLoading2.gif";
 import catLoading1 from "../../assets/catLoading.gif";
+import sorry from "../../assets/sorry.gif";
 import CountDownModal from "../../components/CountdownModal";
 import CONFIG from "../../data/config";
 
@@ -27,7 +28,8 @@ function PetDetails() {
 	const [uploadingText, setUploadingText] = useState("Uploading...");
 	const [images, setImages] = useState([]);
 	const [base64s, setbase64s] = useState([]);
-	const [isChanged, setIsChanged] = useState(false); // State to track if changes were made
+	const [isChanged, setIsChanged] = useState(false);
+	const [error, setError] = useState(false);
 	const [modalContents, setmodalContents] = useState({
 		title: "",
 		contents: "",
@@ -48,27 +50,34 @@ function PetDetails() {
 	useEffect(() => {
 		setLoading(true);
 
-		axios
-			.get(`${CONFIG.BASE_URL}/admin/petDetails/${id}`, {
-				headers: {
-					token: token,
-				},
-			})
-			.then((res) => setpetInfo(res.data))
-			.catch((err) => console.log(err));
+		const fetchData = async () => {
+			try {
+				const [infoRes, imgRes] = await Promise.all([
+					axios.get(`${CONFIG.BASE_URL}/admin/petDetails/${id}`, {
+						headers: { token },
+					}),
+					axios.get(`${CONFIG.BASE_URL}/admin/petImage/${id}`, {
+						headers: { token },
+					}),
+				]);
+				setpetInfo(infoRes.data);
+				setpetImage(imgRes.data);
+				setError(false);
+			} catch (err) {
+				console.log(err);
+				setError(true);
+			}
+			setLoading(false);
+		};
 
-		axios
-			.get(`${CONFIG.BASE_URL}/admin/petImage/${id}`, {
-				headers: {
-					token: token,
-				},
-			})
-			.then((result) => {
-				setpetImage(result.data);
-				setLoading(false);
-			})
-			.catch((err) => console.log(err));
+		fetchData();
 	}, [id, token]);
+
+	const handleRetry = () => {
+		setError(false);
+		setLoading(true);
+		navigate(0);
+	};
 
 	const handleInputChange = (e) => {
 		e.preventDefault();
@@ -212,6 +221,22 @@ function PetDetails() {
 				{loading && (
 					<LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />
 				)}
+				{error && (
+					<LoadingOverlay
+						gifSrc={sorry}
+						label="Can't connect. Please check your internet connection."
+					>
+						<div className="errorBtnGroup">
+							<button className="goBackBtn" onClick={() => navigate(-1)}>
+								Go Back
+							</button>
+							<button className="retryBtn" onClick={handleRetry}>
+								Try Again
+							</button>
+						</div>
+					</LoadingOverlay>
+				)}
+
 				<div className="adminPetPreview">
 					<AdminDashboardSidebar />
 					<div className="mainContent">

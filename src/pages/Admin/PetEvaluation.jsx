@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import catLoading2 from "../../assets/catLoading2.gif";
+import sorry from "../../assets/sorry.gif";
 import CountDownModal from "../../components/CountdownModal";
 import CONFIG from "../../data/config";
 
@@ -28,6 +29,7 @@ function PetEvaluation() {
 	const [loading, setLoading] = useState(true);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [rejectionReason, setRejectionReason] = useState("");
+	const [error, setError] = useState(false);
 	const [modalContents, setmodalContents] = useState({
 		title: "",
 		contents: "",
@@ -61,6 +63,13 @@ function PetEvaluation() {
 			}
 		}
 	};
+
+	const handleRetry = () => {
+		setError(false);
+		setLoading(true);
+		navigate(0);
+	};
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -87,9 +96,12 @@ function PetEvaluation() {
 				setaccInfo(accRes.data[0]);
 				setpetInfo(petRes.data);
 				setAdoptInfo(adoptRes.data);
+				setError(false);
 				setLoading(false);
 			} catch (err) {
 				console.log(err);
+				setError(true);
+				setLoading(false);
 			}
 		};
 
@@ -169,7 +181,24 @@ function PetEvaluation() {
 			>
 				<p>{modalContents.contents}</p>
 			</CountDownModal>
-			{loading && <LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />}
+			{loading && !error && (
+				<LoadingOverlay gifSrc={catLoading2} label="Loading . . ." />
+			)}
+			{error && (
+				<LoadingOverlay
+					gifSrc={sorry}
+					label="Can't connect. Please check your internet connection."
+				>
+					<div className="errorBtnGroup">
+						<button className="goBackBtn" onClick={() => navigate(-1)}>
+							Go Back
+						</button>
+						<button className="retryBtn" onClick={handleRetry}>
+							Try Again
+						</button>
+					</div>
+				</LoadingOverlay>
+			)}
 			<div className="adminEvaluation">
 				<AdminDashboardSidebar />
 				<div className="mainContent">
