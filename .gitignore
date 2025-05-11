@@ -28,9 +28,7 @@ yarn-error.log*
 
 # Ignore package.json and lock files in client and server
 /client/package.json
-/server/package.json
 /client/package-lock.json
-/server/package-lock.json
 /client/yarn.lock
 /server/yarn.lock
 /server/.env
