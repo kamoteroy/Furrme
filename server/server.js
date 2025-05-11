@@ -31,7 +31,7 @@ db.connect((err) => {
 	initDB(db);
 });
 
-app.get("/", (req, res) => res.send("Server is running"));
+app.get("/", (req, res) => res.send("Server is runnings"));
 
 app.listen(PORT, () => {
 	console.log(`Server listening on port ${PORT}`);
